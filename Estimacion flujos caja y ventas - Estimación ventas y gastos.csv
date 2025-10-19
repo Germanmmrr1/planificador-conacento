@@ -1,0 +1,15 @@
+Gastos Operativa,,,,,Optimista,Regular,Pesimista
+,Mensual,Anual,,Total comensales,80,80,80
+Salarios,"12,729.17€","152,750.00€",,Ticket medio,30,30,30
+Veladores,,"1,415.00€",,Turnos x semana,9,9,9
+Alarma,30,30.00€,,Turnos x año (2026 tiene 53 semanas),441,441,441
+Internet,50,600.00€,,Media ocupacion,50%,40%,30%
+Luz,750,"9,000.00€",,Media comensales x turno,40,32,24
+Agua,250,"3,000.00€",,Facturación bruta,529200,423360,317520
+Gas,300,"3,600.00€",,- Aprovisionamiento(-35%),343980,275184,206388
+Alquiler local,2000,"24,000.00€",,Gastos Personal (incluyendo SS),"152,750.00€","152,750.00€","152,750.00€"
+Qamarero,,"1,000.00€",,Otros gastos explotacion,"46,545.00€","46,545.00€","46,545.00€"
+Asesoría,,300,,Resultado explotación,"144,685.00€","75,889.00€","7,093.00€"
+Redes sociales,150,1800,,,,,
+Mantenimiento,150,1800,,,,,
+,"16,409.17€","199,295.00€",,,,,

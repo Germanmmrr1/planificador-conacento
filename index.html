@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis Financiero - Restaurante ConAcento</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .section.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 20px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .input-group input[type="number"],
+        .input-group input[type="range"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input[type="number"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .input-group input[type="range"] {
+            padding: 0;
+            height: 8px;
+            background: #ddd;
+            border: none;
+            cursor: pointer;
+        }
+
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .range-value {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            padding: 0 30px;
+            margin-top: -10px;
+            background: white;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-button {
+            padding: 15px 30px;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            color: #667eea;
+            background: #f8f9fa;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .result-card h4 {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .result-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .result-card.positive .value {
+            color: #28a745;
+        }
+
+        .result-card.negative .value {
+            color: #dc3545;
+        }
+
+        .financial-flow {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .flow-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background: #f8f9fa;
+            align-items: center;
+            border-left: 5px solid #667eea;
+        }
+
+        .flow-item.revenue {
+            border-left-color: #28a745;
+            background: #e8f5e9;
+        }
+
+        .flow-item.expense {
+            border-left-color: #dc3545;
+            background: #ffebee;
+        }
+
+        .flow-item.margin {
+            border-left-color: #17a2b8;
+            background: #e0f7fa;
+        }
+
+        .flow-item.result {
+            border-left-color: #667eea;
+            background: #e8eaf6;
+            font-size: 1.1em;
+            font-weight: bold;
+            border-width: 8px;
+        }
+
+        .flow-item.result.positive {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+
+        .flow-item.result.negative {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .flow-label {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .flow-operator {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .flow-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+            text-align: right;
+        }
+
+        .flow-item.result .flow-value {
+            font-size: 1.8em;
+        }
+
+        .employee-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .employee-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .expand-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .expand-btn:hover {
+            background: #5568d3;
+            transform: scale(1.1);
+        }
+
+        .employee-detail {
+            display: none;
+            grid-column: 1 / -1;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .employee-detail.show {
+            display: block;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .detail-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .detail-item label {
+            display: block;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .detail-item .value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .employee-item input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            text-align: center;
+        }
+
+        .employee-item input:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .employee-item .name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .employee-item .cost-display {
+            text-align: center;
+            font-weight: 600;
+            color: #dc3545;
+            font-size: 1.05em;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-item {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: help;
+            margin-left: 8px;
+            position: relative;
+        }
+
+        .tooltip-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            white-space: pre-line;
+            font-size: 13px;
+            font-weight: normal;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            min-width: 320px;
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .tooltip-icon:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 8px solid transparent;
+            border-top-color: #333;
+            z-index: 1000;
+        }
+
+        .info-box-inline {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+
+        .info-box-inline strong {
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Análisis Financiero - Restaurante ConAcento</h1>
+            <p>Herramienta interactiva para proyección de ingresos y gastos</p>
+        </header>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-container">
+            <button class="tab-button active" onclick="switchTab('variables')">Variables de Venta</button>
+            <button class="tab-button" onclick="switchTab('salarios')">Personal y Salarios</button>
+            <button class="tab-button" onclick="switchTab('gastos')">Gastos Operativos</button>
+            <button class="tab-button" onclick="switchTab('resultados')">Resultados</button>
+        </div>
+
+        <!-- Tab: Variables de Venta -->
+        <div id="tab-variables" class="tab-content active">
+            <div class="tab-grid">
+                <div class="section">
+                    <h2>Variables de Venta</h2>
+
+                    <div class="input-group">
+                        <label>
+                            Capacidad Total (comensales): <span class="range-value" id="capacidad-value">80</span>
+                            <span class="tooltip-icon" data-tooltip="40 plazas en terraza + 50 plazas aprox. en interior">i</span>
+                        </label>
+                        <input type="range" id="capacidad" min="40" max="120" value="90" step="5" oninput="updateInputs()">
+                        <div class="info-box-inline" style="margin-top: 10px;">
+                            <strong>Distribución:</strong> 40 plazas en terraza + 50 plazas aproximadamente en interior = <strong>90 plazas totales</strong>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Ticket Medio (€): <span class="range-value" id="ticket-value">30</span></label>
+                        <input type="range" id="ticket" min="20" max="60" value="30" step="1" oninput="updateInputs()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>
+                            Turnos por Semana: <span class="range-value" id="turnos-value">9</span>
+                            <span class="tooltip-icon" data-tooltip="Miércoles a sábado (comida y cena) + domingo (solo comida) = 9 turnos">i</span>
+                        </label>
+                        <input type="range" id="turnos" min="4" max="14" value="9" step="1" oninput="updateInputs()">
+                        <div class="info-box-inline" style="margin-top: 10px;">
+                            <strong>Horario:</strong> Miércoles a sábado (comida y cena) + domingo (solo comida) = <strong>9 turnos semanales</strong>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>
+                            Semanas por Año: <span class="range-value" id="semanas-value">52</span>
+                            <span class="tooltip-icon" data-tooltip="2026 tiene 53 semanas, 4 cerradas en agosto = 49 semanas">i</span>
+                        </label>
+                        <input type="range" id="semanas" min="48" max="53" value="49" step="1" oninput="updateInputs()">
+                        <div class="info-box-inline" style="margin-top: 10px;">
+                            <strong>Nota:</strong> El año 2026 tiene 53 semanas. Restando 4 semanas cerradas en agosto, quedan <strong>49 semanas operativas</strong>.
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Ocupación Media (%): <span class="range-value" id="ocupacion-value">30</span></label>
+                        <input type="range" id="ocupacion" min="10" max="100" value="30" step="5" oninput="updateInputs()">
+                    </div>
+
+                    <div class="input-group">
+                        <label>
+                            Aprovisionamiento (% sobre ventas): <span class="range-value" id="aprovisionamiento-value">35</span>
+                            <span class="tooltip-icon" data-tooltip="35% es el histórico de Leo y está en línea con el sector">i</span>
+                        </label>
+                        <input type="range" id="aprovisionamiento" min="25" max="45" value="35" step="1" oninput="updateInputs()">
+                        <div class="info-box-inline" style="margin-top: 10px;">
+                            <strong>Referencia:</strong> Este 35% corresponde al coste histórico de aprovisionamiento de Leo en años anteriores y está en línea con los estándares del sector de restauración.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h2>Resumen Rápido</h2>
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h4>Turnos Anuales</h4>
+                            <div class="value" id="result-turnos-preview">468</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Comensales/Turno</h4>
+                            <div class="value" id="result-comensales-preview">32</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Total Comensales/Año</h4>
+                            <div class="value" id="result-comensales-anuales-preview">14,976</div>
+                        </div>
+                        <div class="result-card">
+                            <h4>Facturación Bruta</h4>
+                            <div class="value" id="result-facturacion-preview">449,280€</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Personal y Salarios -->
+        <div id="tab-salarios" class="tab-content">
+            <div style="padding: 30px;">
+                <div class="section full-width">
+                    <h2>Personal y Salarios</h2>
+
+                    <div class="employee-header" style="display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 15px; padding: 10px 15px; font-weight: 600; color: #667eea; border-bottom: 2px solid #667eea; margin-bottom: 15px;">
+                        <div>Empleado</div>
+                        <div style="text-align: center;">Salario Neto Mensual</div>
+                        <div style="text-align: center;">Coste Total Anual Empresa</div>
+                        <div style="text-align: center;">Info</div>
+                    </div>
+
+                    <div class="info-box" style="margin-bottom: 20px;">
+                        <strong>Cómo funciona el cálculo:</strong> Introduce el salario neto mensual que el empleado recibe en su cuenta. El sistema calcula:
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li><strong>Salario Bruto Anual:</strong> Se calcula de forma inversa considerando las retenciones de SS empleado (6.35%) e IRPF progresivo</li>
+                            <li>
+                                <strong>IRPF:</strong> Se aplican los tramos de Andalucía 2025
+                                <span class="tooltip-icon" data-tooltip="Tramos IRPF Andalucía 2025:
+0€ - 12.450€ → 19%
+12.450€ - 13.000€ → 21,5%
+13.000€ - 20.200€ → 24%
+20.200€ - 21.000€ → 27%
+21.000€ - 35.200€ → 30%
+35.200€ - 50.000€ → 37%
+50.000€ - 60.000€ → 41%
+60.000€+ → 45%">i</span>
+                            </li>
+                            <li><strong>Seguridad Social Empresa (31%):</strong> Se aplica sobre el bruto</li>
+                            <li><strong>Coste Total = Bruto Anual + SS Empresa</strong></li>
+                        </ul>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                            💡 Haz clic en el botón <strong>+</strong> para ver el desglose completo de cada empleado
+                        </div>
+                    </div>
+
+                    <div class="employee-list" id="employee-list">
+                        <!-- Se llenará dinámicamente -->
+                    </div>
+
+                    <div class="info-box" style="margin-top: 20px;">
+                        <strong>Total Coste Personal Anual:</strong> <span id="total-personal" style="font-size: 1.3em; margin-left: 10px;">152,750€</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Gastos Operativos -->
+        <div id="tab-gastos" class="tab-content">
+            <div style="padding: 30px;">
+                <!-- Gastos Operativos -->
+            <div class="section full-width">
+                <h2>Gastos Operativos Mensuales/Anuales</h2>
+
+                <div class="results-grid">
+                    <div class="input-group">
+                        <label>Alquiler Local (€/mes)</label>
+                        <input type="number" id="alquiler" value="2000" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Luz (€/mes)</label>
+                        <input type="number" id="luz" value="750" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Agua (€/mes)</label>
+                        <input type="number" id="agua" value="250" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Gas (€/mes)</label>
+                        <input type="number" id="gas" value="300" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Internet (€/mes)</label>
+                        <input type="number" id="internet" value="50" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Alarma (€/mes)</label>
+                        <input type="number" id="alarma" value="30" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Redes Sociales (€/mes)</label>
+                        <input type="number" id="redes" value="150" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Mantenimiento (€/mes)</label>
+                        <input type="number" id="mantenimiento" value="150" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Veladores (€/año)</label>
+                        <input type="number" id="veladores" value="1415" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Qamarero (€/año)</label>
+                        <input type="number" id="qamarero" value="1000" oninput="updateInputs()">
+                    </div>
+                    <div class="input-group">
+                        <label>Asesoría (€/año)</label>
+                        <input type="number" id="asesoria" value="300" oninput="updateInputs()">
+                    </div>
+                </div>
+
+                <div class="info-box" style="margin-top: 20px;">
+                    <strong>Total Gastos Operativos Anuales:</strong> <span id="total-operativos" style="font-size: 1.3em; margin-left: 10px;">46,545€</span>
+                </div>
+            </div>
+
+            </div>
+        </div>
+
+        <!-- Tab: Resultados -->
+        <div id="tab-resultados" class="tab-content">
+            <div style="padding: 30px;">
+                <!-- Resultados Financieros -->
+                <div class="section full-width">
+                    <h2>Cuenta de Resultados Anual</h2>
+
+                    <div class="financial-flow">
+                        <!-- Facturación Bruta -->
+                        <div class="flow-item revenue">
+                            <div class="flow-label">Facturación Bruta</div>
+                            <div class="flow-operator"></div>
+                            <div class="flow-value" id="flow-facturacion">449,280€</div>
+                        </div>
+
+                        <!-- Aprovisionamiento -->
+                        <div class="flow-item expense">
+                            <div class="flow-label">- Gastos de Aprovisionamiento</div>
+                            <div class="flow-operator">−</div>
+                            <div class="flow-value" id="flow-aprovisionamiento">157,248€</div>
+                        </div>
+
+                        <!-- Margen Bruto -->
+                        <div class="flow-item margin">
+                            <div class="flow-label">= Margen Bruto</div>
+                            <div class="flow-operator">=</div>
+                            <div class="flow-value" id="flow-margen">292,032€</div>
+                        </div>
+
+                        <!-- Gastos Personal -->
+                        <div class="flow-item expense">
+                            <div class="flow-label">- Gastos de Personal</div>
+                            <div class="flow-operator">−</div>
+                            <div class="flow-value" id="flow-personal">152,750€</div>
+                        </div>
+
+                        <!-- Gastos Operativos -->
+                        <div class="flow-item expense">
+                            <div class="flow-label">- Gastos Operativos</div>
+                            <div class="flow-operator">−</div>
+                            <div class="flow-value" id="flow-operativos">46,545€</div>
+                        </div>
+
+                        <!-- Resultado de Explotación -->
+                        <div class="flow-item result" id="flow-result-item">
+                            <div class="flow-label">= Resultado de Explotación</div>
+                            <div class="flow-operator">=</div>
+                            <div class="flow-value" id="flow-resultado">92,737€</div>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 30px;">
+                        <strong>Margen de Explotación:</strong> <span id="margen-porcentaje" style="font-size: 1.2em; margin-left: 10px;">20.6%</span>
+                    </div>
+                </div>
+
+                <!-- Gráfico -->
+                <div class="section full-width">
+                    <h2>Visualización de Resultados</h2>
+                    <div class="chart-container" style="height: 500px;">
+                        <canvas id="waterfallChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de empleados (solo salario neto mensual como input)
+        const employees = [
+            { name: 'Vito (Jefe de Sala + Gerente)', netMonthly: 2000 },
+            { name: 'Ferrari (Jefe cocina)', netMonthly: 1650 },
+            { name: 'Elena (Ayudante cocina)', netMonthly: 1550 },
+            { name: 'Elena U (Camarero)', netMonthly: 1450 },
+            { name: 'Extra cocina (fin de semana)', netMonthly: 550 },
+            { name: 'Extra sala (fin de semana)', netMonthly: 550 },
+            { name: 'Extra office (30h)', netMonthly: 750 }
+        ];
+
+        // Calcular IRPF progresivo según tramos de Andalucía 2025
+        function calculateProgressiveIRPF(grossAnnual) {
+            // Tramos IRPF Andalucía 2025 (base liquidable)
+            const brackets = [
+                { limit: 12450, rate: 0.19 },
+                { limit: 13000, rate: 0.215 },
+                { limit: 20200, rate: 0.24 },
+                { limit: 21000, rate: 0.27 },
+                { limit: 35200, rate: 0.30 },
+                { limit: 50000, rate: 0.37 },
+                { limit: 60000, rate: 0.41 },
+                { limit: Infinity, rate: 0.45 }
+            ];
+
+            let totalTax = 0;
+            let previousLimit = 0;
+
+            for (let bracket of brackets) {
+                if (grossAnnual > previousLimit) {
+                    const taxableInBracket = Math.min(grossAnnual, bracket.limit) - previousLimit;
+                    totalTax += taxableInBracket * bracket.rate;
+                    previousLimit = bracket.limit;
+                } else {
+                    break;
+                }
+            }
+
+            return totalTax;
+        }
+
+        // Calcular tasa efectiva de IRPF (para estimación)
+        function calculateIRPFRate(grossMonthly) {
+            const grossAnnual = grossMonthly * 12;
+            const totalIRPF = calculateProgressiveIRPF(grossAnnual);
+            return totalIRPF / grossAnnual;
+        }
+
+        // Calcular salario bruto desde salario neto (iterativo)
+        function calculateGrossFromNet(netMonthly) {
+            const SS_EMPLOYEE_RATE = 0.0635; // 6.35% Seguridad Social empleado
+            const netAnnual = netMonthly * 12;
+
+            // Estimación inicial: el neto suele ser ~75-80% del bruto
+            let grossAnnual = netAnnual / 0.77;
+            let iterations = 0;
+            const maxIterations = 100;
+
+            while (iterations < maxIterations) {
+                // Calcular SS empleado
+                const ssEmployee = grossAnnual * SS_EMPLOYEE_RATE;
+
+                // Base imponible para IRPF (después de SS empleado)
+                const taxableBase = grossAnnual - ssEmployee;
+
+                // Calcular IRPF progresivo
+                const irpf = calculateProgressiveIRPF(taxableBase);
+
+                // Neto = Bruto - SS Empleado - IRPF
+                const calculatedNet = grossAnnual - ssEmployee - irpf;
+                const difference = netAnnual - calculatedNet;
+
+                // Convergencia
+                if (Math.abs(difference) < 1) {
+                    break;
+                }
+
+                // Ajustar bruto
+                const effectiveRate = (ssEmployee + irpf) / grossAnnual;
+                grossAnnual += difference / (1 - effectiveRate);
+                iterations++;
+            }
+
+            return grossAnnual / 12; // Retornar mensual
+        }
+
+        // Calcular coste total anual para la empresa desde salario neto mensual
+        function calculateTotalCompanyCost(netMonthly) {
+            const SS_EMPLOYEE_RATE = 0.0635; // 6.35% SS empleado
+            const SS_COMPANY_RATE = 0.31;     // 31% SS empresa
+
+            // Paso 1: Calcular bruto mensual necesario para obtener ese neto
+            const grossMonthly = calculateGrossFromNet(netMonthly);
+            const grossAnnual = grossMonthly * 12;
+
+            // Paso 2: Calcular componentes
+            const ssEmployee = grossAnnual * SS_EMPLOYEE_RATE;
+
+            // Base imponible para IRPF (después de SS empleado)
+            const taxableBase = grossAnnual - ssEmployee;
+
+            // IRPF progresivo
+            const irpfAnnual = calculateProgressiveIRPF(taxableBase);
+
+            // Paso 3: SS empresa (sobre el bruto)
+            const companySS = grossAnnual * SS_COMPANY_RATE;
+
+            // COSTE TOTAL EMPRESA = Bruto + SS Empresa
+            // (El bruto ya incluye lo que se descuenta al empleado)
+            const totalCost = grossAnnual + companySS;
+
+            return {
+                netMonthly: netMonthly,
+                netAnnual: netMonthly * 12,
+                grossMonthly: grossMonthly,
+                grossAnnual: grossAnnual,
+                ssEmployee: ssEmployee,
+                irpf: irpfAnnual,
+                companySS: companySS,
+                totalCost: totalCost
+            };
+        }
+
+        let waterfallChart = null;
+
+        // Cambiar entre tabs
+        function switchTab(tabName) {
+            // Ocultar todos los contenidos
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Desactivar todos los botones
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Activar el tab seleccionado
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Mostrar/ocultar detalle de empleado
+        function toggleEmployeeDetail(index) {
+            const detail = document.getElementById(`emp-detail-${index}`);
+            detail.classList.toggle('show');
+        }
+
+        // Inicializar empleados
+        function initEmployees() {
+            const list = document.getElementById('employee-list');
+            employees.forEach((emp, index) => {
+                const container = document.createElement('div');
+
+                // Calcular coste inicial
+                const cost = calculateTotalCompanyCost(emp.netMonthly);
+
+                container.innerHTML = `
+                    <div class="employee-item">
+                        <span class="name">${emp.name}</span>
+                        <input type="number" id="emp-net-${index}" value="${emp.netMonthly.toFixed(2)}"
+                               placeholder="Neto mensual" step="0.01" min="0" oninput="updateInputs()">
+                        <div class="cost-display" id="emp-cost-${index}">${formatCurrency(cost.totalCost)}</div>
+                        <button class="expand-btn" onclick="toggleEmployeeDetail(${index})" title="Ver desglose">+</button>
+
+                        <div class="employee-detail" id="emp-detail-${index}">
+                            <h4 style="margin-bottom: 10px; color: #667eea;">Desglose del Coste Anual</h4>
+                            <div class="detail-grid" id="emp-breakdown-${index}">
+                                <!-- Se llenará dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(container);
+
+                // Llenar desglose inicial
+                updateEmployeeBreakdown(index, cost);
+            });
+        }
+
+        // Actualizar desglose de empleado
+        function updateEmployeeBreakdown(index, cost) {
+            const breakdown = document.getElementById(`emp-breakdown-${index}`);
+            breakdown.innerHTML = `
+                <div class="detail-item">
+                    <label>Salario Neto Mensual</label>
+                    <div class="value">${formatCurrency(cost.netMonthly)}</div>
+                </div>
+                <div class="detail-item">
+                    <label>Salario Neto Anual</label>
+                    <div class="value">${formatCurrency(cost.netAnnual)}</div>
+                </div>
+                <div class="detail-item">
+                    <label>Salario Bruto Mensual</label>
+                    <div class="value">${formatCurrency(cost.grossMonthly)}</div>
+                </div>
+                <div class="detail-item">
+                    <label>Salario Bruto Anual</label>
+                    <div class="value">${formatCurrency(cost.grossAnnual)}</div>
+                </div>
+                <div class="detail-item">
+                    <label>SS Empleado (6.35%)</label>
+                    <div class="value">${formatCurrency(cost.ssEmployee)}</div>
+                </div>
+                <div class="detail-item">
+                    <label>IRPF Anual</label>
+                    <div class="value">${formatCurrency(cost.irpf)}</div>
+                </div>
+                <div class="detail-item" style="border-left-color: #dc3545;">
+                    <label>SS Empresa (31%)</label>
+                    <div class="value">${formatCurrency(cost.companySS)}</div>
+                </div>
+                <div class="detail-item" style="border-left-color: #dc3545;">
+                    <label><strong>COSTE TOTAL EMPRESA</strong></label>
+                    <div class="value" style="color: #dc3545; font-size: 1.3em;">${formatCurrency(cost.totalCost)}</div>
+                </div>
+            `;
+        }
+
+        // Actualizar valores y cálculos
+        function updateInputs() {
+            // Actualizar displays de rangos
+            document.getElementById('capacidad-value').textContent = document.getElementById('capacidad').value;
+            document.getElementById('ticket-value').textContent = document.getElementById('ticket').value + '€';
+            document.getElementById('turnos-value').textContent = document.getElementById('turnos').value;
+            document.getElementById('semanas-value').textContent = document.getElementById('semanas').value;
+            document.getElementById('ocupacion-value').textContent = document.getElementById('ocupacion').value + '%';
+            document.getElementById('aprovisionamiento-value').textContent = document.getElementById('aprovisionamiento').value + '%';
+
+            // Calcular resultados
+            calculateResults();
+        }
+
+        // Calcular resultados financieros
+        function calculateResults() {
+            // Variables de venta
+            const capacidad = parseFloat(document.getElementById('capacidad').value);
+            const ticket = parseFloat(document.getElementById('ticket').value);
+            const turnos = parseFloat(document.getElementById('turnos').value);
+            const semanas = parseFloat(document.getElementById('semanas').value);
+            const ocupacion = parseFloat(document.getElementById('ocupacion').value) / 100;
+            const aprovisionamientoPct = parseFloat(document.getElementById('aprovisionamiento').value) / 100;
+
+            // Cálculos de venta
+            const turnosAnuales = turnos * semanas;
+            const comensalesPorTurno = Math.round(capacidad * ocupacion);
+            const facturacionBruta = comensalesPorTurno * ticket * turnosAnuales;
+            const aprovisionamiento = facturacionBruta * aprovisionamientoPct;
+            const margenBruto = facturacionBruta - aprovisionamiento;
+
+            // Gastos de personal
+            let totalPersonal = 0;
+            employees.forEach((emp, index) => {
+                const netMonthly = parseFloat(document.getElementById(`emp-net-${index}`).value) || 0;
+                const cost = calculateTotalCompanyCost(netMonthly);
+                totalPersonal += cost.totalCost;
+
+                // Debug log
+                console.log(`${emp.name}: Net ${netMonthly}€/mes → Total ${cost.totalCost.toFixed(2)}€/año`);
+
+                // Actualizar display del coste
+                document.getElementById(`emp-cost-${index}`).textContent = formatCurrency(cost.totalCost);
+
+                // Actualizar desglose si está visible
+                const detail = document.getElementById(`emp-detail-${index}`);
+                if (detail && detail.classList.contains('show')) {
+                    updateEmployeeBreakdown(index, cost);
+                }
+            });
+
+            console.log(`TOTAL GASTOS PERSONAL: ${totalPersonal.toFixed(2)}€/año`);
+
+            // Gastos operativos
+            const alquiler = parseFloat(document.getElementById('alquiler').value) * 12;
+            const luz = parseFloat(document.getElementById('luz').value) * 12;
+            const agua = parseFloat(document.getElementById('agua').value) * 12;
+            const gas = parseFloat(document.getElementById('gas').value) * 12;
+            const internet = parseFloat(document.getElementById('internet').value) * 12;
+            const alarma = parseFloat(document.getElementById('alarma').value) * 12;
+            const redes = parseFloat(document.getElementById('redes').value) * 12;
+            const mantenimiento = parseFloat(document.getElementById('mantenimiento').value) * 12;
+            const veladores = parseFloat(document.getElementById('veladores').value);
+            const qamarero = parseFloat(document.getElementById('qamarero').value);
+            const asesoria = parseFloat(document.getElementById('asesoria').value);
+
+            const totalOperativos = alquiler + luz + agua + gas + internet + alarma +
+                                   redes + mantenimiento + veladores + qamarero + asesoria;
+
+            // Resultado de explotación
+            const resultadoExplotacion = margenBruto - totalPersonal - totalOperativos;
+            const margenPorcentaje = (resultadoExplotacion / facturacionBruta * 100).toFixed(1);
+
+            // Actualizar UI - Flow financiero
+            document.getElementById('flow-facturacion').textContent = formatCurrency(facturacionBruta);
+            document.getElementById('flow-aprovisionamiento').textContent = formatCurrency(aprovisionamiento);
+            document.getElementById('flow-margen').textContent = formatCurrency(margenBruto);
+            document.getElementById('flow-personal').textContent = formatCurrency(totalPersonal);
+            document.getElementById('flow-operativos').textContent = formatCurrency(totalOperativos);
+            document.getElementById('flow-resultado').textContent = formatCurrency(resultadoExplotacion);
+
+            // Actualizar otros displays
+            document.getElementById('total-personal').textContent = formatCurrency(totalPersonal);
+            document.getElementById('total-operativos').textContent = formatCurrency(totalOperativos);
+            document.getElementById('margen-porcentaje').textContent = margenPorcentaje + '%';
+
+            // Calcular comensales anuales totales
+            const comensalesAnuales = comensalesPorTurno * turnosAnuales;
+
+            // Actualizar UI - Preview en tab de Variables
+            document.getElementById('result-turnos-preview').textContent = turnosAnuales;
+            document.getElementById('result-comensales-preview').textContent = comensalesPorTurno;
+            document.getElementById('result-comensales-anuales-preview').textContent = comensalesAnuales.toLocaleString('es-ES');
+            document.getElementById('result-facturacion-preview').textContent = formatCurrency(facturacionBruta);
+
+            // Aplicar clases de color al resultado
+            const flowResultItem = document.getElementById('flow-result-item');
+            flowResultItem.classList.remove('positive', 'negative');
+            if (resultadoExplotacion > 0) {
+                flowResultItem.classList.add('positive');
+            } else {
+                flowResultItem.classList.add('negative');
+            }
+
+            // Actualizar gráficos
+            updateCharts();
+        }
+
+        // Obtener resultados actuales
+        function getCurrentResults() {
+            const capacidad = parseFloat(document.getElementById('capacidad').value);
+            const ticket = parseFloat(document.getElementById('ticket').value);
+            const turnos = parseFloat(document.getElementById('turnos').value);
+            const semanas = parseFloat(document.getElementById('semanas').value);
+            const ocupacion = parseFloat(document.getElementById('ocupacion').value) / 100;
+            const aprovisionamientoPct = parseFloat(document.getElementById('aprovisionamiento').value) / 100;
+
+            const turnosAnuales = turnos * semanas;
+            const comensalesPorTurno = Math.round(capacidad * ocupacion);
+            const facturacion = comensalesPorTurno * ticket * turnosAnuales;
+            const aprovisionamiento = facturacion * aprovisionamientoPct;
+            const margen = facturacion - aprovisionamiento;
+
+            let totalPersonal = 0;
+            employees.forEach((emp, index) => {
+                const netMonthly = parseFloat(document.getElementById(`emp-net-${index}`).value) || 0;
+                const cost = calculateTotalCompanyCost(netMonthly);
+                totalPersonal += cost.totalCost;
+            });
+
+            const alquiler = parseFloat(document.getElementById('alquiler').value) * 12;
+            const luz = parseFloat(document.getElementById('luz').value) * 12;
+            const agua = parseFloat(document.getElementById('agua').value) * 12;
+            const gas = parseFloat(document.getElementById('gas').value) * 12;
+            const internet = parseFloat(document.getElementById('internet').value) * 12;
+            const alarma = parseFloat(document.getElementById('alarma').value) * 12;
+            const redes = parseFloat(document.getElementById('redes').value) * 12;
+            const mantenimiento = parseFloat(document.getElementById('mantenimiento').value) * 12;
+            const veladores = parseFloat(document.getElementById('veladores').value);
+            const qamarero = parseFloat(document.getElementById('qamarero').value);
+            const asesoria = parseFloat(document.getElementById('asesoria').value);
+
+            const operativos = alquiler + luz + agua + gas + internet + alarma +
+                              redes + mantenimiento + veladores + qamarero + asesoria;
+
+            const resultado = margen - totalPersonal - operativos;
+
+            return { facturacion, margen, personal: totalPersonal, operativos, resultado };
+        }
+
+        // Actualizar gráfico
+        function updateCharts() {
+            const actual = getCurrentResults();
+
+            const ctx = document.getElementById('waterfallChart');
+            if (waterfallChart) {
+                waterfallChart.destroy();
+            }
+
+            const aprovisionamiento = actual.facturacion * (parseFloat(document.getElementById('aprovisionamiento').value) / 100);
+            const margen = actual.facturacion - aprovisionamiento;
+
+            waterfallChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: [
+                        'Facturación\nBruta',
+                        'Aprovisionamiento',
+                        'Margen\nBruto',
+                        'Gastos\nPersonal',
+                        'Gastos\nOperativos',
+                        'Resultado\nExplotación'
+                    ],
+                    datasets: [{
+                        label: 'Importe',
+                        data: [
+                            actual.facturacion,
+                            aprovisionamiento,
+                            margen,
+                            actual.personal,
+                            actual.operativos,
+                            actual.resultado
+                        ],
+                        backgroundColor: [
+                            'rgba(40, 167, 69, 0.8)',    // Verde - Facturación
+                            'rgba(220, 53, 69, 0.8)',    // Rojo - Aprovisionamiento
+                            'rgba(23, 162, 184, 0.8)',   // Azul - Margen
+                            'rgba(220, 53, 69, 0.8)',    // Rojo - Personal
+                            'rgba(220, 53, 69, 0.8)',    // Rojo - Operativos
+                            actual.resultado > 0 ? 'rgba(40, 167, 69, 0.8)' : 'rgba(220, 53, 69, 0.8)'  // Verde/Rojo - Resultado
+                        ],
+                        borderColor: [
+                            'rgba(40, 167, 69, 1)',
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(23, 162, 184, 1)',
+                            'rgba(220, 53, 69, 1)',
+                            'rgba(220, 53, 69, 1)',
+                            actual.resultado > 0 ? 'rgba(40, 167, 69, 1)' : 'rgba(220, 53, 69, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                },
+                                font: {
+                                    size: 13
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 13,
+                                    weight: 'bold'
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return formatCurrency(context.parsed.y);
+                                },
+                                title: function(context) {
+                                    return context[0].label.replace('\n', ' ');
+                                }
+                            },
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 16
+                            },
+                            padding: 12
+                        },
+                        title: {
+                            display: true,
+                            text: 'Flujo Financiero Anual',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Formatear moneda
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('es-ES', {
+                style: 'currency',
+                currency: 'EUR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(value);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            initEmployees();
+            updateInputs();
+        });
+    </script>
+</body>
+</html>
