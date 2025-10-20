@@ -505,8 +505,10 @@
 
             .month-header {
                 padding: 12px;
-                grid-template-columns: 1fr;
-                gap: 10px;
+            }
+
+            .month-header-top {
+                margin-bottom: 10px;
             }
 
             .month-header h3 {
@@ -519,34 +521,31 @@
                 overflow-x: auto;
             }
 
-            /* Month summary - layout vertical en móvil */
+            /* Month summary - 3 columnas en móvil */
             .month-summary {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(3, 1fr);
                 gap: 6px;
-                font-size: 0.7em;
+                font-size: 0.75em;
             }
 
             .month-summary-item {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 4px 8px;
+                text-align: center;
+                padding: 6px 4px;
                 background: rgba(255, 255, 255, 0.1);
                 border-radius: 4px;
             }
 
             .month-summary-item label {
-                font-size: 0.85em;
+                font-size: 0.8em;
                 white-space: nowrap;
+                display: block;
+                margin-bottom: 3px;
             }
 
             .month-summary-item .value {
-                font-size: 1em;
+                font-size: 1.1em;
                 font-weight: bold;
-            }
-
-            .expand-icon {
-                margin-left: 8px;
+                display: block;
             }
 
             /* Calendar grid - 7 columnas con scroll horizontal */
@@ -847,12 +846,29 @@
             }
 
             .month-summary {
-                grid-template-columns: 1fr;
-                gap: 6px;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 4px;
+                font-size: 0.7em;
+            }
+
+            .month-summary-item {
+                padding: 4px 2px;
+            }
+
+            .month-summary-item label {
+                font-size: 0.75em;
+            }
+
+            .month-summary-item .value {
+                font-size: 1em;
             }
 
             .month-header {
                 padding: 10px;
+            }
+
+            .month-header-top {
+                margin-bottom: 8px;
             }
 
             .month-header h3 {
@@ -1037,11 +1053,14 @@
             color: white;
             padding: 20px;
             cursor: pointer;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 15px;
-            align-items: center;
             transition: all 0.3s;
+        }
+
+        .month-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         .month-header:hover {
@@ -2888,7 +2907,10 @@
                 monthSection.className = 'month-section';
                 monthSection.innerHTML = `
                     <div class="month-header" onclick="toggleMonth('${yearMonth}')">
-                        <h3>${monthName} ${year}</h3>
+                        <div class="month-header-top">
+                            <h3>${monthName} ${year}</h3>
+                            <div class="expand-icon" id="expand-icon-${yearMonth}">▼</div>
+                        </div>
                         <div class="month-summary">
                             <div class="month-summary-item">
                                 <label>Turnos</label>
@@ -2902,7 +2924,6 @@
                                 <label>Comensales Totales</label>
                                 <div class="value" id="month-diners-${yearMonth}">${totals.totalDiners}</div>
                             </div>
-                            <div class="expand-icon" id="expand-icon-${yearMonth}">▼</div>
                         </div>
                     </div>
                     <div class="month-content" id="month-content-${yearMonth}">
