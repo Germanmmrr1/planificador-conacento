@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Análisis Financiero - Restaurante ConAcento</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -10,13 +12,17 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 20px;
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            touch-action: manipulation;
         }
 
         .container {
@@ -137,6 +143,8 @@
             margin-top: -10px;
             background: white;
             border-bottom: 2px solid #e0e0e0;
+            -webkit-overflow-scrolling: touch;
+            overflow-x: auto;
         }
 
         .tab-button {
@@ -391,6 +399,7 @@
             margin-top: 20px;
         }
 
+        /* Responsive Design - Tablets y móviles grandes */
         @media (max-width: 968px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -398,6 +407,311 @@
 
             .employee-item {
                 grid-template-columns: 1fr;
+            }
+
+            .tab-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .monthly-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .bulk-controls {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Responsive Design - Móviles (iPhone y similares) */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            header p {
+                font-size: 0.95em;
+            }
+
+            .tabs-container {
+                padding: 0 15px;
+                gap: 5px;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-button {
+                padding: 12px 15px;
+                font-size: 0.9em;
+                flex-shrink: 0;
+            }
+
+            .tab-grid,
+            .main-content {
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .section {
+                padding: 15px;
+            }
+
+            .section h2 {
+                font-size: 1.4em;
+            }
+
+            /* Month summary - 2 columnas en móvil */
+            .month-summary {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+                font-size: 0.85em;
+            }
+
+            /* Calendar grid - mantener 7 columnas pero más pequeñas */
+            .calendar-grid {
+                gap: 5px;
+            }
+
+            .calendar-header {
+                padding: 8px 4px;
+                font-size: 0.75em;
+            }
+
+            .day-cell {
+                padding: 8px;
+                font-size: 0.85em;
+            }
+
+            .day-date {
+                font-size: 0.95em;
+                margin-bottom: 5px;
+            }
+
+            .day-name {
+                font-size: 0.65em;
+            }
+
+            .day-controls {
+                margin-top: 6px;
+            }
+
+            .day-controls label {
+                font-size: 0.75em;
+            }
+
+            .day-controls input[type="number"] {
+                padding: 6px;
+                font-size: 0.85em;
+            }
+
+            .occupancy-display {
+                font-size: 0.8em;
+            }
+
+            .day-info {
+                margin-top: 6px;
+                padding-top: 6px;
+            }
+
+            .toggle-switch {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .switch {
+                width: 45px;
+                height: 22px;
+            }
+
+            .slider:before {
+                height: 16px;
+                width: 16px;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(23px);
+            }
+
+            /* Bulk controls - 1 columna en móvil */
+            .bulk-controls {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .bulk-btn {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            /* Monthly stats - 1 columna en móvil */
+            .monthly-stats {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .stat-box {
+                padding: 12px;
+            }
+
+            .stat-box .value {
+                font-size: 1.2em;
+            }
+
+            /* Employee list */
+            .employee-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .employee-header {
+                display: none !important;
+            }
+
+            .employee-item .name {
+                font-size: 1.05em;
+                margin-bottom: 5px;
+            }
+
+            .employee-item input {
+                width: 100%;
+            }
+
+            .expand-btn {
+                width: 100%;
+                height: auto;
+                padding: 10px;
+                border-radius: 6px;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* Results grid */
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            /* Financial flow */
+            .flow-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                padding: 15px;
+            }
+
+            .flow-operator {
+                text-align: center;
+                font-size: 1.2em;
+            }
+
+            .flow-value {
+                text-align: left;
+                font-size: 1.2em;
+            }
+
+            .flow-item.result .flow-value {
+                font-size: 1.4em;
+            }
+
+            /* Chart container */
+            .chart-container {
+                height: 300px;
+            }
+
+            /* Tooltips - ajustar para móvil */
+            .tooltip-icon:hover::after {
+                min-width: 250px;
+                font-size: 12px;
+                left: auto;
+                right: 0;
+                transform: none;
+            }
+
+            .tooltip-icon:hover::before {
+                left: auto;
+                right: 10px;
+                transform: none;
+            }
+
+            /* Table responsive */
+            #monthly-results-table {
+                font-size: 0.8em;
+            }
+
+            #monthly-results-table th,
+            #monthly-results-table td {
+                padding: 8px 4px;
+            }
+
+            /* Info boxes */
+            .info-box,
+            .info-box-inline {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+
+            /* Inputs más grandes para touch */
+            input[type="number"],
+            input[type="range"],
+            button {
+                min-height: 44px; /* Apple HIG recomendación */
+            }
+
+            input[type="range"] {
+                height: 44px; /* Área táctil más grande */
+            }
+        }
+
+        /* Móviles pequeños (iPhone SE, etc) */
+        @media (max-width: 375px) {
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            .tab-button {
+                padding: 10px 12px;
+                font-size: 0.85em;
+            }
+
+            .section h2 {
+                font-size: 1.2em;
+            }
+
+            .month-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar-grid {
+                gap: 3px;
+            }
+
+            .day-cell {
+                padding: 6px;
+                font-size: 0.75em;
+            }
+
+            .day-date {
+                font-size: 0.85em;
+            }
+
+            .flow-label {
+                font-size: 0.95em;
+            }
+
+            .flow-value {
+                font-size: 1.1em;
             }
         }
 
@@ -780,6 +1094,13 @@
 
         .expand-icon.rotated {
             transform: rotate(180deg);
+        }
+
+        .day-info {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(102, 126, 234, 0.2);
+            text-align: center;
         }
     </style>
 </head>
