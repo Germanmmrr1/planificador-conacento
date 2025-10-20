@@ -3,7 +3,16 @@
     "allow": [
       "Bash(open index.html)",
       "Bash(git init)",
-      "Bash(git add .)"
+      "Bash(git add .)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nInitial commit: ConAcento Financial Analysis Tool\n\n- Interactive financial projection tool for restaurant\n- Sales variables with tooltips (capacity, tickets, shifts, weeks, occupancy)\n- Personnel cost calculator with progressive IRPF (Andalucía 2025)\n- Operational expenses tracking\n- Financial flow visualization with chart\n- Responsive design for mobile and desktop\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(echo \"After creating the GitHub repo, run these commands (replace YOUR-USERNAME):\n\ngit remote add origin https://github.com/YOUR-USERNAME/conacento-financial-analysis.git\ngit branch -M main\ngit push -u origin main\")",
+      "Bash(brew install gh)",
+      "Bash(gh auth status)",
+      "Bash(gh auth login)",
+      "Bash(gh auth login --web)",
+      "Read(//Users/gerboray/Desktop/Analisis financiero modelo 200/**)",
+      "Bash(node test_calculation.js)",
+      "Bash(open \"/Users/gerboray/Desktop/Analisis financiero modelo 200/Analisis conacento/index.html\")"
     ],
     "deny": [],
     "ask": []

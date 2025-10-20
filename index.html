@@ -472,6 +472,315 @@
         .info-box-inline strong {
             color: #856404;
         }
+
+        /* Planificación Detallada Styles */
+        .month-section {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .month-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .month-header:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #653a91 100%);
+        }
+
+        .month-header h3 {
+            margin: 0;
+            color: white;
+            font-size: 1.4em;
+        }
+
+        .month-summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            font-size: 0.95em;
+        }
+
+        .month-summary-item {
+            text-align: center;
+        }
+
+        .month-summary-item label {
+            display: block;
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-bottom: 3px;
+        }
+
+        .month-summary-item .value {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .month-content {
+            display: none;
+            padding: 25px;
+            background: #f8f9fa;
+        }
+
+        .month-content.expanded {
+            display: block;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .day-cell {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .day-cell:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .day-cell.closed {
+            background: #f0f0f0;
+            opacity: 0.6;
+        }
+
+        .day-cell.open {
+            background: #e8f5e9;
+        }
+
+        .day-date {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-name {
+            font-size: 0.75em;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .day-controls {
+            margin-top: 10px;
+        }
+
+        .day-controls label {
+            display: block;
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .day-controls input[type="range"] {
+            width: 100%;
+            height: 6px;
+        }
+
+        .day-controls input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .day-controls input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .day-controls input[type="number"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .occupancy-display {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 0.9em;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .shifts-display {
+            font-weight: bold;
+            color: #28a745;
+            font-size: 0.85em;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #28a745;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .bulk-controls {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .bulk-btn {
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .bulk-btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+
+        .monthly-stats {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-box label {
+            display: block;
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .stat-box .value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-box.revenue {
+            border-left-color: #28a745;
+        }
+
+        .stat-box.revenue .value {
+            color: #28a745;
+        }
+
+        .stat-box.expense {
+            border-left-color: #dc3545;
+        }
+
+        .stat-box.expense .value {
+            color: #dc3545;
+        }
+
+        .stat-box.result {
+            border-left-color: #667eea;
+        }
+
+        .expand-icon {
+            transition: transform 0.3s;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body>
@@ -483,91 +792,58 @@
 
         <!-- Tabs Navigation -->
         <div class="tabs-container">
-            <button class="tab-button active" onclick="switchTab('variables')">Variables de Venta</button>
+            <button class="tab-button active" onclick="switchTab('planificacion')">Planificación y Variables</button>
             <button class="tab-button" onclick="switchTab('salarios')">Personal y Salarios</button>
             <button class="tab-button" onclick="switchTab('gastos')">Gastos Operativos</button>
             <button class="tab-button" onclick="switchTab('resultados')">Resultados</button>
         </div>
 
-        <!-- Tab: Variables de Venta -->
-        <div id="tab-variables" class="tab-content active">
-            <div class="tab-grid">
-                <div class="section">
+        <!-- Tab: Planificación y Variables (Merged) -->
+        <div id="tab-planificacion" class="tab-content active">
+            <div style="padding: 30px;">
+                <!-- Variables Section -->
+                <div class="section full-width">
                     <h2>Variables de Venta</h2>
-
-                    <div class="input-group">
-                        <label>
-                            Capacidad Total (comensales): <span class="range-value" id="capacidad-value">80</span>
-                            <span class="tooltip-icon" data-tooltip="40 plazas en terraza + 50 plazas aprox. en interior">i</span>
-                        </label>
-                        <input type="range" id="capacidad" min="40" max="120" value="90" step="5" oninput="updateInputs()">
-                        <div class="info-box-inline" style="margin-top: 10px;">
-                            <strong>Distribución:</strong> 40 plazas en terraza + 50 plazas aproximadamente en interior = <strong>90 plazas totales</strong>
+                    <div class="results-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="input-group">
+                            <label>
+                                Capacidad Total (comensales): <span class="range-value" id="capacidad-value">90</span>
+                                <span class="tooltip-icon" data-tooltip="40 plazas en terraza + 50 plazas aprox. en interior">i</span>
+                            </label>
+                            <input type="range" id="capacidad" min="40" max="120" value="90" step="5" oninput="updateAllCalculations()">
                         </div>
-                    </div>
 
-                    <div class="input-group">
-                        <label>Ticket Medio (€): <span class="range-value" id="ticket-value">30</span></label>
-                        <input type="range" id="ticket" min="20" max="60" value="30" step="1" oninput="updateInputs()">
-                    </div>
-
-                    <div class="input-group">
-                        <label>
-                            Turnos por Semana: <span class="range-value" id="turnos-value">9</span>
-                            <span class="tooltip-icon" data-tooltip="Miércoles a sábado (comida y cena) + domingo (solo comida) = 9 turnos">i</span>
-                        </label>
-                        <input type="range" id="turnos" min="4" max="14" value="9" step="1" oninput="updateInputs()">
-                        <div class="info-box-inline" style="margin-top: 10px;">
-                            <strong>Horario:</strong> Miércoles a sábado (comida y cena) + domingo (solo comida) = <strong>9 turnos semanales</strong>
+                        <div class="input-group">
+                            <label>Ticket Medio (€): <span class="range-value" id="ticket-value">30</span></label>
+                            <input type="range" id="ticket" min="20" max="60" value="30" step="1" oninput="updateAllCalculations()">
                         </div>
-                    </div>
 
-                    <div class="input-group">
-                        <label>
-                            Semanas por Año: <span class="range-value" id="semanas-value">52</span>
-                            <span class="tooltip-icon" data-tooltip="2026 tiene 53 semanas, 4 cerradas en agosto = 49 semanas">i</span>
-                        </label>
-                        <input type="range" id="semanas" min="48" max="53" value="49" step="1" oninput="updateInputs()">
-                        <div class="info-box-inline" style="margin-top: 10px;">
-                            <strong>Nota:</strong> El año 2026 tiene 53 semanas. Restando 4 semanas cerradas en agosto, quedan <strong>49 semanas operativas</strong>.
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Ocupación Media (%): <span class="range-value" id="ocupacion-value">30</span></label>
-                        <input type="range" id="ocupacion" min="10" max="100" value="30" step="5" oninput="updateInputs()">
-                    </div>
-
-                    <div class="input-group">
-                        <label>
-                            Aprovisionamiento (% sobre ventas): <span class="range-value" id="aprovisionamiento-value">35</span>
-                            <span class="tooltip-icon" data-tooltip="35% es el histórico de Leo y está en línea con el sector">i</span>
-                        </label>
-                        <input type="range" id="aprovisionamiento" min="25" max="45" value="35" step="1" oninput="updateInputs()">
-                        <div class="info-box-inline" style="margin-top: 10px;">
-                            <strong>Referencia:</strong> Este 35% corresponde al coste histórico de aprovisionamiento de Leo en años anteriores y está en línea con los estándares del sector de restauración.
+                        <div class="input-group">
+                            <label>
+                                Aprovisionamiento (% sobre ventas): <span class="range-value" id="aprovisionamiento-value">35</span>
+                                <span class="tooltip-icon" data-tooltip="35% es el histórico de Leo y está en línea con el sector">i</span>
+                            </label>
+                            <input type="range" id="aprovisionamiento" min="25" max="45" value="35" step="1" oninput="updateAllCalculations()">
                         </div>
                     </div>
                 </div>
 
-                <div class="section">
-                    <h2>Resumen Rápido</h2>
-                    <div class="results-grid">
-                        <div class="result-card">
-                            <h4>Turnos Anuales</h4>
-                            <div class="value" id="result-turnos-preview">468</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Comensales/Turno</h4>
-                            <div class="value" id="result-comensales-preview">32</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Total Comensales/Año</h4>
-                            <div class="value" id="result-comensales-anuales-preview">14,976</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Facturación Bruta</h4>
-                            <div class="value" id="result-facturacion-preview">449,280€</div>
+                <!-- Planning Section -->
+                <div class="section full-width" style="margin-top: 30px;">
+                    <h2>Planificación Detallada por Día</h2>
+                    <div class="info-box">
+                        <strong>Instrucciones:</strong> Expande cada mes para ver el calendario completo. Marca los días abiertos/cerrados y ajusta la ocupación prevista para cada día. Los cálculos se actualizarán automáticamente.
+                    </div>
+
+                    <div id="planning-months-container">
+                        <!-- Los meses se generarán dinámicamente aquí -->
+                    </div>
+
+                    <!-- Resumen de Tesorería -->
+                    <div style="margin-top: 30px;">
+                        <h2>Flujo de Tesorería Acumulado</h2>
+                        <div class="chart-container" style="height: 400px;">
+                            <canvas id="treasuryChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -615,8 +891,12 @@
                         <!-- Se llenará dinámicamente -->
                     </div>
 
+                    <button onclick="addNewEmployee()" style="width: 100%; padding: 15px; margin-top: 20px; background: #667eea; color: white; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                        + Añadir Nuevo Empleado
+                    </button>
+
                     <div class="info-box" style="margin-top: 20px;">
-                        <strong>Total Coste Personal Anual:</strong> <span id="total-personal" style="font-size: 1.3em; margin-left: 10px;">152,750€</span>
+                        <strong>Total Coste Personal Anual:</strong> <span id="total-personal" style="font-size: 1.3em; margin-left: 10px;">182,831€</span>
                     </div>
                 </div>
             </div>
@@ -632,49 +912,57 @@
                 <div class="results-grid">
                     <div class="input-group">
                         <label>Alquiler Local (€/mes)</label>
-                        <input type="number" id="alquiler" value="2000" oninput="updateInputs()">
+                        <input type="number" id="alquiler" value="1836" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Luz (€/mes)</label>
-                        <input type="number" id="luz" value="750" oninput="updateInputs()">
+                        <input type="number" id="luz" value="750" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Agua (€/mes)</label>
-                        <input type="number" id="agua" value="250" oninput="updateInputs()">
+                        <input type="number" id="agua" value="250" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Gas (€/mes)</label>
-                        <input type="number" id="gas" value="300" oninput="updateInputs()">
+                        <input type="number" id="gas" value="300" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Internet (€/mes)</label>
-                        <input type="number" id="internet" value="50" oninput="updateInputs()">
+                        <input type="number" id="internet" value="50" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Alarma (€/mes)</label>
-                        <input type="number" id="alarma" value="30" oninput="updateInputs()">
+                        <input type="number" id="alarma" value="30" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Redes Sociales (€/mes)</label>
-                        <input type="number" id="redes" value="150" oninput="updateInputs()">
+                        <input type="number" id="redes" value="150" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Mantenimiento (€/mes)</label>
-                        <input type="number" id="mantenimiento" value="150" oninput="updateInputs()">
+                        <input type="number" id="mantenimiento" value="150" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Veladores (€/año)</label>
-                        <input type="number" id="veladores" value="1415" oninput="updateInputs()">
+                        <input type="number" id="veladores" value="1415" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Qamarero (€/año)</label>
-                        <input type="number" id="qamarero" value="1000" oninput="updateInputs()">
+                        <input type="number" id="qamarero" value="1000" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
-                        <label>Asesoría (€/año)</label>
-                        <input type="number" id="asesoria" value="300" oninput="updateInputs()">
+                        <label>Asesoría (€/mes)</label>
+                        <input type="number" id="asesoria" value="320" oninput="updateAllCalculations()">
+                    </div>
+
+                    <div id="custom-expenses-list">
+                        <!-- Gastos personalizados se añadirán aquí -->
                     </div>
                 </div>
+
+                <button onclick="addNewExpense()" style="width: 100%; padding: 15px; margin-top: 20px; background: #667eea; color: white; border: none; border-radius: 10px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                    + Añadir Nuevo Gasto
+                </button>
 
                 <div class="info-box" style="margin-top: 20px;">
                     <strong>Total Gastos Operativos Anuales:</strong> <span id="total-operativos" style="font-size: 1.3em; margin-left: 10px;">46,545€</span>
@@ -687,61 +975,48 @@
         <!-- Tab: Resultados -->
         <div id="tab-resultados" class="tab-content">
             <div style="padding: 30px;">
-                <!-- Resultados Financieros -->
+                <!-- Resultados 2025 -->
                 <div class="section full-width">
-                    <h2>Cuenta de Resultados Anual</h2>
-
-                    <div class="financial-flow">
-                        <!-- Facturación Bruta -->
-                        <div class="flow-item revenue">
-                            <div class="flow-label">Facturación Bruta</div>
-                            <div class="flow-operator"></div>
-                            <div class="flow-value" id="flow-facturacion">449,280€</div>
-                        </div>
-
-                        <!-- Aprovisionamiento -->
-                        <div class="flow-item expense">
-                            <div class="flow-label">- Gastos de Aprovisionamiento</div>
-                            <div class="flow-operator">−</div>
-                            <div class="flow-value" id="flow-aprovisionamiento">157,248€</div>
-                        </div>
-
-                        <!-- Margen Bruto -->
-                        <div class="flow-item margin">
-                            <div class="flow-label">= Margen Bruto</div>
-                            <div class="flow-operator">=</div>
-                            <div class="flow-value" id="flow-margen">292,032€</div>
-                        </div>
-
-                        <!-- Gastos Personal -->
-                        <div class="flow-item expense">
-                            <div class="flow-label">- Gastos de Personal</div>
-                            <div class="flow-operator">−</div>
-                            <div class="flow-value" id="flow-personal">152,750€</div>
-                        </div>
-
-                        <!-- Gastos Operativos -->
-                        <div class="flow-item expense">
-                            <div class="flow-label">- Gastos Operativos</div>
-                            <div class="flow-operator">−</div>
-                            <div class="flow-value" id="flow-operativos">46,545€</div>
-                        </div>
-
-                        <!-- Resultado de Explotación -->
-                        <div class="flow-item result" id="flow-result-item">
-                            <div class="flow-label">= Resultado de Explotación</div>
-                            <div class="flow-operator">=</div>
-                            <div class="flow-value" id="flow-resultado">92,737€</div>
-                        </div>
+                    <h2>Resultado de Explotación - 2025 (Nov-Dic)</h2>
+                    <div class="financial-flow" id="results-2025">
+                        <!-- Se generará dinámicamente -->
                     </div>
+                </div>
 
-                    <div class="info-box" style="margin-top: 30px;">
-                        <strong>Margen de Explotación:</strong> <span id="margen-porcentaje" style="font-size: 1.2em; margin-left: 10px;">20.6%</span>
+                <!-- Resultados 2026 -->
+                <div class="section full-width" style="margin-top: 30px;">
+                    <h2>Resultado de Explotación - 2026</h2>
+                    <div class="financial-flow" id="results-2026">
+                        <!-- Se generará dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Resultados Mensuales -->
+                <div class="section full-width" style="margin-top: 30px;">
+                    <h2>Resultado de Explotación - Desglose Mensual</h2>
+                    <div style="overflow-x: auto;">
+                        <table id="monthly-results-table" style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; text-align: left; border: 1px solid #ddd;">Mes</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Turnos</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Facturación</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Aprovisionamiento</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Margen Bruto</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Gastos Personal</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Gastos Operativos</th>
+                                    <th style="padding: 12px; text-align: right; border: 1px solid #ddd;">Resultado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="monthly-results-body">
+                                <!-- Se generará dinámicamente -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
                 <!-- Gráfico -->
-                <div class="section full-width">
+                <div class="section full-width" style="margin-top: 30px;">
                     <h2>Visualización de Resultados</h2>
                     <div class="chart-container" style="height: 500px;">
                         <canvas id="waterfallChart"></canvas>
@@ -876,6 +1151,11 @@
         }
 
         let waterfallChart = null;
+        let treasuryChart = null;
+        let customEmployees = [];
+        let customExpenses = [];
+        let calendarData = [];
+        let dailyPlanning = {}; // Store daily open/closed status and occupancy
 
         // Cambiar entre tabs
         function switchTab(tabName) {
@@ -900,20 +1180,51 @@
             detail.classList.toggle('show');
         }
 
-        // Inicializar empleados
-        function initEmployees() {
+        // Añadir nuevo empleado
+        function addNewEmployee() {
+            const name = prompt('Nombre del empleado:');
+            if (!name) return;
+
+            const netSalary = parseFloat(prompt('Salario neto mensual (€):'));
+            if (!netSalary || netSalary <= 0) {
+                alert('Por favor, introduce un salario válido');
+                return;
+            }
+
+            const newEmployee = {
+                name: name,
+                netMonthly: netSalary
+            };
+
+            customEmployees.push(newEmployee);
+            renderEmployees();
+            updateAllCalculations();
+        }
+
+        // Eliminar empleado personalizado
+        function removeCustomEmployee(index) {
+            if (confirm('¿Eliminar este empleado?')) {
+                customEmployees.splice(index, 1);
+                renderEmployees();
+                updateAllCalculations();
+            }
+        }
+
+        // Renderizar todos los empleados
+        function renderEmployees() {
             const list = document.getElementById('employee-list');
+            list.innerHTML = '';
+
+            // Empleados base
             employees.forEach((emp, index) => {
                 const container = document.createElement('div');
-
-                // Calcular coste inicial
                 const cost = calculateTotalCompanyCost(emp.netMonthly);
 
                 container.innerHTML = `
                     <div class="employee-item">
                         <span class="name">${emp.name}</span>
                         <input type="number" id="emp-net-${index}" value="${emp.netMonthly.toFixed(2)}"
-                               placeholder="Neto mensual" step="0.01" min="0" oninput="updateInputs()">
+                               placeholder="Neto mensual" step="0.01" min="0" oninput="employees[${index}].netMonthly = parseFloat(this.value); updateAllCalculations()">
                         <div class="cost-display" id="emp-cost-${index}">${formatCurrency(cost.totalCost)}</div>
                         <button class="expand-btn" onclick="toggleEmployeeDetail(${index})" title="Ver desglose">+</button>
 
@@ -926,9 +1237,106 @@
                     </div>
                 `;
                 list.appendChild(container);
-
-                // Llenar desglose inicial
                 updateEmployeeBreakdown(index, cost);
+            });
+
+            // Empleados personalizados
+            customEmployees.forEach((emp, index) => {
+                const customIndex = employees.length + index;
+                const container = document.createElement('div');
+                const cost = calculateTotalCompanyCost(emp.netMonthly);
+
+                container.innerHTML = `
+                    <div class="employee-item" style="border-left: 3px solid #ffc107;">
+                        <input type="text" id="custom-emp-name-${index}" value="${emp.name}"
+                               placeholder="Nombre empleado" style="font-weight: bold; padding: 10px; border: 2px solid #ddd; border-radius: 6px;" oninput="customEmployees[${index}].name = this.value">
+                        <input type="number" id="custom-emp-net-${index}" value="${emp.netMonthly.toFixed(2)}"
+                               placeholder="Neto mensual" step="0.01" min="0" oninput="customEmployees[${index}].netMonthly = parseFloat(this.value); updateAllCalculations()">
+                        <div class="cost-display" id="custom-emp-cost-${index}">${formatCurrency(cost.totalCost)}</div>
+                        <button onclick="removeCustomEmployee(${index})" style="background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-weight: bold;">×</button>
+                    </div>
+                `;
+                list.appendChild(container);
+            });
+        }
+
+        // Inicializar empleados
+        function initEmployees() {
+            renderEmployees();
+        }
+
+        // Añadir nuevo gasto
+        function addNewExpense() {
+            const name = prompt('Nombre del gasto:');
+            if (!name) return;
+
+            const frequencyInput = prompt('¿Importe mensual o anual? (escribir "mensual" o "anual"):');
+            if (!frequencyInput) return;
+
+            const frequency = frequencyInput.toLowerCase().includes('mensual') ? 'monthly' : 'annual';
+            const frequencyLabel = frequency === 'monthly' ? '€/mes' : '€/año';
+
+            const amount = parseFloat(prompt(`Importe (${frequencyLabel}):`));
+            if (!amount || amount < 0) {
+                alert('Por favor, introduce un importe válido');
+                return;
+            }
+
+            const newExpense = {
+                name: name,
+                amount: amount,
+                frequency: frequency
+            };
+
+            customExpenses.push(newExpense);
+            renderCustomExpenses();
+            updateAllCalculations();
+        }
+
+        // Eliminar gasto personalizado
+        function removeCustomExpense(index) {
+            if (confirm('¿Eliminar este gasto?')) {
+                customExpenses.splice(index, 1);
+                renderCustomExpenses();
+                updateAllCalculations();
+            }
+        }
+
+        // Renderizar gastos personalizados
+        function renderCustomExpenses() {
+            const list = document.getElementById('custom-expenses-list');
+            list.innerHTML = '';
+
+            customExpenses.forEach((expense, index) => {
+                const frequency = expense.frequency || 'annual'; // Default to annual for backwards compatibility
+                const frequencyLabel = frequency === 'monthly' ? '€/mes' : '€/año';
+
+                const div = document.createElement('div');
+                div.className = 'input-group';
+                div.style.position = 'relative';
+                div.innerHTML = `
+                    <label>
+                        <input type="text" id="custom-expense-name-${index}" value="${expense.name}"
+                               placeholder="Nombre del gasto"
+                               style="width: calc(100% - 50px); padding: 10px; border: 2px solid #ffc107; border-radius: 6px; font-weight: 600; margin-bottom: 5px;"
+                               oninput="customExpenses[${index}].name = this.value">
+                        <button onclick="removeCustomExpense(${index})"
+                                style="position: absolute; right: 0; top: 0; background: #dc3545; color: white; border: none; width: 40px; height: 40px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1.2em;">×</button>
+                    </label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="number" id="custom-expense-${index}" value="${expense.amount}"
+                               placeholder="Importe (${frequencyLabel})" min="0"
+                               style="flex: 1;"
+                               oninput="customExpenses[${index}].amount = parseFloat(this.value) || 0; updateAllCalculations()">
+                        <select id="custom-expense-freq-${index}"
+                                style="padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-weight: 600;"
+                                onchange="customExpenses[${index}].frequency = this.value; updateAllCalculations()">
+                            <option value="monthly" ${frequency === 'monthly' ? 'selected' : ''}>Mensual</option>
+                            <option value="annual" ${frequency === 'annual' ? 'selected' : ''}>Anual</option>
+                        </select>
+                    </div>
+                `;
+                list.appendChild(div);
             });
         }
 
@@ -972,166 +1380,248 @@
         }
 
         // Actualizar valores y cálculos
-        function updateInputs() {
-            // Actualizar displays de rangos
-            document.getElementById('capacidad-value').textContent = document.getElementById('capacidad').value;
-            document.getElementById('ticket-value').textContent = document.getElementById('ticket').value + '€';
-            document.getElementById('turnos-value').textContent = document.getElementById('turnos').value;
-            document.getElementById('semanas-value').textContent = document.getElementById('semanas').value;
-            document.getElementById('ocupacion-value').textContent = document.getElementById('ocupacion').value + '%';
-            document.getElementById('aprovisionamiento-value').textContent = document.getElementById('aprovisionamiento').value + '%';
-
-            // Calcular resultados
-            calculateResults();
-        }
-
-        // Calcular resultados financieros
-        function calculateResults() {
-            // Variables de venta
-            const capacidad = parseFloat(document.getElementById('capacidad').value);
-            const ticket = parseFloat(document.getElementById('ticket').value);
-            const turnos = parseFloat(document.getElementById('turnos').value);
-            const semanas = parseFloat(document.getElementById('semanas').value);
-            const ocupacion = parseFloat(document.getElementById('ocupacion').value) / 100;
-            const aprovisionamientoPct = parseFloat(document.getElementById('aprovisionamiento').value) / 100;
-
-            // Cálculos de venta
-            const turnosAnuales = turnos * semanas;
-            const comensalesPorTurno = Math.round(capacidad * ocupacion);
-            const facturacionBruta = comensalesPorTurno * ticket * turnosAnuales;
-            const aprovisionamiento = facturacionBruta * aprovisionamientoPct;
-            const margenBruto = facturacionBruta - aprovisionamiento;
-
-            // Gastos de personal
-            let totalPersonal = 0;
+        // Actualizar displays de empleados sin re-renderizar
+        function updateEmployeeDisplays() {
+            // Actualizar empleados base
             employees.forEach((emp, index) => {
-                const netMonthly = parseFloat(document.getElementById(`emp-net-${index}`).value) || 0;
-                const cost = calculateTotalCompanyCost(netMonthly);
-                totalPersonal += cost.totalCost;
-
-                // Debug log
-                console.log(`${emp.name}: Net ${netMonthly}€/mes → Total ${cost.totalCost.toFixed(2)}€/año`);
-
-                // Actualizar display del coste
-                document.getElementById(`emp-cost-${index}`).textContent = formatCurrency(cost.totalCost);
-
-                // Actualizar desglose si está visible
-                const detail = document.getElementById(`emp-detail-${index}`);
-                if (detail && detail.classList.contains('show')) {
+                const cost = calculateTotalCompanyCost(emp.netMonthly);
+                const costDisplay = document.getElementById(`emp-cost-${index}`);
+                if (costDisplay) {
+                    costDisplay.textContent = formatCurrency(cost.totalCost);
+                }
+                // Actualizar desglose si existe
+                const breakdown = document.getElementById(`emp-breakdown-${index}`);
+                if (breakdown && breakdown.innerHTML !== '') {
                     updateEmployeeBreakdown(index, cost);
                 }
             });
 
-            console.log(`TOTAL GASTOS PERSONAL: ${totalPersonal.toFixed(2)}€/año`);
+            // Actualizar empleados personalizados
+            customEmployees.forEach((emp, index) => {
+                const cost = calculateTotalCompanyCost(emp.netMonthly);
+                const costDisplay = document.getElementById(`custom-emp-cost-${index}`);
+                if (costDisplay) {
+                    costDisplay.textContent = formatCurrency(cost.totalCost);
+                }
+            });
+        }
 
-            // Gastos operativos
-            const alquiler = parseFloat(document.getElementById('alquiler').value) * 12;
-            const luz = parseFloat(document.getElementById('luz').value) * 12;
-            const agua = parseFloat(document.getElementById('agua').value) * 12;
-            const gas = parseFloat(document.getElementById('gas').value) * 12;
-            const internet = parseFloat(document.getElementById('internet').value) * 12;
-            const alarma = parseFloat(document.getElementById('alarma').value) * 12;
-            const redes = parseFloat(document.getElementById('redes').value) * 12;
-            const mantenimiento = parseFloat(document.getElementById('mantenimiento').value) * 12;
-            const veladores = parseFloat(document.getElementById('veladores').value);
-            const qamarero = parseFloat(document.getElementById('qamarero').value);
-            const asesoria = parseFloat(document.getElementById('asesoria').value);
+        function updateAllCalculations() {
+            // Actualizar displays de rangos
+            document.getElementById('capacidad-value').textContent = document.getElementById('capacidad').value;
+            document.getElementById('ticket-value').textContent = document.getElementById('ticket').value + '€';
+            document.getElementById('aprovisionamiento-value').textContent = document.getElementById('aprovisionamiento').value + '%';
 
-            const totalOperativos = alquiler + luz + agua + gas + internet + alarma +
-                                   redes + mantenimiento + veladores + qamarero + asesoria;
+            // Actualizar displays de empleados
+            updateEmployeeDisplays();
 
-            // Resultado de explotación
-            const resultadoExplotacion = margenBruto - totalPersonal - totalOperativos;
-            const margenPorcentaje = (resultadoExplotacion / facturacionBruta * 100).toFixed(1);
-
-            // Actualizar UI - Flow financiero
-            document.getElementById('flow-facturacion').textContent = formatCurrency(facturacionBruta);
-            document.getElementById('flow-aprovisionamiento').textContent = formatCurrency(aprovisionamiento);
-            document.getElementById('flow-margen').textContent = formatCurrency(margenBruto);
-            document.getElementById('flow-personal').textContent = formatCurrency(totalPersonal);
-            document.getElementById('flow-operativos').textContent = formatCurrency(totalOperativos);
-            document.getElementById('flow-resultado').textContent = formatCurrency(resultadoExplotacion);
-
-            // Actualizar otros displays
+            // Actualizar totales en las pestañas
+            const totalPersonal = calculateMonthlyPersonalCost();
+            const totalOperativos = calculateMonthlyOperativeCost();
             document.getElementById('total-personal').textContent = formatCurrency(totalPersonal);
             document.getElementById('total-operativos').textContent = formatCurrency(totalOperativos);
-            document.getElementById('margen-porcentaje').textContent = margenPorcentaje + '%';
 
-            // Calcular comensales anuales totales
-            const comensalesAnuales = comensalesPorTurno * turnosAnuales;
-
-            // Actualizar UI - Preview en tab de Variables
-            document.getElementById('result-turnos-preview').textContent = turnosAnuales;
-            document.getElementById('result-comensales-preview').textContent = comensalesPorTurno;
-            document.getElementById('result-comensales-anuales-preview').textContent = comensalesAnuales.toLocaleString('es-ES');
-            document.getElementById('result-facturacion-preview').textContent = formatCurrency(facturacionBruta);
-
-            // Aplicar clases de color al resultado
-            const flowResultItem = document.getElementById('flow-result-item');
-            flowResultItem.classList.remove('positive', 'negative');
-            if (resultadoExplotacion > 0) {
-                flowResultItem.classList.add('positive');
-            } else {
-                flowResultItem.classList.add('negative');
-            }
-
-            // Actualizar gráficos
-            updateCharts();
+            // Recalcular todo
+            updateAllMonthStats();
+            updateTreasuryChart();
+            calculateYearlyResults();
         }
 
-        // Obtener resultados actuales
-        function getCurrentResults() {
+        // Update all month statistics
+        function updateAllMonthStats() {
+            const allMonths = Object.keys(groupByMonth()).sort();
+            allMonths.forEach(yearMonth => {
+                updateMonthSummary(yearMonth);
+                updateMonthStats(yearMonth);
+            });
+        }
+
+        // Calculate yearly results based on actual planning data
+        function calculateYearlyResults() {
             const capacidad = parseFloat(document.getElementById('capacidad').value);
             const ticket = parseFloat(document.getElementById('ticket').value);
-            const turnos = parseFloat(document.getElementById('turnos').value);
-            const semanas = parseFloat(document.getElementById('semanas').value);
-            const ocupacion = parseFloat(document.getElementById('ocupacion').value) / 100;
             const aprovisionamientoPct = parseFloat(document.getElementById('aprovisionamiento').value) / 100;
 
-            const turnosAnuales = turnos * semanas;
-            const comensalesPorTurno = Math.round(capacidad * ocupacion);
-            const facturacion = comensalesPorTurno * ticket * turnosAnuales;
-            const aprovisionamiento = facturacion * aprovisionamientoPct;
-            const margen = facturacion - aprovisionamiento;
+            // Calculate totals for 2025 (Nov-Dec only)
+            let results2025 = { shifts: 0, revenue: 0, aprovisionamiento: 0, margen: 0 };
+            let results2026 = { shifts: 0, revenue: 0, aprovisionamiento: 0, margen: 0 };
+            let monthlyResults = [];
 
-            let totalPersonal = 0;
-            employees.forEach((emp, index) => {
-                const netMonthly = parseFloat(document.getElementById(`emp-net-${index}`).value) || 0;
-                const cost = calculateTotalCompanyCost(netMonthly);
-                totalPersonal += cost.totalCost;
+            const allMonths = Object.keys(groupByMonth()).sort();
+
+            allMonths.forEach(yearMonth => {
+                const [year, month] = yearMonth.split('-');
+                const monthDays = calendarData.filter(day => {
+                    const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                    return key === yearMonth;
+                });
+
+                let monthShifts = 0;
+                let monthRevenue = 0;
+
+                monthDays.forEach(day => {
+                    const planning = dailyPlanning[day.fecha];
+                    if (planning && planning.open) {
+                        const shifts = planning.shifts || 2;
+                        const occupancy = (planning.occupancy || 40) / 100;
+                        const comensales = Math.round(capacidad * occupancy);
+                        const revenue = comensales * ticket * shifts;
+
+                        monthShifts += shifts;
+                        monthRevenue += revenue;
+                    }
+                });
+
+                const monthAprov = monthRevenue * aprovisionamientoPct;
+                const monthMargen = monthRevenue - monthAprov;
+
+                // Annual personnel cost (monthly basis)
+                const monthPersonal = calculateMonthlyPersonalCost() / 12;
+                const monthOperativos = calculateMonthlyOperativeCost() / 12;
+                const monthResult = monthMargen - monthPersonal - monthOperativos;
+
+                // Add to appropriate year
+                if (year === '2025') {
+                    results2025.shifts += monthShifts;
+                    results2025.revenue += monthRevenue;
+                    results2025.aprovisionamiento += monthAprov;
+                    results2025.margen += monthMargen;
+                } else if (year === '2026') {
+                    results2026.shifts += monthShifts;
+                    results2026.revenue += monthRevenue;
+                    results2026.aprovisionamiento += monthAprov;
+                    results2026.margen += monthMargen;
+                }
+
+                // Store monthly result
+                monthlyResults.push({
+                    yearMonth,
+                    monthName: monthNames[parseInt(month)] + ' ' + year,
+                    shifts: monthShifts,
+                    revenue: monthRevenue,
+                    aprovisionamiento: monthAprov,
+                    margen: monthMargen,
+                    personal: monthPersonal,
+                    operativos: monthOperativos,
+                    resultado: monthResult
+                });
             });
 
-            const alquiler = parseFloat(document.getElementById('alquiler').value) * 12;
-            const luz = parseFloat(document.getElementById('luz').value) * 12;
-            const agua = parseFloat(document.getElementById('agua').value) * 12;
-            const gas = parseFloat(document.getElementById('gas').value) * 12;
-            const internet = parseFloat(document.getElementById('internet').value) * 12;
-            const alarma = parseFloat(document.getElementById('alarma').value) * 12;
-            const redes = parseFloat(document.getElementById('redes').value) * 12;
-            const mantenimiento = parseFloat(document.getElementById('mantenimiento').value) * 12;
-            const veladores = parseFloat(document.getElementById('veladores').value);
-            const qamarero = parseFloat(document.getElementById('qamarero').value);
-            const asesoria = parseFloat(document.getElementById('asesoria').value);
+            // Calculate final results for each year
+            const totalPersonal2025 = calculateMonthlyPersonalCost() / 12 * 2; // 2 months
+            const totalOperativos2025 = calculateMonthlyOperativeCost() / 12 * 2;
+            const resultado2025 = results2025.margen - totalPersonal2025 - totalOperativos2025;
 
-            const operativos = alquiler + luz + agua + gas + internet + alarma +
-                              redes + mantenimiento + veladores + qamarero + asesoria;
+            const totalPersonal2026 = calculateMonthlyPersonalCost(); // 12 months
+            const totalOperativos2026 = calculateMonthlyOperativeCost();
+            const resultado2026 = results2026.margen - totalPersonal2026 - totalOperativos2026;
 
-            const resultado = margen - totalPersonal - operativos;
+            // Render 2025 results
+            renderYearResults('results-2025', {
+                facturacion: results2025.revenue,
+                aprovisionamiento: results2025.aprovisionamiento,
+                margen: results2025.margen,
+                personal: totalPersonal2025,
+                operativos: totalOperativos2025,
+                resultado: resultado2025
+            });
 
-            return { facturacion, margen, personal: totalPersonal, operativos, resultado };
+            // Render 2026 results
+            renderYearResults('results-2026', {
+                facturacion: results2026.revenue,
+                aprovisionamiento: results2026.aprovisionamiento,
+                margen: results2026.margen,
+                personal: totalPersonal2026,
+                operativos: totalOperativos2026,
+                resultado: resultado2026
+            });
+
+            // Render monthly table
+            renderMonthlyResultsTable(monthlyResults);
+
+            // Update chart with combined data
+            updateResultsChart(results2025, results2026);
         }
 
-        // Actualizar gráfico
-        function updateCharts() {
-            const actual = getCurrentResults();
+        // Render year results
+        function renderYearResults(containerId, results) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="flow-item revenue">
+                    <div class="flow-label">Facturación Bruta</div>
+                    <div class="flow-operator"></div>
+                    <div class="flow-value">${formatCurrency(results.facturacion)}</div>
+                </div>
+                <div class="flow-item expense">
+                    <div class="flow-label">- Gastos de Aprovisionamiento</div>
+                    <div class="flow-operator">−</div>
+                    <div class="flow-value">${formatCurrency(results.aprovisionamiento)}</div>
+                </div>
+                <div class="flow-item margin">
+                    <div class="flow-label">= Margen Bruto</div>
+                    <div class="flow-operator">=</div>
+                    <div class="flow-value">${formatCurrency(results.margen)}</div>
+                </div>
+                <div class="flow-item expense">
+                    <div class="flow-label">- Gastos de Personal</div>
+                    <div class="flow-operator">−</div>
+                    <div class="flow-value">${formatCurrency(results.personal)}</div>
+                </div>
+                <div class="flow-item expense">
+                    <div class="flow-label">- Gastos Operativos</div>
+                    <div class="flow-operator">−</div>
+                    <div class="flow-value">${formatCurrency(results.operativos)}</div>
+                </div>
+                <div class="flow-item result ${results.resultado > 0 ? 'positive' : 'negative'}">
+                    <div class="flow-label">= Resultado de Explotación</div>
+                    <div class="flow-operator">=</div>
+                    <div class="flow-value">${formatCurrency(results.resultado)}</div>
+                </div>
+            `;
+        }
 
+        // Render monthly results table
+        function renderMonthlyResultsTable(monthlyResults) {
+            const tbody = document.getElementById('monthly-results-body');
+            tbody.innerHTML = '';
+
+            monthlyResults.forEach(month => {
+                const row = document.createElement('tr');
+                row.style.borderBottom = '1px solid #ddd';
+
+                const resultClass = month.resultado > 0 ? 'color: #28a745' : 'color: #dc3545';
+
+                row.innerHTML = `
+                    <td style="padding: 10px; border: 1px solid #ddd;">${month.monthName}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${month.shifts}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${formatCurrency(month.revenue)}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${formatCurrency(month.aprovisionamiento)}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${formatCurrency(month.margen)}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${formatCurrency(month.personal)}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #ddd;">${formatCurrency(month.operativos)}</td>
+                    <td style="padding: 10px; text-align: right; border: 1px solid #ddd; font-weight: bold; ${resultClass}">${formatCurrency(month.resultado)}</td>
+                `;
+
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update results chart
+        function updateResultsChart(results2025, results2026) {
             const ctx = document.getElementById('waterfallChart');
+            if (!ctx) return;
+
             if (waterfallChart) {
                 waterfallChart.destroy();
             }
 
-            const aprovisionamiento = actual.facturacion * (parseFloat(document.getElementById('aprovisionamiento').value) / 100);
-            const margen = actual.facturacion - aprovisionamiento;
+            // Combined totals
+            const totalPersonal = calculateMonthlyPersonalCost() / 12 * 2 + calculateMonthlyPersonalCost();
+            const totalOperativos = calculateMonthlyOperativeCost() / 12 * 2 + calculateMonthlyOperativeCost();
+            const totalFacturacion = results2025.revenue + results2026.revenue;
+            const totalAprov = results2025.aprovisionamiento + results2026.aprovisionamiento;
+            const totalMargen = results2025.margen + results2026.margen;
+            const totalResultado = totalMargen - totalPersonal - totalOperativos;
 
             waterfallChart = new Chart(ctx, {
                 type: 'bar',
@@ -1145,22 +1635,22 @@
                         'Resultado\nExplotación'
                     ],
                     datasets: [{
-                        label: 'Importe',
+                        label: 'Importe Total',
                         data: [
-                            actual.facturacion,
-                            aprovisionamiento,
-                            margen,
-                            actual.personal,
-                            actual.operativos,
-                            actual.resultado
+                            totalFacturacion,
+                            totalAprov,
+                            totalMargen,
+                            totalPersonal,
+                            totalOperativos,
+                            totalResultado
                         ],
                         backgroundColor: [
-                            'rgba(40, 167, 69, 0.8)',    // Verde - Facturación
-                            'rgba(220, 53, 69, 0.8)',    // Rojo - Aprovisionamiento
-                            'rgba(23, 162, 184, 0.8)',   // Azul - Margen
-                            'rgba(220, 53, 69, 0.8)',    // Rojo - Personal
-                            'rgba(220, 53, 69, 0.8)',    // Rojo - Operativos
-                            actual.resultado > 0 ? 'rgba(40, 167, 69, 0.8)' : 'rgba(220, 53, 69, 0.8)'  // Verde/Rojo - Resultado
+                            'rgba(40, 167, 69, 0.8)',
+                            'rgba(220, 53, 69, 0.8)',
+                            'rgba(23, 162, 184, 0.8)',
+                            'rgba(220, 53, 69, 0.8)',
+                            'rgba(220, 53, 69, 0.8)',
+                            totalResultado > 0 ? 'rgba(40, 167, 69, 0.8)' : 'rgba(220, 53, 69, 0.8)'
                         ],
                         borderColor: [
                             'rgba(40, 167, 69, 1)',
@@ -1168,7 +1658,7 @@
                             'rgba(23, 162, 184, 1)',
                             'rgba(220, 53, 69, 1)',
                             'rgba(220, 53, 69, 1)',
-                            actual.resultado > 0 ? 'rgba(40, 167, 69, 1)' : 'rgba(220, 53, 69, 1)'
+                            totalResultado > 0 ? 'rgba(40, 167, 69, 1)' : 'rgba(220, 53, 69, 1)'
                         ],
                         borderWidth: 2
                     }]
@@ -1228,7 +1718,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Flujo Financiero Anual',
+                            text: 'Flujo Financiero Total (2025-2026)',
                             font: {
                                 size: 18,
                                 weight: 'bold'
@@ -1253,10 +1743,1134 @@
             }).format(value);
         }
 
+        // Calendar CSV data (embedded)
+        const calendarCSV = `fecha,dia_semana,dia,mes,año,semana_iso
+2025-11-01,sábado,1,11,2025,44
+2025-11-02,domingo,2,11,2025,44
+2025-11-03,lunes,3,11,2025,45
+2025-11-04,martes,4,11,2025,45
+2025-11-05,miércoles,5,11,2025,45
+2025-11-06,jueves,6,11,2025,45
+2025-11-07,viernes,7,11,2025,45
+2025-11-08,sábado,8,11,2025,45
+2025-11-09,domingo,9,11,2025,45
+2025-11-10,lunes,10,11,2025,46
+2025-11-11,martes,11,11,2025,46
+2025-11-12,miércoles,12,11,2025,46
+2025-11-13,jueves,13,11,2025,46
+2025-11-14,viernes,14,11,2025,46
+2025-11-15,sábado,15,11,2025,46
+2025-11-16,domingo,16,11,2025,46
+2025-11-17,lunes,17,11,2025,47
+2025-11-18,martes,18,11,2025,47
+2025-11-19,miércoles,19,11,2025,47
+2025-11-20,jueves,20,11,2025,47
+2025-11-21,viernes,21,11,2025,47
+2025-11-22,sábado,22,11,2025,47
+2025-11-23,domingo,23,11,2025,47
+2025-11-24,lunes,24,11,2025,48
+2025-11-25,martes,25,11,2025,48
+2025-11-26,miércoles,26,11,2025,48
+2025-11-27,jueves,27,11,2025,48
+2025-11-28,viernes,28,11,2025,48
+2025-11-29,sábado,29,11,2025,48
+2025-11-30,domingo,30,11,2025,48
+2025-12-01,lunes,1,12,2025,49
+2025-12-02,martes,2,12,2025,49
+2025-12-03,miércoles,3,12,2025,49
+2025-12-04,jueves,4,12,2025,49
+2025-12-05,viernes,5,12,2025,49
+2025-12-06,sábado,6,12,2025,49
+2025-12-07,domingo,7,12,2025,49
+2025-12-08,lunes,8,12,2025,50
+2025-12-09,martes,9,12,2025,50
+2025-12-10,miércoles,10,12,2025,50
+2025-12-11,jueves,11,12,2025,50
+2025-12-12,viernes,12,12,2025,50
+2025-12-13,sábado,13,12,2025,50
+2025-12-14,domingo,14,12,2025,50
+2025-12-15,lunes,15,12,2025,51
+2025-12-16,martes,16,12,2025,51
+2025-12-17,miércoles,17,12,2025,51
+2025-12-18,jueves,18,12,2025,51
+2025-12-19,viernes,19,12,2025,51
+2025-12-20,sábado,20,12,2025,51
+2025-12-21,domingo,21,12,2025,51
+2025-12-22,lunes,22,12,2025,52
+2025-12-23,martes,23,12,2025,52
+2025-12-24,miércoles,24,12,2025,52
+2025-12-25,jueves,25,12,2025,52
+2025-12-26,viernes,26,12,2025,52
+2025-12-27,sábado,27,12,2025,52
+2025-12-28,domingo,28,12,2025,52
+2025-12-29,lunes,29,12,2025,1
+2025-12-30,martes,30,12,2025,1
+2025-12-31,miércoles,31,12,2025,1
+2026-01-01,jueves,1,1,2026,1
+2026-01-02,viernes,2,1,2026,1
+2026-01-03,sábado,3,1,2026,1
+2026-01-04,domingo,4,1,2026,1
+2026-01-05,lunes,5,1,2026,2
+2026-01-06,martes,6,1,2026,2
+2026-01-07,miércoles,7,1,2026,2
+2026-01-08,jueves,8,1,2026,2
+2026-01-09,viernes,9,1,2026,2
+2026-01-10,sábado,10,1,2026,2
+2026-01-11,domingo,11,1,2026,2
+2026-01-12,lunes,12,1,2026,3
+2026-01-13,martes,13,1,2026,3
+2026-01-14,miércoles,14,1,2026,3
+2026-01-15,jueves,15,1,2026,3
+2026-01-16,viernes,16,1,2026,3
+2026-01-17,sábado,17,1,2026,3
+2026-01-18,domingo,18,1,2026,3
+2026-01-19,lunes,19,1,2026,4
+2026-01-20,martes,20,1,2026,4
+2026-01-21,miércoles,21,1,2026,4
+2026-01-22,jueves,22,1,2026,4
+2026-01-23,viernes,23,1,2026,4
+2026-01-24,sábado,24,1,2026,4
+2026-01-25,domingo,25,1,2026,4
+2026-01-26,lunes,26,1,2026,5
+2026-01-27,martes,27,1,2026,5
+2026-01-28,miércoles,28,1,2026,5
+2026-01-29,jueves,29,1,2026,5
+2026-01-30,viernes,30,1,2026,5
+2026-01-31,sábado,31,1,2026,5
+2026-02-01,domingo,1,2,2026,5
+2026-02-02,lunes,2,2,2026,6
+2026-02-03,martes,3,2,2026,6
+2026-02-04,miércoles,4,2,2026,6
+2026-02-05,jueves,5,2,2026,6
+2026-02-06,viernes,6,2,2026,6
+2026-02-07,sábado,7,2,2026,6
+2026-02-08,domingo,8,2,2026,6
+2026-02-09,lunes,9,2,2026,7
+2026-02-10,martes,10,2,2026,7
+2026-02-11,miércoles,11,2,2026,7
+2026-02-12,jueves,12,2,2026,7
+2026-02-13,viernes,13,2,2026,7
+2026-02-14,sábado,14,2,2026,7
+2026-02-15,domingo,15,2,2026,7
+2026-02-16,lunes,16,2,2026,8
+2026-02-17,martes,17,2,2026,8
+2026-02-18,miércoles,18,2,2026,8
+2026-02-19,jueves,19,2,2026,8
+2026-02-20,viernes,20,2,2026,8
+2026-02-21,sábado,21,2,2026,8
+2026-02-22,domingo,22,2,2026,8
+2026-02-23,lunes,23,2,2026,9
+2026-02-24,martes,24,2,2026,9
+2026-02-25,miércoles,25,2,2026,9
+2026-02-26,jueves,26,2,2026,9
+2026-02-27,viernes,27,2,2026,9
+2026-02-28,sábado,28,2,2026,9
+2026-03-01,domingo,1,3,2026,9
+2026-03-02,lunes,2,3,2026,10
+2026-03-03,martes,3,3,2026,10
+2026-03-04,miércoles,4,3,2026,10
+2026-03-05,jueves,5,3,2026,10
+2026-03-06,viernes,6,3,2026,10
+2026-03-07,sábado,7,3,2026,10
+2026-03-08,domingo,8,3,2026,10
+2026-03-09,lunes,9,3,2026,11
+2026-03-10,martes,10,3,2026,11
+2026-03-11,miércoles,11,3,2026,11
+2026-03-12,jueves,12,3,2026,11
+2026-03-13,viernes,13,3,2026,11
+2026-03-14,sábado,14,3,2026,11
+2026-03-15,domingo,15,3,2026,11
+2026-03-16,lunes,16,3,2026,12
+2026-03-17,martes,17,3,2026,12
+2026-03-18,miércoles,18,3,2026,12
+2026-03-19,jueves,19,3,2026,12
+2026-03-20,viernes,20,3,2026,12
+2026-03-21,sábado,21,3,2026,12
+2026-03-22,domingo,22,3,2026,12
+2026-03-23,lunes,23,3,2026,13
+2026-03-24,martes,24,3,2026,13
+2026-03-25,miércoles,25,3,2026,13
+2026-03-26,jueves,26,3,2026,13
+2026-03-27,viernes,27,3,2026,13
+2026-03-28,sábado,28,3,2026,13
+2026-03-29,domingo,29,3,2026,13
+2026-03-30,lunes,30,3,2026,14
+2026-03-31,martes,31,3,2026,14
+2026-04-01,miércoles,1,4,2026,14
+2026-04-02,jueves,2,4,2026,14
+2026-04-03,viernes,3,4,2026,14
+2026-04-04,sábado,4,4,2026,14
+2026-04-05,domingo,5,4,2026,14
+2026-04-06,lunes,6,4,2026,15
+2026-04-07,martes,7,4,2026,15
+2026-04-08,miércoles,8,4,2026,15
+2026-04-09,jueves,9,4,2026,15
+2026-04-10,viernes,10,4,2026,15
+2026-04-11,sábado,11,4,2026,15
+2026-04-12,domingo,12,4,2026,15
+2026-04-13,lunes,13,4,2026,16
+2026-04-14,martes,14,4,2026,16
+2026-04-15,miércoles,15,4,2026,16
+2026-04-16,jueves,16,4,2026,16
+2026-04-17,viernes,17,4,2026,16
+2026-04-18,sábado,18,4,2026,16
+2026-04-19,domingo,19,4,2026,16
+2026-04-20,lunes,20,4,2026,17
+2026-04-21,martes,21,4,2026,17
+2026-04-22,miércoles,22,4,2026,17
+2026-04-23,jueves,23,4,2026,17
+2026-04-24,viernes,24,4,2026,17
+2026-04-25,sábado,25,4,2026,17
+2026-04-26,domingo,26,4,2026,17
+2026-04-27,lunes,27,4,2026,18
+2026-04-28,martes,28,4,2026,18
+2026-04-29,miércoles,29,4,2026,18
+2026-04-30,jueves,30,4,2026,18
+2026-05-01,viernes,1,5,2026,18
+2026-05-02,sábado,2,5,2026,18
+2026-05-03,domingo,3,5,2026,18
+2026-05-04,lunes,4,5,2026,19
+2026-05-05,martes,5,5,2026,19
+2026-05-06,miércoles,6,5,2026,19
+2026-05-07,jueves,7,5,2026,19
+2026-05-08,viernes,8,5,2026,19
+2026-05-09,sábado,9,5,2026,19
+2026-05-10,domingo,10,5,2026,19
+2026-05-11,lunes,11,5,2026,20
+2026-05-12,martes,12,5,2026,20
+2026-05-13,miércoles,13,5,2026,20
+2026-05-14,jueves,14,5,2026,20
+2026-05-15,viernes,15,5,2026,20
+2026-05-16,sábado,16,5,2026,20
+2026-05-17,domingo,17,5,2026,20
+2026-05-18,lunes,18,5,2026,21
+2026-05-19,martes,19,5,2026,21
+2026-05-20,miércoles,20,5,2026,21
+2026-05-21,jueves,21,5,2026,21
+2026-05-22,viernes,22,5,2026,21
+2026-05-23,sábado,23,5,2026,21
+2026-05-24,domingo,24,5,2026,21
+2026-05-25,lunes,25,5,2026,22
+2026-05-26,martes,26,5,2026,22
+2026-05-27,miércoles,27,5,2026,22
+2026-05-28,jueves,28,5,2026,22
+2026-05-29,viernes,29,5,2026,22
+2026-05-30,sábado,30,5,2026,22
+2026-05-31,domingo,31,5,2026,22
+2026-06-01,lunes,1,6,2026,23
+2026-06-02,martes,2,6,2026,23
+2026-06-03,miércoles,3,6,2026,23
+2026-06-04,jueves,4,6,2026,23
+2026-06-05,viernes,5,6,2026,23
+2026-06-06,sábado,6,6,2026,23
+2026-06-07,domingo,7,6,2026,23
+2026-06-08,lunes,8,6,2026,24
+2026-06-09,martes,9,6,2026,24
+2026-06-10,miércoles,10,6,2026,24
+2026-06-11,jueves,11,6,2026,24
+2026-06-12,viernes,12,6,2026,24
+2026-06-13,sábado,13,6,2026,24
+2026-06-14,domingo,14,6,2026,24
+2026-06-15,lunes,15,6,2026,25
+2026-06-16,martes,16,6,2026,25
+2026-06-17,miércoles,17,6,2026,25
+2026-06-18,jueves,18,6,2026,25
+2026-06-19,viernes,19,6,2026,25
+2026-06-20,sábado,20,6,2026,25
+2026-06-21,domingo,21,6,2026,25
+2026-06-22,lunes,22,6,2026,26
+2026-06-23,martes,23,6,2026,26
+2026-06-24,miércoles,24,6,2026,26
+2026-06-25,jueves,25,6,2026,26
+2026-06-26,viernes,26,6,2026,26
+2026-06-27,sábado,27,6,2026,26
+2026-06-28,domingo,28,6,2026,26
+2026-06-29,lunes,29,6,2026,27
+2026-06-30,martes,30,6,2026,27
+2026-07-01,miércoles,1,7,2026,27
+2026-07-02,jueves,2,7,2026,27
+2026-07-03,viernes,3,7,2026,27
+2026-07-04,sábado,4,7,2026,27
+2026-07-05,domingo,5,7,2026,27
+2026-07-06,lunes,6,7,2026,28
+2026-07-07,martes,7,7,2026,28
+2026-07-08,miércoles,8,7,2026,28
+2026-07-09,jueves,9,7,2026,28
+2026-07-10,viernes,10,7,2026,28
+2026-07-11,sábado,11,7,2026,28
+2026-07-12,domingo,12,7,2026,28
+2026-07-13,lunes,13,7,2026,29
+2026-07-14,martes,14,7,2026,29
+2026-07-15,miércoles,15,7,2026,29
+2026-07-16,jueves,16,7,2026,29
+2026-07-17,viernes,17,7,2026,29
+2026-07-18,sábado,18,7,2026,29
+2026-07-19,domingo,19,7,2026,29
+2026-07-20,lunes,20,7,2026,30
+2026-07-21,martes,21,7,2026,30
+2026-07-22,miércoles,22,7,2026,30
+2026-07-23,jueves,23,7,2026,30
+2026-07-24,viernes,24,7,2026,30
+2026-07-25,sábado,25,7,2026,30
+2026-07-26,domingo,26,7,2026,30
+2026-07-27,lunes,27,7,2026,31
+2026-07-28,martes,28,7,2026,31
+2026-07-29,miércoles,29,7,2026,31
+2026-07-30,jueves,30,7,2026,31
+2026-07-31,viernes,31,7,2026,31
+2026-08-01,sábado,1,8,2026,31
+2026-08-02,domingo,2,8,2026,31
+2026-08-03,lunes,3,8,2026,32
+2026-08-04,martes,4,8,2026,32
+2026-08-05,miércoles,5,8,2026,32
+2026-08-06,jueves,6,8,2026,32
+2026-08-07,viernes,7,8,2026,32
+2026-08-08,sábado,8,8,2026,32
+2026-08-09,domingo,9,8,2026,32
+2026-08-10,lunes,10,8,2026,33
+2026-08-11,martes,11,8,2026,33
+2026-08-12,miércoles,12,8,2026,33
+2026-08-13,jueves,13,8,2026,33
+2026-08-14,viernes,14,8,2026,33
+2026-08-15,sábado,15,8,2026,33
+2026-08-16,domingo,16,8,2026,33
+2026-08-17,lunes,17,8,2026,34
+2026-08-18,martes,18,8,2026,34
+2026-08-19,miércoles,19,8,2026,34
+2026-08-20,jueves,20,8,2026,34
+2026-08-21,viernes,21,8,2026,34
+2026-08-22,sábado,22,8,2026,34
+2026-08-23,domingo,23,8,2026,34
+2026-08-24,lunes,24,8,2026,35
+2026-08-25,martes,25,8,2026,35
+2026-08-26,miércoles,26,8,2026,35
+2026-08-27,jueves,27,8,2026,35
+2026-08-28,viernes,28,8,2026,35
+2026-08-29,sábado,29,8,2026,35
+2026-08-30,domingo,30,8,2026,35
+2026-08-31,lunes,31,8,2026,36
+2026-09-01,martes,1,9,2026,36
+2026-09-02,miércoles,2,9,2026,36
+2026-09-03,jueves,3,9,2026,36
+2026-09-04,viernes,4,9,2026,36
+2026-09-05,sábado,5,9,2026,36
+2026-09-06,domingo,6,9,2026,36
+2026-09-07,lunes,7,9,2026,37
+2026-09-08,martes,8,9,2026,37
+2026-09-09,miércoles,9,9,2026,37
+2026-09-10,jueves,10,9,2026,37
+2026-09-11,viernes,11,9,2026,37
+2026-09-12,sábado,12,9,2026,37
+2026-09-13,domingo,13,9,2026,37
+2026-09-14,lunes,14,9,2026,38
+2026-09-15,martes,15,9,2026,38
+2026-09-16,miércoles,16,9,2026,38
+2026-09-17,jueves,17,9,2026,38
+2026-09-18,viernes,18,9,2026,38
+2026-09-19,sábado,19,9,2026,38
+2026-09-20,domingo,20,9,2026,38
+2026-09-21,lunes,21,9,2026,39
+2026-09-22,martes,22,9,2026,39
+2026-09-23,miércoles,23,9,2026,39
+2026-09-24,jueves,24,9,2026,39
+2026-09-25,viernes,25,9,2026,39
+2026-09-26,sábado,26,9,2026,39
+2026-09-27,domingo,27,9,2026,39
+2026-09-28,lunes,28,9,2026,40
+2026-09-29,martes,29,9,2026,40
+2026-09-30,miércoles,30,9,2026,40
+2026-10-01,jueves,1,10,2026,40
+2026-10-02,viernes,2,10,2026,40
+2026-10-03,sábado,3,10,2026,40
+2026-10-04,domingo,4,10,2026,40
+2026-10-05,lunes,5,10,2026,41
+2026-10-06,martes,6,10,2026,41
+2026-10-07,miércoles,7,10,2026,41
+2026-10-08,jueves,8,10,2026,41
+2026-10-09,viernes,9,10,2026,41
+2026-10-10,sábado,10,10,2026,41
+2026-10-11,domingo,11,10,2026,41
+2026-10-12,lunes,12,10,2026,42
+2026-10-13,martes,13,10,2026,42
+2026-10-14,miércoles,14,10,2026,42
+2026-10-15,jueves,15,10,2026,42
+2026-10-16,viernes,16,10,2026,42
+2026-10-17,sábado,17,10,2026,42
+2026-10-18,domingo,18,10,2026,42
+2026-10-19,lunes,19,10,2026,43
+2026-10-20,martes,20,10,2026,43
+2026-10-21,miércoles,21,10,2026,43
+2026-10-22,jueves,22,10,2026,43
+2026-10-23,viernes,23,10,2026,43
+2026-10-24,sábado,24,10,2026,43
+2026-10-25,domingo,25,10,2026,43
+2026-10-26,lunes,26,10,2026,44
+2026-10-27,martes,27,10,2026,44
+2026-10-28,miércoles,28,10,2026,44
+2026-10-29,jueves,29,10,2026,44
+2026-10-30,viernes,30,10,2026,44
+2026-10-31,sábado,31,10,2026,44
+2026-11-01,domingo,1,11,2026,44
+2026-11-02,lunes,2,11,2026,45
+2026-11-03,martes,3,11,2026,45
+2026-11-04,miércoles,4,11,2026,45
+2026-11-05,jueves,5,11,2026,45
+2026-11-06,viernes,6,11,2026,45
+2026-11-07,sábado,7,11,2026,45
+2026-11-08,domingo,8,11,2026,45
+2026-11-09,lunes,9,11,2026,46
+2026-11-10,martes,10,11,2026,46
+2026-11-11,miércoles,11,11,2026,46
+2026-11-12,jueves,12,11,2026,46
+2026-11-13,viernes,13,11,2026,46
+2026-11-14,sábado,14,11,2026,46
+2026-11-15,domingo,15,11,2026,46
+2026-11-16,lunes,16,11,2026,47
+2026-11-17,martes,17,11,2026,47
+2026-11-18,miércoles,18,11,2026,47
+2026-11-19,jueves,19,11,2026,47
+2026-11-20,viernes,20,11,2026,47
+2026-11-21,sábado,21,11,2026,47
+2026-11-22,domingo,22,11,2026,47
+2026-11-23,lunes,23,11,2026,48
+2026-11-24,martes,24,11,2026,48
+2026-11-25,miércoles,25,11,2026,48
+2026-11-26,jueves,26,11,2026,48
+2026-11-27,viernes,27,11,2026,48
+2026-11-28,sábado,28,11,2026,48
+2026-11-29,domingo,29,11,2026,48
+2026-11-30,lunes,30,11,2026,49
+2026-12-01,martes,1,12,2026,49
+2026-12-02,miércoles,2,12,2026,49
+2026-12-03,jueves,3,12,2026,49
+2026-12-04,viernes,4,12,2026,49
+2026-12-05,sábado,5,12,2026,49
+2026-12-06,domingo,6,12,2026,49
+2026-12-07,lunes,7,12,2026,50
+2026-12-08,martes,8,12,2026,50
+2026-12-09,miércoles,9,12,2026,50
+2026-12-10,jueves,10,12,2026,50
+2026-12-11,viernes,11,12,2026,50
+2026-12-12,sábado,12,12,2026,50
+2026-12-13,domingo,13,12,2026,50
+2026-12-14,lunes,14,12,2026,51
+2026-12-15,martes,15,12,2026,51
+2026-12-16,miércoles,16,12,2026,51
+2026-12-17,jueves,17,12,2026,51
+2026-12-18,viernes,18,12,2026,51
+2026-12-19,sábado,19,12,2026,51
+2026-12-20,domingo,20,12,2026,51
+2026-12-21,lunes,21,12,2026,52
+2026-12-22,martes,22,12,2026,52
+2026-12-23,miércoles,23,12,2026,52
+2026-12-24,jueves,24,12,2026,52
+2026-12-25,viernes,25,12,2026,52
+2026-12-26,sábado,26,12,2026,52
+2026-12-27,domingo,27,12,2026,52
+2026-12-28,lunes,28,12,2026,53
+2026-12-29,martes,29,12,2026,53
+2026-12-30,miércoles,30,12,2026,53
+2026-12-31,jueves,31,12,2026,53`;
+
+        // Parse CSV data
+        function parseCalendarData() {
+            const lines = calendarCSV.trim().split('\n');
+            const headers = lines[0].split(',');
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',');
+                const row = {};
+                headers.forEach((header, index) => {
+                    row[header] = values[index];
+                });
+                calendarData.push(row);
+
+                // Initialize daily planning with default values
+                // Restaurant is open Wed-Sat (lunch+dinner) and Sunday (lunch only)
+                const dayName = row.dia_semana.toLowerCase();
+                const isWednesday = dayName === 'miércoles';
+                const isThursday = dayName === 'jueves';
+                const isFriday = dayName === 'viernes';
+                const isSaturday = dayName === 'sábado';
+                const isSunday = dayName === 'domingo';
+
+                // Restaurant opens on November 5, 2025 (close Nov 1-4)
+                const isBeforeOpening = row.fecha === '2025-11-01' || row.fecha === '2025-11-02' ||
+                                       row.fecha === '2025-11-03' || row.fecha === '2025-11-04';
+
+                // August is closed (all of August 2026)
+                const isAugust = parseInt(row.mes) === 8 && parseInt(row.año) === 2026;
+
+                const isNormallyOpen = isWednesday || isThursday || isFriday || isSaturday || isSunday;
+                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
+
+                // Default occupancy: 25% miércoles-jueves, 45% viernes-domingo
+                let defaultOccupancy = 25; // miércoles-jueves
+                if (isFriday || isSaturday || isSunday) {
+                    defaultOccupancy = 45; // viernes-domingo
+                }
+
+                dailyPlanning[row.fecha] = {
+                    open: isOpen,
+                    occupancy: defaultOccupancy,
+                    shifts: isSunday ? 1 : (isOpen ? 2 : 0) // 1 shift on Sunday, 2 on other open days
+                };
+            }
+        }
+
+        // Group calendar data by month
+        function groupByMonth() {
+            const months = {};
+            calendarData.forEach(day => {
+                const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                if (!months[key]) {
+                    months[key] = [];
+                }
+                months[key].push(day);
+            });
+            return months;
+        }
+
+        // Month names in Spanish
+        const monthNames = ['', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        // Toggle month expansion
+        function toggleMonth(yearMonth) {
+            const content = document.getElementById(`month-content-${yearMonth}`);
+            const icon = document.getElementById(`expand-icon-${yearMonth}`);
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Update day planning
+        function updateDayPlanning(date, field, value) {
+            if (!dailyPlanning[date]) {
+                dailyPlanning[date] = { open: false, occupancy: 25, shifts: 0 };
+            }
+            dailyPlanning[date][field] = value;
+
+            // Update summary for this month
+            const [year, month] = date.split('-');
+            const yearMonth = `${year}-${month}`;
+            updateMonthSummary(yearMonth);
+            updateMonthStats(yearMonth);
+            updateTreasuryChart();
+            calculateYearlyResults();
+        }
+
+        // Calculate month totals
+        function calculateMonthTotals(yearMonth) {
+            const monthDays = calendarData.filter(day => {
+                const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                return key === yearMonth;
+            });
+
+            const capacidad = parseFloat(document.getElementById('capacidad').value);
+            const ticket = parseFloat(document.getElementById('ticket').value);
+
+            let totalShifts = 0;
+            let totalRevenue = 0;
+            let totalDiners = 0;
+
+            monthDays.forEach(day => {
+                const planning = dailyPlanning[day.fecha];
+                if (planning && planning.open) {
+                    const shifts = planning.shifts || 0;
+                    const occupancy = (planning.occupancy || 40) / 100;
+                    const comensales = Math.round(capacidad * occupancy);
+                    const revenue = comensales * ticket * shifts;
+
+                    totalShifts += shifts;
+                    totalRevenue += revenue;
+                    totalDiners += comensales * shifts; // Total diners = diners per shift × number of shifts
+                }
+            });
+
+            return { totalShifts, totalRevenue, totalDiners };
+        }
+
+        // Update month summary
+        function updateMonthSummary(yearMonth) {
+            const totals = calculateMonthTotals(yearMonth);
+
+            document.getElementById(`month-shifts-${yearMonth}`).textContent = totals.totalShifts;
+            document.getElementById(`month-diners-${yearMonth}`).textContent = totals.totalDiners;
+
+            // Update días abiertos
+            const monthDays = calendarData.filter(day => {
+                const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                return key === yearMonth;
+            });
+            document.getElementById(`month-open-days-${yearMonth}`).textContent =
+                monthDays.filter(d => dailyPlanning[d.fecha]?.open).length;
+        }
+
+        // Render calendar for all months
+        function renderCalendar() {
+            const container = document.getElementById('planning-months-container');
+            container.innerHTML = '';
+
+            const monthsGrouped = groupByMonth();
+            const sortedMonths = Object.keys(monthsGrouped).sort();
+
+            sortedMonths.forEach(yearMonth => {
+                const days = monthsGrouped[yearMonth];
+                const [year, month] = yearMonth.split('-');
+                const monthName = monthNames[parseInt(month)];
+
+                const totals = calculateMonthTotals(yearMonth);
+
+                const monthSection = document.createElement('div');
+                monthSection.className = 'month-section';
+                monthSection.innerHTML = `
+                    <div class="month-header" onclick="toggleMonth('${yearMonth}')">
+                        <h3>${monthName} ${year}</h3>
+                        <div class="month-summary">
+                            <div class="month-summary-item">
+                                <label>Turnos</label>
+                                <div class="value" id="month-shifts-${yearMonth}">${totals.totalShifts}</div>
+                            </div>
+                            <div class="month-summary-item">
+                                <label>Días Abiertos</label>
+                                <div class="value" id="month-open-days-${yearMonth}">${days.filter(d => dailyPlanning[d.fecha]?.open).length}</div>
+                            </div>
+                            <div class="month-summary-item">
+                                <label>Comensales Totales</label>
+                                <div class="value" id="month-diners-${yearMonth}">${totals.totalDiners}</div>
+                            </div>
+                            <div class="expand-icon" id="expand-icon-${yearMonth}">▼</div>
+                        </div>
+                    </div>
+                    <div class="month-content" id="month-content-${yearMonth}">
+                        <div class="bulk-controls">
+                            <button class="bulk-btn" onclick="bulkSetDays('${yearMonth}', true)">Abrir todos los días</button>
+                            <button class="bulk-btn" onclick="bulkSetDays('${yearMonth}', false)">Cerrar todos los días</button>
+                            <button class="bulk-btn" onclick="bulkSetOccupancy('${yearMonth}')">Cambiar ocupación del mes</button>
+                        </div>
+                        <div class="calendar-grid">
+                            <div class="calendar-header">L</div>
+                            <div class="calendar-header">M</div>
+                            <div class="calendar-header">X</div>
+                            <div class="calendar-header">J</div>
+                            <div class="calendar-header">V</div>
+                            <div class="calendar-header">S</div>
+                            <div class="calendar-header">D</div>
+                        </div>
+                        <div class="calendar-grid" id="calendar-${yearMonth}">
+                            <!-- Days will be rendered here -->
+                        </div>
+                        <div class="monthly-stats">
+                            <div class="stat-box revenue">
+                                <label>Ingresos</label>
+                                <div class="value" id="stats-revenue-${yearMonth}">${formatCurrency(0)}</div>
+                            </div>
+                            <div class="stat-box expense">
+                                <label>Aprovisionamiento</label>
+                                <div class="value" id="stats-aprovisionamiento-${yearMonth}">${formatCurrency(0)}</div>
+                            </div>
+                            <div class="stat-box expense">
+                                <label>Gastos Personal</label>
+                                <div class="value" id="stats-personal-${yearMonth}">${formatCurrency(0)}</div>
+                            </div>
+                            <div class="stat-box expense">
+                                <label>Gastos Operativos</label>
+                                <div class="value" id="stats-operativos-${yearMonth}">${formatCurrency(0)}</div>
+                            </div>
+                            <div class="stat-box result">
+                                <label>Resultado Mes</label>
+                                <div class="value" id="stats-result-${yearMonth}">${formatCurrency(0)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(monthSection);
+
+                // Render days
+                renderMonthDays(yearMonth, days);
+                updateMonthStats(yearMonth);
+            });
+        }
+
+        // Render days for a specific month
+        function renderMonthDays(yearMonth, days) {
+            const calendarGrid = document.getElementById(`calendar-${yearMonth}`);
+
+            // Find first day of month to determine offset
+            const firstDay = days[0];
+            const dayOfWeekMap = {
+                'lunes': 0, 'martes': 1, 'miércoles': 2, 'jueves': 3,
+                'viernes': 4, 'sábado': 5, 'domingo': 6
+            };
+            const offset = dayOfWeekMap[firstDay.dia_semana.toLowerCase()];
+
+            // Add empty cells for offset
+            for (let i = 0; i < offset; i++) {
+                const emptyCell = document.createElement('div');
+                calendarGrid.appendChild(emptyCell);
+            }
+
+            // Render each day
+            days.forEach(day => {
+                const planning = dailyPlanning[day.fecha];
+                const isOpen = planning?.open || false;
+                const occupancy = planning?.occupancy || 40;
+                const shifts = planning?.shifts || 0;
+
+                // Calcular comensales
+                const capacidad = parseFloat(document.getElementById('capacidad').value);
+                const comensalesPorTurno = Math.round(capacidad * (occupancy / 100));
+                const comensalesTotales = comensalesPorTurno * shifts;
+
+                const dayCell = document.createElement('div');
+                dayCell.className = `day-cell ${isOpen ? 'open' : 'closed'}`;
+                dayCell.id = `day-${day.fecha}`;
+
+                dayCell.innerHTML = `
+                    <div class="day-date">
+                        <span>${day.dia}</span>
+                        <span class="day-name">${day.dia_semana.substring(0, 3)}</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <label class="switch">
+                            <input type="checkbox" id="open-${day.fecha}" ${isOpen ? 'checked' : ''}
+                                   onchange="updateDayPlanning('${day.fecha}', 'open', this.checked); renderDayCell('${day.fecha}')">
+                            <span class="slider"></span>
+                        </label>
+                        <span style="font-size: 0.8em;">${isOpen ? 'Abierto' : 'Cerrado'}</span>
+                    </div>
+                    ${isOpen ? `
+                        <div class="day-controls">
+                            <label>Turnos:</label>
+                            <input type="number" min="0" max="4" step="1" value="${shifts}"
+                                   oninput="updateDayPlanning('${day.fecha}', 'shifts', parseInt(this.value))">
+                        </div>
+                        <div class="day-controls">
+                            <label>Ocupación:</label>
+                            <input type="range" min="10" max="100" step="1" value="${occupancy}"
+                                   oninput="updateDayPlanning('${day.fecha}', 'occupancy', parseInt(this.value)); renderDayCell('${day.fecha}')">
+                            <div class="occupancy-display" id="occ-display-${day.fecha}">${occupancy}%</div>
+                        </div>
+                        <div class="day-info" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(102, 126, 234, 0.2); text-align: center;">
+                            <span style="font-size: 0.85em; color: #667eea; font-weight: 600;">${comensalesTotales} comensales</span>
+                            <span style="font-size: 0.75em; color: #999; display: block;">(${comensalesPorTurno} × ${shifts})</span>
+                        </div>
+                    ` : ''}
+                `;
+
+                calendarGrid.appendChild(dayCell);
+            });
+        }
+
+        // Re-render single day cell
+        function renderDayCell(date) {
+            const dayData = calendarData.find(d => d.fecha === date);
+            if (!dayData) return;
+
+            const planning = dailyPlanning[date];
+            const isOpen = planning?.open || false;
+            const occupancy = planning?.occupancy || 40;
+            const shifts = planning?.shifts || 0;
+
+            // Calcular comensales
+            const capacidad = parseFloat(document.getElementById('capacidad').value);
+            const comensalesPorTurno = Math.round(capacidad * (occupancy / 100));
+            const comensalesTotales = comensalesPorTurno * shifts;
+
+            const dayCell = document.getElementById(`day-${date}`);
+            dayCell.className = `day-cell ${isOpen ? 'open' : 'closed'}`;
+
+            dayCell.innerHTML = `
+                <div class="day-date">
+                    <span>${dayData.dia}</span>
+                    <span class="day-name">${dayData.dia_semana.substring(0, 3)}</span>
+                </div>
+                <div class="toggle-switch">
+                    <label class="switch">
+                        <input type="checkbox" id="open-${date}" ${isOpen ? 'checked' : ''}
+                               onchange="updateDayPlanning('${date}', 'open', this.checked); renderDayCell('${date}')">
+                        <span class="slider"></span>
+                    </label>
+                    <span style="font-size: 0.8em;">${isOpen ? 'Abierto' : 'Cerrado'}</span>
+                </div>
+                ${isOpen ? `
+                    <div class="day-controls">
+                        <label>Turnos:</label>
+                        <input type="number" min="0" max="4" step="1" value="${shifts}"
+                               oninput="updateDayPlanning('${date}', 'shifts', parseInt(this.value))">
+                    </div>
+                    <div class="day-controls">
+                        <label>Ocupación:</label>
+                        <input type="range" min="10" max="100" step="1" value="${occupancy}"
+                               oninput="updateDayPlanning('${date}', 'occupancy', parseInt(this.value)); renderDayCell('${date}')">
+                        <div class="occupancy-display" id="occ-display-${date}">${occupancy}%</div>
+                    </div>
+                    <div class="day-info" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(102, 126, 234, 0.2); text-align: center;">
+                        <span style="font-size: 0.85em; color: #667eea; font-weight: 600;">${comensalesTotales} comensales</span>
+                        <span style="font-size: 0.75em; color: #999; display: block;">(${comensalesPorTurno} × ${shifts})</span>
+                    </div>
+                ` : ''}
+            `;
+
+            // Update month summary and all results
+            const [year, month] = date.split('-');
+            const yearMonth = `${year}-${month}`;
+            updateMonthSummary(yearMonth);
+            updateMonthStats(yearMonth);
+            updateTreasuryChart();
+            calculateYearlyResults();
+        }
+
+        // Bulk set days open/closed for a month
+        function bulkSetDays(yearMonth, open) {
+            const monthDays = calendarData.filter(day => {
+                const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                return key === yearMonth;
+            });
+
+            monthDays.forEach(day => {
+                dailyPlanning[day.fecha].open = open;
+            });
+
+            // Re-render month
+            const [year, month] = yearMonth.split('-');
+            const days = monthDays;
+            document.getElementById(`calendar-${yearMonth}`).innerHTML = '';
+            renderMonthDays(yearMonth, days);
+            updateMonthSummary(yearMonth);
+            updateMonthStats(yearMonth);
+            updateTreasuryChart();
+            calculateYearlyResults();
+        }
+
+        // Bulk set shifts for a month
+        function bulkSetShifts(yearMonth) {
+            const newShifts = prompt('Turnos para todo el mes (0-4):');
+            if (!newShifts) return;
+
+            const shiftsValue = parseInt(newShifts);
+            if (shiftsValue < 0 || shiftsValue > 4) {
+                alert('Los turnos deben estar entre 0 y 4');
+                return;
+            }
+
+            const monthDays = calendarData.filter(day => {
+                const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                return key === yearMonth;
+            });
+
+            monthDays.forEach(day => {
+                if (dailyPlanning[day.fecha].open) {
+                    dailyPlanning[day.fecha].shifts = shiftsValue;
+                }
+            });
+
+            // Re-render month
+            const [year, month] = yearMonth.split('-');
+            const days = monthDays;
+            document.getElementById(`calendar-${yearMonth}`).innerHTML = '';
+            renderMonthDays(yearMonth, days);
+            updateMonthSummary(yearMonth);
+            updateMonthStats(yearMonth);
+            updateTreasuryChart();
+            calculateYearlyResults();
+        }
+
+        // Bulk set occupancy for a month
+        function bulkSetOccupancy(yearMonth) {
+            const choice = prompt('¿Cambiar ocupación por:\n1 - Todo el mes (mismo % para todos los días)\n2 - Por días de la semana\n\nEscribe 1 o 2:');
+
+            if (!choice) return;
+
+            const monthDays = calendarData.filter(day => {
+                const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                return key === yearMonth;
+            });
+
+            if (choice === '1') {
+                // Opción 1: Todo el mes
+                const newOccupancy = prompt('Ocupación para todo el mes (%):');
+                if (!newOccupancy) return;
+
+                const occupancyValue = parseInt(newOccupancy);
+                if (occupancyValue < 10 || occupancyValue > 100) {
+                    alert('La ocupación debe estar entre 10% y 100%');
+                    return;
+                }
+
+                monthDays.forEach(day => {
+                    if (dailyPlanning[day.fecha].open) {
+                        dailyPlanning[day.fecha].occupancy = occupancyValue;
+                    }
+                });
+            } else if (choice === '2') {
+                // Opción 2: Por días de la semana
+                const miercoles = prompt('Ocupación para Miércoles (%):');
+                if (!miercoles) return;
+                const jueves = prompt('Ocupación para Jueves (%):');
+                if (!jueves) return;
+                const viernes = prompt('Ocupación para Viernes (%):');
+                if (!viernes) return;
+                const sabado = prompt('Ocupación para Sábado (%):');
+                if (!sabado) return;
+                const domingo = prompt('Ocupación para Domingo (%):');
+                if (!domingo) return;
+
+                const occMie = parseInt(miercoles);
+                const occJue = parseInt(jueves);
+                const occVie = parseInt(viernes);
+                const occSab = parseInt(sabado);
+                const occDom = parseInt(domingo);
+
+                // Validar que todos estén en rango
+                if ([occMie, occJue, occVie, occSab, occDom].some(v => v < 10 || v > 100)) {
+                    alert('Todas las ocupaciones deben estar entre 10% y 100%');
+                    return;
+                }
+
+                monthDays.forEach(day => {
+                    if (dailyPlanning[day.fecha].open) {
+                        const dayName = day.dia_semana.toLowerCase();
+                        if (dayName === 'miércoles') {
+                            dailyPlanning[day.fecha].occupancy = occMie;
+                        } else if (dayName === 'jueves') {
+                            dailyPlanning[day.fecha].occupancy = occJue;
+                        } else if (dayName === 'viernes') {
+                            dailyPlanning[day.fecha].occupancy = occVie;
+                        } else if (dayName === 'sábado') {
+                            dailyPlanning[day.fecha].occupancy = occSab;
+                        } else if (dayName === 'domingo') {
+                            dailyPlanning[day.fecha].occupancy = occDom;
+                        }
+                    }
+                });
+            } else {
+                alert('Opción no válida. Escribe 1 o 2.');
+                return;
+            }
+
+            // Re-render month
+            const [year, month] = yearMonth.split('-');
+            const days = monthDays;
+            document.getElementById(`calendar-${yearMonth}`).innerHTML = '';
+            renderMonthDays(yearMonth, days);
+            updateMonthSummary(yearMonth);
+            updateMonthStats(yearMonth);
+            updateTreasuryChart();
+            calculateYearlyResults();
+        }
+
+        // Update monthly statistics
+        function updateMonthStats(yearMonth) {
+            const monthDays = calendarData.filter(day => {
+                const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                return key === yearMonth;
+            });
+
+            const capacidad = parseFloat(document.getElementById('capacidad').value);
+            const ticket = parseFloat(document.getElementById('ticket').value);
+            const aprovisionamientoPct = parseFloat(document.getElementById('aprovisionamiento').value) / 100;
+
+            let totalRevenue = 0;
+
+            monthDays.forEach(day => {
+                const planning = dailyPlanning[day.fecha];
+                if (planning && planning.open) {
+                    const shifts = planning.shifts || 2; // Default 2 shifts per day
+                    const occupancy = (planning.occupancy || 40) / 100;
+                    const comensales = Math.round(capacidad * occupancy);
+                    const revenue = comensales * ticket * shifts;
+                    totalRevenue += revenue;
+                }
+            });
+
+            const aprovisionamiento = totalRevenue * aprovisionamientoPct;
+            const margen = totalRevenue - aprovisionamiento;
+
+            // Calculate monthly fixed costs (proportional)
+            const totalPersonal = calculateMonthlyPersonalCost() / 12;
+            const totalOperativos = calculateMonthlyOperativeCost() / 12;
+
+            const result = margen - totalPersonal - totalOperativos;
+
+            // Update stats display with full breakdown
+            document.getElementById(`stats-revenue-${yearMonth}`).textContent = formatCurrency(totalRevenue);
+            document.getElementById(`stats-aprovisionamiento-${yearMonth}`).textContent = formatCurrency(aprovisionamiento);
+            document.getElementById(`stats-personal-${yearMonth}`).textContent = formatCurrency(totalPersonal);
+            document.getElementById(`stats-operativos-${yearMonth}`).textContent = formatCurrency(totalOperativos);
+            document.getElementById(`stats-result-${yearMonth}`).textContent = formatCurrency(result);
+        }
+
+        // Calculate monthly personal cost
+        function calculateMonthlyPersonalCost() {
+            let total = 0;
+            employees.forEach((emp, index) => {
+                const netMonthly = parseFloat(document.getElementById(`emp-net-${index}`)?.value) || emp.netMonthly;
+                const cost = calculateTotalCompanyCost(netMonthly);
+                total += cost.totalCost;
+            });
+            customEmployees.forEach(emp => {
+                const cost = calculateTotalCompanyCost(emp.netMonthly);
+                total += cost.totalCost;
+            });
+            return total;
+        }
+
+        // Calculate monthly operative cost
+        function calculateMonthlyOperativeCost() {
+            const alquiler = parseFloat(document.getElementById('alquiler').value) * 12;
+            const luz = parseFloat(document.getElementById('luz').value) * 12;
+            const agua = parseFloat(document.getElementById('agua').value) * 12;
+            const gas = parseFloat(document.getElementById('gas').value) * 12;
+            const internet = parseFloat(document.getElementById('internet').value) * 12;
+            const alarma = parseFloat(document.getElementById('alarma').value) * 12;
+            const redes = parseFloat(document.getElementById('redes').value) * 12;
+            const mantenimiento = parseFloat(document.getElementById('mantenimiento').value) * 12;
+            const veladores = parseFloat(document.getElementById('veladores').value);
+            const qamarero = parseFloat(document.getElementById('qamarero').value);
+            const asesoria = parseFloat(document.getElementById('asesoria').value) * 12;
+
+            let total = alquiler + luz + agua + gas + internet + alarma + redes + mantenimiento + veladores + qamarero + asesoria;
+
+            customExpenses.forEach(expense => {
+                const frequency = expense.frequency || 'annual'; // Default to annual for backwards compatibility
+                const annualAmount = frequency === 'monthly' ? (expense.amount || 0) * 12 : (expense.amount || 0);
+                total += annualAmount;
+            });
+
+            return total;
+        }
+
+        // Update treasury chart
+        function updateTreasuryChart() {
+            const ctx = document.getElementById('treasuryChart');
+            if (!ctx) return;
+
+            if (treasuryChart) {
+                treasuryChart.destroy();
+            }
+
+            const allMonths = Object.keys(groupByMonth()).sort();
+            const monthLabels = [];
+            const treasuryData = [];
+            const revenueData = [];
+            const expensesData = [];
+
+            const capacidad = parseFloat(document.getElementById('capacidad').value);
+            const ticket = parseFloat(document.getElementById('ticket').value);
+            const aprovisionamientoPct = parseFloat(document.getElementById('aprovisionamiento').value) / 100;
+            const monthlyExpenses = (calculateMonthlyPersonalCost() + calculateMonthlyOperativeCost()) / 12;
+
+            let cumulativeTreasury = 0;
+
+            allMonths.forEach(yearMonth => {
+                const [year, month] = yearMonth.split('-');
+                const monthName = monthNames[parseInt(month)];
+                monthLabels.push(`${monthName.substring(0, 3)} ${year}`);
+
+                const mDays = calendarData.filter(day => {
+                    const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
+                    return key === yearMonth;
+                });
+
+                let mRevenue = 0;
+                mDays.forEach(day => {
+                    const planning = dailyPlanning[day.fecha];
+                    if (planning && planning.open) {
+                        const shifts = planning.shifts || 2;
+                        const occupancy = (planning.occupancy || 40) / 100;
+                        const comensales = Math.round(capacidad * occupancy);
+                        mRevenue += comensales * ticket * shifts;
+                    }
+                });
+
+                const mAprov = mRevenue * aprovisionamientoPct;
+                const mMargen = mRevenue - mAprov;
+                const mResult = mMargen - monthlyExpenses;
+                cumulativeTreasury += mResult;
+
+                revenueData.push(mRevenue);
+                expensesData.push(monthlyExpenses);
+                treasuryData.push(cumulativeTreasury);
+            });
+
+            treasuryChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: monthLabels,
+                    datasets: [
+                        {
+                            label: 'Tesorería Acumulada',
+                            data: treasuryData,
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Ingresos Mensuales',
+                            data: revenueData,
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            hidden: true
+                        },
+                        {
+                            label: 'Gastos Mensuales',
+                            data: expensesData,
+                            borderColor: '#dc3545',
+                            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            hidden: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
+                                }
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             initEmployees();
-            updateInputs();
+            parseCalendarData();
+            renderCalendar();
+            updateAllCalculations(); // Actualiza todos los cálculos, incluyendo totales de pestañas, charts y resultados
         });
     </script>
 </body>
