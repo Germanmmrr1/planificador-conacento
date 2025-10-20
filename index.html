@@ -190,6 +190,10 @@
             margin-top: 20px;
         }
 
+        .variables-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
         .result-card {
             background: white;
             padding: 20px;
@@ -501,10 +505,13 @@
 
             .month-header {
                 padding: 12px;
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
 
             .month-header h3 {
                 font-size: 1.1em;
+                margin: 0;
             }
 
             .month-content {
@@ -512,19 +519,34 @@
                 overflow-x: auto;
             }
 
-            /* Month summary - 2 columnas en móvil */
+            /* Month summary - layout vertical en móvil */
             .month-summary {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-                font-size: 0.75em;
+                grid-template-columns: 1fr;
+                gap: 6px;
+                font-size: 0.7em;
+            }
+
+            .month-summary-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 4px 8px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 4px;
             }
 
             .month-summary-item label {
-                font-size: 0.8em;
+                font-size: 0.85em;
+                white-space: nowrap;
             }
 
             .month-summary-item .value {
                 font-size: 1em;
+                font-weight: bold;
+            }
+
+            .expand-icon {
+                margin-left: 8px;
             }
 
             /* Calendar grid - 7 columnas con scroll horizontal */
@@ -695,6 +717,11 @@
             .results-grid {
                 grid-template-columns: 1fr;
                 gap: 12px;
+            }
+
+            .variables-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
 
             .input-group {
@@ -1010,8 +1037,9 @@
             color: white;
             padding: 20px;
             cursor: pointer;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 15px;
             align-items: center;
             transition: all 0.3s;
         }
@@ -1028,7 +1056,7 @@
 
         .month-summary {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             font-size: 0.95em;
         }
@@ -1339,7 +1367,7 @@
                 <!-- Variables Section -->
                 <div class="section full-width">
                     <h2>Variables de Venta</h2>
-                    <div class="results-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="results-grid variables-grid">
                         <div class="input-group">
                             <label>
                                 Capacidad Total (comensales): <span class="range-value" id="capacidad-value">90</span>
