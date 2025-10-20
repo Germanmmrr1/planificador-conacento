@@ -31,7 +31,8 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
         header {
@@ -143,8 +144,6 @@
             margin-top: -10px;
             background: white;
             border-bottom: 2px solid #e0e0e0;
-            -webkit-overflow-scrolling: touch;
-            overflow-x: auto;
         }
 
         .tab-button {
@@ -429,142 +428,236 @@
         /* Responsive Design - Móviles (iPhone y similares) */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 5px;
+            }
+
+            .container {
+                border-radius: 10px;
+            }
+
+            header {
+                padding: 20px 15px;
             }
 
             header h1 {
-                font-size: 1.8em;
+                font-size: 1.5em;
+                margin-bottom: 5px;
             }
 
             header p {
-                font-size: 0.95em;
+                font-size: 0.85em;
             }
 
             .tabs-container {
-                padding: 0 15px;
+                padding: 0 10px;
                 gap: 5px;
                 overflow-x: auto;
                 white-space: nowrap;
                 -webkit-overflow-scrolling: touch;
+                scrollbar-width: none; /* Firefox */
+                -ms-overflow-style: none; /* IE/Edge */
+            }
+
+            .tabs-container::-webkit-scrollbar {
+                display: none; /* Chrome/Safari */
             }
 
             .tab-button {
-                padding: 12px 15px;
-                font-size: 0.9em;
+                padding: 10px 12px;
+                font-size: 0.8em;
                 flex-shrink: 0;
             }
 
             .tab-grid,
             .main-content {
-                padding: 15px;
-                gap: 15px;
+                padding: 10px;
+                gap: 10px;
+            }
+
+            #tab-planificacion > div,
+            #tab-salarios > div,
+            #tab-gastos > div,
+            #tab-resultados > div {
+                padding: 10px !important;
             }
 
             .section {
-                padding: 15px;
+                padding: 12px;
             }
 
             .section h2 {
-                font-size: 1.4em;
+                font-size: 1.2em;
+                margin-bottom: 12px;
+                padding-bottom: 8px;
+            }
+
+            .section.full-width {
+                margin-top: 15px !important;
+            }
+
+            .month-section {
+                margin-bottom: 12px;
+            }
+
+            .month-header {
+                padding: 12px;
+            }
+
+            .month-header h3 {
+                font-size: 1.1em;
+            }
+
+            .month-content {
+                padding: 12px;
+                overflow-x: auto;
             }
 
             /* Month summary - 2 columnas en móvil */
             .month-summary {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-                font-size: 0.85em;
-            }
-
-            /* Calendar grid - mantener 7 columnas pero más pequeñas */
-            .calendar-grid {
-                gap: 5px;
-            }
-
-            .calendar-header {
-                padding: 8px 4px;
+                gap: 8px;
                 font-size: 0.75em;
             }
 
-            .day-cell {
-                padding: 8px;
-                font-size: 0.85em;
-            }
-
-            .day-date {
-                font-size: 0.95em;
-                margin-bottom: 5px;
-            }
-
-            .day-name {
-                font-size: 0.65em;
-            }
-
-            .day-controls {
-                margin-top: 6px;
-            }
-
-            .day-controls label {
-                font-size: 0.75em;
-            }
-
-            .day-controls input[type="number"] {
-                padding: 6px;
-                font-size: 0.85em;
-            }
-
-            .occupancy-display {
+            .month-summary-item label {
                 font-size: 0.8em;
             }
 
+            .month-summary-item .value {
+                font-size: 1em;
+            }
+
+            /* Calendar grid - 7 columnas con scroll horizontal */
+            .calendar-grid {
+                gap: 3px;
+                font-size: 0.75em;
+                grid-template-columns: repeat(7, 1fr);
+                min-width: 500px;
+                overflow: visible;
+            }
+
+            .calendar-header {
+                padding: 5px 2px;
+                font-size: 0.65em;
+            }
+
+            .day-cell {
+                padding: 4px;
+                min-height: auto;
+            }
+
+            .day-date {
+                font-size: 0.8em;
+                margin-bottom: 3px;
+                flex-direction: column;
+                gap: 1px;
+            }
+
+            .day-date span:first-child {
+                font-size: 1.1em;
+            }
+
+            .day-name {
+                font-size: 0.6em;
+            }
+
+            .day-controls {
+                margin-top: 4px;
+            }
+
+            .day-controls label {
+                font-size: 0.65em;
+                margin-bottom: 2px;
+            }
+
+            .day-controls input[type="number"] {
+                padding: 4px;
+                font-size: 0.75em;
+                min-height: 32px;
+            }
+
+            .day-controls input[type="range"] {
+                height: 32px;
+            }
+
+            .occupancy-display {
+                font-size: 0.7em;
+                margin-top: 2px;
+            }
+
             .day-info {
-                margin-top: 6px;
-                padding-top: 6px;
+                margin-top: 4px;
+                padding-top: 4px;
+                font-size: 0.65em;
+            }
+
+            .day-info span:first-child {
+                font-size: 0.75em !important;
+            }
+
+            .day-info span:last-child {
+                font-size: 0.65em !important;
             }
 
             .toggle-switch {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
                 gap: 4px;
+                margin-bottom: 5px;
+            }
+
+            .toggle-switch span {
+                font-size: 0.65em;
             }
 
             .switch {
-                width: 45px;
-                height: 22px;
+                width: 36px;
+                height: 18px;
             }
 
             .slider:before {
-                height: 16px;
-                width: 16px;
+                height: 14px;
+                width: 14px;
+                left: 2px;
+                bottom: 2px;
             }
 
             input:checked + .slider:before {
-                transform: translateX(23px);
+                transform: translateX(18px);
             }
 
             /* Bulk controls - 1 columna en móvil */
             .bulk-controls {
                 grid-template-columns: 1fr;
-                gap: 10px;
+                gap: 8px;
+                padding: 10px;
             }
 
             .bulk-btn {
-                padding: 12px;
-                font-size: 0.9em;
+                padding: 10px;
+                font-size: 0.85em;
             }
 
             /* Monthly stats - 1 columna en móvil */
             .monthly-stats {
                 grid-template-columns: 1fr;
-                gap: 10px;
-                padding: 15px;
+                gap: 8px;
+                padding: 12px;
+                margin-top: 12px;
             }
 
             .stat-box {
-                padding: 12px;
+                padding: 10px;
+            }
+
+            .stat-box label {
+                font-size: 0.75em;
+                margin-bottom: 5px;
             }
 
             .stat-box .value {
-                font-size: 1.2em;
+                font-size: 1.1em;
             }
 
             /* Employee list */
@@ -601,7 +694,27 @@
             /* Results grid */
             .results-grid {
                 grid-template-columns: 1fr;
-                gap: 15px;
+                gap: 12px;
+            }
+
+            .input-group {
+                margin-bottom: 15px;
+            }
+
+            .input-group label {
+                font-size: 0.9em;
+            }
+
+            .range-value {
+                font-size: 0.9em;
+                padding: 4px 12px;
+            }
+
+            .tooltip-icon {
+                width: 18px;
+                height: 18px;
+                line-height: 18px;
+                font-size: 12px;
             }
 
             /* Financial flow */
@@ -676,42 +789,138 @@
 
         /* Móviles pequeños (iPhone SE, etc) */
         @media (max-width: 375px) {
+            body {
+                padding: 3px;
+            }
+
+            header {
+                padding: 15px 10px;
+            }
+
             header h1 {
-                font-size: 1.5em;
+                font-size: 1.3em;
+            }
+
+            header p {
+                font-size: 0.75em;
             }
 
             .tab-button {
-                padding: 10px 12px;
-                font-size: 0.85em;
+                padding: 8px 10px;
+                font-size: 0.75em;
+            }
+
+            .section {
+                padding: 10px;
             }
 
             .section h2 {
-                font-size: 1.2em;
+                font-size: 1.1em;
+                margin-bottom: 10px;
             }
 
             .month-summary {
                 grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .month-header {
+                padding: 10px;
+            }
+
+            .month-header h3 {
+                font-size: 1em;
             }
 
             .calendar-grid {
-                gap: 3px;
+                gap: 2px;
+                grid-template-columns: repeat(7, 1fr);
+                min-width: 450px;
+            }
+
+            .calendar-header {
+                padding: 4px 1px;
+                font-size: 0.55em;
             }
 
             .day-cell {
-                padding: 6px;
-                font-size: 0.75em;
+                padding: 3px;
+                font-size: 0.7em;
             }
 
             .day-date {
-                font-size: 0.85em;
+                font-size: 0.75em;
+                margin-bottom: 2px;
+            }
+
+            .day-date span:first-child {
+                font-size: 1em;
+            }
+
+            .day-controls label {
+                font-size: 0.6em;
+            }
+
+            .day-controls input[type="number"] {
+                padding: 3px;
+                font-size: 0.7em;
+                min-height: 28px;
+            }
+
+            .day-controls input[type="range"] {
+                height: 28px;
+            }
+
+            .occupancy-display {
+                font-size: 0.65em;
+            }
+
+            .day-info {
+                font-size: 0.6em;
+                margin-top: 3px;
+                padding-top: 3px;
+            }
+
+            .day-info span:first-child {
+                font-size: 0.7em !important;
+            }
+
+            .day-info span:last-child {
+                font-size: 0.6em !important;
+            }
+
+            .switch {
+                width: 32px;
+                height: 16px;
+            }
+
+            .slider:before {
+                height: 12px;
+                width: 12px;
+            }
+
+            input:checked + .slider:before {
+                transform: translateX(16px);
             }
 
             .flow-label {
-                font-size: 0.95em;
+                font-size: 0.9em;
             }
 
             .flow-value {
-                font-size: 1.1em;
+                font-size: 1em;
+            }
+
+            .flow-item.result .flow-value {
+                font-size: 1.2em;
+            }
+
+            .stat-box label {
+                font-size: 0.7em;
+            }
+
+            .stat-box .value {
+                font-size: 1em;
             }
         }
 
@@ -792,7 +1001,7 @@
             background: white;
             border-radius: 12px;
             margin-bottom: 20px;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
@@ -844,6 +1053,8 @@
             display: none;
             padding: 25px;
             background: #f8f9fa;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .month-content.expanded {
@@ -855,6 +1066,9 @@
             grid-template-columns: repeat(7, 1fr);
             gap: 10px;
             margin-bottom: 20px;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .calendar-header {
