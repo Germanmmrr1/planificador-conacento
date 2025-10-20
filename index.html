@@ -2444,7 +2444,7 @@
                         <div class="day-controls">
                             <label>Turnos:</label>
                             <input type="number" min="0" max="4" step="1" value="${shifts}"
-                                   oninput="updateDayPlanning('${day.fecha}', 'shifts', parseInt(this.value))">
+                                   oninput="updateDayPlanning('${day.fecha}', 'shifts', parseInt(this.value)); renderDayCell('${day.fecha}')">
                         </div>
                         <div class="day-controls">
                             <label>Ocupación:</label>
@@ -2498,7 +2498,7 @@
                     <div class="day-controls">
                         <label>Turnos:</label>
                         <input type="number" min="0" max="4" step="1" value="${shifts}"
-                               oninput="updateDayPlanning('${date}', 'shifts', parseInt(this.value))">
+                               oninput="updateDayPlanning('${date}', 'shifts', parseInt(this.value)); renderDayCell('${date}')">
                     </div>
                     <div class="day-controls">
                         <label>Ocupación:</label>
