@@ -566,7 +566,7 @@
                 gap: 3px;
                 font-size: 0.75em;
                 grid-template-columns: repeat(7, 1fr);
-                min-width: 500px;
+                min-width: 750px; /* Wider for better readability */
                 overflow: visible;
             }
 
@@ -578,6 +578,7 @@
             .day-cell {
                 padding: 4px;
                 min-height: auto;
+                min-width: 105px; /* Adequate width for touch */
             }
 
             .day-date {
@@ -899,7 +900,7 @@
             .calendar-grid {
                 gap: 2px;
                 grid-template-columns: repeat(7, 1fr);
-                min-width: 450px;
+                min-width: 700px; /* Wider for better touch targets on small phones */
             }
 
             .calendar-header {
@@ -910,6 +911,7 @@
             .day-cell {
                 padding: 3px;
                 font-size: 0.7em;
+                min-width: 95px; /* Ensure adequate width */
             }
 
             .day-date {
@@ -1123,6 +1125,7 @@
             background: #f8f9fa;
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            position: relative;
         }
 
         .month-content.expanded {
@@ -1385,6 +1388,11 @@
             text-align: center;
         }
 
+        /* Hide scroll hint on desktop */
+        .calendar-scroll-hint {
+            display: none;
+        }
+
         /* Mobile-friendly Modal */
         .mobile-modal {
             display: none;
@@ -1573,14 +1581,56 @@
                 min-width: 48px;
             }
 
-            /* Improve calendar for mobile - make it full width */
+            /* Improve calendar for mobile - horizontally scrollable */
+            .month-content {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 20px; /* Space for scroll indicator */
+            }
+
             .calendar-grid {
-                min-width: 100% !important;
+                min-width: 840px; /* 7 days × 120px = proper sizing */
+                width: max-content;
                 overflow: visible;
+                scroll-snap-type: x proximity;
             }
 
             .day-cell {
-                min-height: 140px;
+                min-height: 160px;
+                min-width: 110px;
+                scroll-snap-align: start;
+            }
+
+            /* Scroll indicator shadow */
+            .month-content::after {
+                content: '';
+                position: absolute;
+                right: 0;
+                top: 0;
+                bottom: 20px;
+                width: 30px;
+                background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
+                pointer-events: none;
+            }
+
+            /* Show scroll hint - only on mobile */
+            .calendar-scroll-hint {
+                display: block;
+                text-align: center;
+                padding: 10px;
+                color: #667eea;
+                font-size: 0.9em;
+                font-weight: 600;
+                background: rgba(102, 126, 234, 0.1);
+                border-radius: 8px;
+                margin: 10px 0;
+                animation: pulse 2s infinite;
+                border: 2px dashed rgba(102, 126, 234, 0.3);
+            }
+
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.6; }
             }
 
             /* Swipe indicator */
@@ -3376,6 +3426,9 @@
                             <button class="bulk-btn" onclick="bulkSetDays('${yearMonth}', true)">Abrir todos los días</button>
                             <button class="bulk-btn" onclick="bulkSetDays('${yearMonth}', false)">Cerrar todos los días</button>
                             <button class="bulk-btn" onclick="bulkSetOccupancy('${yearMonth}')">Cambiar ocupación del mes</button>
+                        </div>
+                        <div class="calendar-scroll-hint">
+                            👈 Desliza horizontalmente para ver todos los días 👉
                         </div>
                         <div class="calendar-grid">
                             <div class="calendar-header">L</div>
