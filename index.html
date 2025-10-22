@@ -1384,6 +1384,227 @@
             border-top: 1px solid rgba(102, 126, 234, 0.2);
             text-align: center;
         }
+
+        /* Mobile-friendly Modal */
+        .mobile-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .mobile-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal-input-group {
+            margin-bottom: 20px;
+        }
+
+        .modal-input-group label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .modal-input-group input,
+        .modal-input-group select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px; /* Prevents zoom on iOS */
+            transition: border-color 0.3s;
+        }
+
+        .modal-input-group input:focus,
+        .modal-input-group select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .modal-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .modal-btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 48px;
+        }
+
+        .modal-btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .modal-btn-primary:active {
+            background: #5568d3;
+            transform: scale(0.98);
+        }
+
+        .modal-btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-btn-secondary:active {
+            background: #d0d0d0;
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Touch-friendly tooltips */
+        .tooltip-trigger {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip-content {
+            display: none;
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            z-index: 9999;
+            max-width: 90vw;
+            width: 320px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            animation: slideUp 0.2s ease;
+        }
+
+        .tooltip-content.active {
+            display: block;
+        }
+
+        .tooltip-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 9998;
+        }
+
+        .tooltip-overlay.active {
+            display: block;
+        }
+
+        /* Sticky header on mobile */
+        @media (max-width: 768px) {
+            header {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+            }
+
+            .tabs-container {
+                position: sticky;
+                top: 85px; /* Height of header on mobile */
+                z-index: 99;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            /* Better touch targets */
+            button, .btn, .bulk-btn, .modal-btn, .expand-btn {
+                min-height: 48px;
+                min-width: 48px;
+            }
+
+            /* Improve calendar for mobile - make it full width */
+            .calendar-grid {
+                min-width: 100% !important;
+                overflow: visible;
+            }
+
+            .day-cell {
+                min-height: 140px;
+            }
+
+            /* Swipe indicator */
+            .swipe-indicator {
+                text-align: center;
+                padding: 8px;
+                color: #999;
+                font-size: 0.85em;
+                background: rgba(102, 126, 234, 0.05);
+                border-radius: 8px;
+                margin-bottom: 12px;
+            }
+        }
+
+        /* Active state for better touch feedback */
+        .day-cell:active {
+            transform: scale(0.98);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+
+        .bulk-btn:active,
+        .tab-button:active {
+            transform: scale(0.97);
+        }
     </style>
 </head>
 <body>
@@ -1395,10 +1616,10 @@
 
         <!-- Tabs Navigation -->
         <div class="tabs-container">
-            <button class="tab-button active" onclick="switchTab('planificacion')">Planificación y Variables</button>
-            <button class="tab-button" onclick="switchTab('salarios')">Personal y Salarios</button>
-            <button class="tab-button" onclick="switchTab('gastos')">Gastos Operativos</button>
-            <button class="tab-button" onclick="switchTab('resultados')">Resultados</button>
+            <button class="tab-button active" onclick="switchTab('planificacion', this)">Planificación y Variables</button>
+            <button class="tab-button" onclick="switchTab('salarios', this)">Personal y Salarios</button>
+            <button class="tab-button" onclick="switchTab('gastos', this)">Gastos Operativos</button>
+            <button class="tab-button" onclick="switchTab('resultados', this)">Resultados</button>
         </div>
 
         <!-- Tab: Planificación y Variables (Merged) -->
@@ -1411,7 +1632,7 @@
                         <div class="input-group">
                             <label>
                                 Capacidad Total (comensales): <span class="range-value" id="capacidad-value">90</span>
-                                <span class="tooltip-icon" data-tooltip="40 plazas en terraza + 50 plazas aprox. en interior">i</span>
+                                <span class="tooltip-icon" data-tooltip="40 plazas en terraza + 50 plazas aprox. en interior" onclick="showTooltip(this.getAttribute('data-tooltip'), this)">i</span>
                             </label>
                             <input type="range" id="capacidad" min="40" max="120" value="90" step="5" oninput="updateAllCalculations()">
                         </div>
@@ -1424,7 +1645,7 @@
                         <div class="input-group">
                             <label>
                                 Aprovisionamiento (% sobre ventas): <span class="range-value" id="aprovisionamiento-value">35</span>
-                                <span class="tooltip-icon" data-tooltip="35% es el histórico de Leo y está en línea con el sector">i</span>
+                                <span class="tooltip-icon" data-tooltip="35% es el histórico de Leo y está en línea con el sector" onclick="showTooltip(this.getAttribute('data-tooltip'), this)">i</span>
                             </label>
                             <input type="range" id="aprovisionamiento" min="25" max="45" value="35" step="1" oninput="updateAllCalculations()">
                         </div>
@@ -1480,7 +1701,7 @@
 21.000€ - 35.200€ → 30%
 35.200€ - 50.000€ → 37%
 50.000€ - 60.000€ → 41%
-60.000€+ → 45%">i</span>
+60.000€+ → 45%" onclick="showTooltip(this.getAttribute('data-tooltip'), this)">i</span>
                             </li>
                             <li><strong>Seguridad Social Empresa (31%):</strong> Se aplica sobre el bruto</li>
                             <li><strong>Coste Total = Bruto Anual + SS Empresa</strong></li>
@@ -1629,6 +1850,24 @@
         </div>
     </div>
 
+    <!-- Mobile-friendly Modal -->
+    <div id="mobile-modal" class="mobile-modal">
+        <div class="modal-content">
+            <div class="modal-header" id="modal-title">Modal Title</div>
+            <div id="modal-body">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn modal-btn-primary" id="modal-confirm-btn" onclick="confirmModal()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Touch-friendly Tooltip -->
+    <div id="tooltip-overlay" class="tooltip-overlay" onclick="hideTooltip()"></div>
+    <div id="tooltip-content" class="tooltip-content"></div>
+
     <script>
         // Datos de empleados (solo salario neto mensual como input)
         const employees = [
@@ -1760,8 +1999,130 @@
         let calendarData = [];
         let dailyPlanning = {}; // Store daily open/closed status and occupancy
 
+        // ==================== MOBILE-FRIENDLY MODAL FUNCTIONS ====================
+        let modalCallback = null;
+
+        function openModal(title, bodyHTML, confirmText = 'Confirmar', onConfirm = null) {
+            const modal = document.getElementById('mobile-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+
+            modalTitle.textContent = title;
+            modalBody.innerHTML = bodyHTML;
+            confirmBtn.textContent = confirmText;
+            modalCallback = onConfirm;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+
+            // Haptic feedback on supported devices
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('mobile-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+            modalCallback = null;
+        }
+
+        function confirmModal() {
+            if (modalCallback) {
+                modalCallback();
+            }
+            closeModal();
+        }
+
+        // ==================== TOUCH-FRIENDLY TOOLTIPS ====================
+        let activeTooltip = null;
+
+        function showTooltip(text, trigger) {
+            hideTooltip(); // Close any existing tooltip
+
+            const tooltipContent = document.getElementById('tooltip-content');
+            const tooltipOverlay = document.getElementById('tooltip-overlay');
+
+            tooltipContent.textContent = text;
+            tooltipContent.classList.add('active');
+            tooltipOverlay.classList.add('active');
+
+            activeTooltip = tooltipContent;
+
+            // Haptic feedback
+            if (navigator.vibrate) {
+                navigator.vibrate(5);
+            }
+        }
+
+        function hideTooltip() {
+            const tooltipContent = document.getElementById('tooltip-content');
+            const tooltipOverlay = document.getElementById('tooltip-overlay');
+
+            tooltipContent.classList.remove('active');
+            tooltipOverlay.classList.remove('active');
+            activeTooltip = null;
+        }
+
+        // ==================== SWIPE GESTURE SUPPORT ====================
+        let touchStartX = 0;
+        let touchEndX = 0;
+        let currentMonthElement = null;
+
+        function initSwipeGestures() {
+            document.querySelectorAll('.month-section').forEach(monthSection => {
+                monthSection.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    currentMonthElement = monthSection;
+                }, { passive: true });
+
+                monthSection.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe(currentMonthElement);
+                }, { passive: true });
+            });
+        }
+
+        function handleSwipe(element) {
+            const swipeThreshold = 50;
+            const swipeDistance = touchEndX - touchStartX;
+
+            if (Math.abs(swipeDistance) < swipeThreshold) {
+                return; // Not a swipe, just a tap
+            }
+
+            // Get all month sections
+            const allMonths = Array.from(document.querySelectorAll('.month-section'));
+            const currentIndex = allMonths.indexOf(element);
+
+            if (swipeDistance > 0 && currentIndex > 0) {
+                // Swipe right - go to previous month
+                allMonths[currentIndex - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (navigator.vibrate) navigator.vibrate(10);
+            } else if (swipeDistance < 0 && currentIndex < allMonths.length - 1) {
+                // Swipe left - go to next month
+                allMonths[currentIndex + 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (navigator.vibrate) navigator.vibrate(10);
+            }
+        }
+
+        // ==================== HAPTIC FEEDBACK ====================
+        function vibrateLight() {
+            if (navigator.vibrate) {
+                navigator.vibrate(10);
+            }
+        }
+
+        function vibrateMedium() {
+            if (navigator.vibrate) {
+                navigator.vibrate(20);
+            }
+        }
+
         // Cambiar entre tabs
-        function switchTab(tabName) {
+        function switchTab(tabName, eventTarget) {
             // Ocultar todos los contenidos
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -1774,7 +2135,20 @@
 
             // Activar el tab seleccionado
             document.getElementById(`tab-${tabName}`).classList.add('active');
-            event.target.classList.add('active');
+            if (eventTarget) {
+                eventTarget.classList.add('active');
+            } else {
+                // Fallback: find and activate the button
+                document.querySelector(`.tab-button[onclick*="${tabName}"]`)?.classList.add('active');
+            }
+
+            // Haptic feedback
+            vibrateLight();
+
+            // Scroll to top on tab change (mobile UX)
+            if (window.innerWidth <= 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         // Mostrar/ocultar detalle de empleado
@@ -1785,23 +2159,41 @@
 
         // Añadir nuevo empleado
         function addNewEmployee() {
-            const name = prompt('Nombre del empleado:');
-            if (!name) return;
+            const modalBody = `
+                <div class="modal-input-group">
+                    <label>Nombre del empleado:</label>
+                    <input type="text" id="new-employee-name" placeholder="Ej: Juan Pérez (Camarero)" autocomplete="off">
+                </div>
+                <div class="modal-input-group">
+                    <label>Salario neto mensual (€):</label>
+                    <input type="number" id="new-employee-salary" placeholder="1500" min="0" step="50" inputmode="decimal">
+                </div>
+            `;
 
-            const netSalary = parseFloat(prompt('Salario neto mensual (€):'));
-            if (!netSalary || netSalary <= 0) {
-                alert('Por favor, introduce un salario válido');
-                return;
-            }
+            openModal('Añadir Nuevo Empleado', modalBody, 'Añadir', () => {
+                const name = document.getElementById('new-employee-name').value.trim();
+                const netSalary = parseFloat(document.getElementById('new-employee-salary').value);
 
-            const newEmployee = {
-                name: name,
-                netMonthly: netSalary
-            };
+                if (!name) {
+                    alert('Por favor, introduce un nombre');
+                    return;
+                }
 
-            customEmployees.push(newEmployee);
-            renderEmployees();
-            updateAllCalculations();
+                if (!netSalary || netSalary <= 0) {
+                    alert('Por favor, introduce un salario válido');
+                    return;
+                }
+
+                const newEmployee = {
+                    name: name,
+                    netMonthly: netSalary
+                };
+
+                customEmployees.push(newEmployee);
+                renderEmployees();
+                updateAllCalculations();
+                vibrateMedium(); // Success feedback
+            });
         }
 
         // Eliminar empleado personalizado
@@ -1882,30 +2274,50 @@
 
         // Añadir nuevo gasto
         function addNewExpense() {
-            const name = prompt('Nombre del gasto:');
-            if (!name) return;
+            const modalBody = `
+                <div class="modal-input-group">
+                    <label>Nombre del gasto:</label>
+                    <input type="text" id="new-expense-name" placeholder="Ej: Limpieza, Seguros..." autocomplete="off">
+                </div>
+                <div class="modal-input-group">
+                    <label>Frecuencia:</label>
+                    <select id="new-expense-frequency">
+                        <option value="monthly">Mensual</option>
+                        <option value="annual">Anual</option>
+                    </select>
+                </div>
+                <div class="modal-input-group">
+                    <label>Importe (€):</label>
+                    <input type="number" id="new-expense-amount" placeholder="500" min="0" step="10" inputmode="decimal">
+                </div>
+            `;
 
-            const frequencyInput = prompt('¿Importe mensual o anual? (escribir "mensual" o "anual"):');
-            if (!frequencyInput) return;
+            openModal('Añadir Nuevo Gasto', modalBody, 'Añadir', () => {
+                const name = document.getElementById('new-expense-name').value.trim();
+                const frequency = document.getElementById('new-expense-frequency').value;
+                const amount = parseFloat(document.getElementById('new-expense-amount').value);
 
-            const frequency = frequencyInput.toLowerCase().includes('mensual') ? 'monthly' : 'annual';
-            const frequencyLabel = frequency === 'monthly' ? '€/mes' : '€/año';
+                if (!name) {
+                    alert('Por favor, introduce un nombre para el gasto');
+                    return;
+                }
 
-            const amount = parseFloat(prompt(`Importe (${frequencyLabel}):`));
-            if (!amount || amount < 0) {
-                alert('Por favor, introduce un importe válido');
-                return;
-            }
+                if (!amount || amount < 0) {
+                    alert('Por favor, introduce un importe válido');
+                    return;
+                }
 
-            const newExpense = {
-                name: name,
-                amount: amount,
-                frequency: frequency
-            };
+                const newExpense = {
+                    name: name,
+                    amount: amount,
+                    frequency: frequency
+                };
 
-            customExpenses.push(newExpense);
-            renderCustomExpenses();
-            updateAllCalculations();
+                customExpenses.push(newExpense);
+                renderCustomExpenses();
+                updateAllCalculations();
+                vibrateMedium(); // Success feedback
+            });
         }
 
         // Eliminar gasto personalizado
@@ -3196,86 +3608,125 @@
 
         // Bulk set occupancy for a month
         function bulkSetOccupancy(yearMonth) {
-            const choice = prompt('¿Cambiar ocupación por:\n1 - Todo el mes (mismo % para todos los días)\n2 - Por días de la semana\n\nEscribe 1 o 2:');
-
-            if (!choice) return;
-
             const monthDays = calendarData.filter(day => {
                 const key = `${day.año}-${String(day.mes).padStart(2, '0')}`;
                 return key === yearMonth;
             });
 
-            if (choice === '1') {
-                // Opción 1: Todo el mes
-                const newOccupancy = prompt('Ocupación para todo el mes (%):');
-                if (!newOccupancy) return;
+            // Step 1: Choose the method
+            const modalBody = `
+                <div class="modal-input-group">
+                    <label>¿Cómo deseas cambiar la ocupación?</label>
+                    <select id="occupancy-choice" onchange="updateOccupancyForm()">
+                        <option value="all">Todo el mes (mismo % para todos los días)</option>
+                        <option value="by-day">Por días de la semana</option>
+                    </select>
+                </div>
+                <div id="occupancy-inputs">
+                    <div class="modal-input-group">
+                        <label>Ocupación para todo el mes (%):</label>
+                        <input type="number" id="occ-all" value="40" min="10" max="100" step="5" inputmode="decimal">
+                    </div>
+                </div>
+            `;
 
-                const occupancyValue = parseInt(newOccupancy);
-                if (occupancyValue < 10 || occupancyValue > 100) {
-                    alert('La ocupación debe estar entre 10% y 100%');
-                    return;
-                }
+            openModal('Cambiar Ocupación del Mes', modalBody, 'Aplicar', () => {
+                const choice = document.getElementById('occupancy-choice').value;
 
-                monthDays.forEach(day => {
-                    if (dailyPlanning[day.fecha].open) {
-                        dailyPlanning[day.fecha].occupancy = occupancyValue;
+                if (choice === 'all') {
+                    const occupancyValue = parseInt(document.getElementById('occ-all').value);
+                    if (occupancyValue < 10 || occupancyValue > 100) {
+                        alert('La ocupación debe estar entre 10% y 100%');
+                        return;
                     }
-                });
-            } else if (choice === '2') {
-                // Opción 2: Por días de la semana
-                const miercoles = prompt('Ocupación para Miércoles (%):');
-                if (!miercoles) return;
-                const jueves = prompt('Ocupación para Jueves (%):');
-                if (!jueves) return;
-                const viernes = prompt('Ocupación para Viernes (%):');
-                if (!viernes) return;
-                const sabado = prompt('Ocupación para Sábado (%):');
-                if (!sabado) return;
-                const domingo = prompt('Ocupación para Domingo (%):');
-                if (!domingo) return;
 
-                const occMie = parseInt(miercoles);
-                const occJue = parseInt(jueves);
-                const occVie = parseInt(viernes);
-                const occSab = parseInt(sabado);
-                const occDom = parseInt(domingo);
-
-                // Validar que todos estén en rango
-                if ([occMie, occJue, occVie, occSab, occDom].some(v => v < 10 || v > 100)) {
-                    alert('Todas las ocupaciones deben estar entre 10% y 100%');
-                    return;
-                }
-
-                monthDays.forEach(day => {
-                    if (dailyPlanning[day.fecha].open) {
-                        const dayName = day.dia_semana.toLowerCase();
-                        if (dayName === 'miércoles') {
-                            dailyPlanning[day.fecha].occupancy = occMie;
-                        } else if (dayName === 'jueves') {
-                            dailyPlanning[day.fecha].occupancy = occJue;
-                        } else if (dayName === 'viernes') {
-                            dailyPlanning[day.fecha].occupancy = occVie;
-                        } else if (dayName === 'sábado') {
-                            dailyPlanning[day.fecha].occupancy = occSab;
-                        } else if (dayName === 'domingo') {
-                            dailyPlanning[day.fecha].occupancy = occDom;
+                    monthDays.forEach(day => {
+                        if (dailyPlanning[day.fecha].open) {
+                            dailyPlanning[day.fecha].occupancy = occupancyValue;
                         }
-                    }
-                });
-            } else {
-                alert('Opción no válida. Escribe 1 o 2.');
-                return;
-            }
+                    });
+                } else if (choice === 'by-day') {
+                    const occMie = parseInt(document.getElementById('occ-mie').value);
+                    const occJue = parseInt(document.getElementById('occ-jue').value);
+                    const occVie = parseInt(document.getElementById('occ-vie').value);
+                    const occSab = parseInt(document.getElementById('occ-sab').value);
+                    const occDom = parseInt(document.getElementById('occ-dom').value);
 
-            // Re-render month
-            const [year, month] = yearMonth.split('-');
-            const days = monthDays;
-            document.getElementById(`calendar-${yearMonth}`).innerHTML = '';
-            renderMonthDays(yearMonth, days);
-            updateMonthSummary(yearMonth);
-            updateMonthStats(yearMonth);
-            updateTreasuryChart();
-            calculateYearlyResults();
+                    // Validar que todos estén en rango
+                    if ([occMie, occJue, occVie, occSab, occDom].some(v => v < 10 || v > 100)) {
+                        alert('Todas las ocupaciones deben estar entre 10% y 100%');
+                        return;
+                    }
+
+                    monthDays.forEach(day => {
+                        if (dailyPlanning[day.fecha].open) {
+                            const dayName = day.dia_semana.toLowerCase();
+                            if (dayName === 'miércoles') {
+                                dailyPlanning[day.fecha].occupancy = occMie;
+                            } else if (dayName === 'jueves') {
+                                dailyPlanning[day.fecha].occupancy = occJue;
+                            } else if (dayName === 'viernes') {
+                                dailyPlanning[day.fecha].occupancy = occVie;
+                            } else if (dayName === 'sábado') {
+                                dailyPlanning[day.fecha].occupancy = occSab;
+                            } else if (dayName === 'domingo') {
+                                dailyPlanning[day.fecha].occupancy = occDom;
+                            }
+                        }
+                    });
+                }
+
+                // Re-render month
+                const [year, month] = yearMonth.split('-');
+                const days = monthDays;
+                document.getElementById(`calendar-${yearMonth}`).innerHTML = '';
+                renderMonthDays(yearMonth, days);
+                updateMonthSummary(yearMonth);
+                updateMonthStats(yearMonth);
+                updateTreasuryChart();
+                calculateYearlyResults();
+                vibrateMedium(); // Success feedback
+            });
+
+            // Initialize the form switcher
+            setTimeout(() => {
+                window.updateOccupancyForm = function() {
+                    const choice = document.getElementById('occupancy-choice').value;
+                    const inputsDiv = document.getElementById('occupancy-inputs');
+
+                    if (choice === 'all') {
+                        inputsDiv.innerHTML = `
+                            <div class="modal-input-group">
+                                <label>Ocupación para todo el mes (%):</label>
+                                <input type="number" id="occ-all" value="40" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
+                        `;
+                    } else {
+                        inputsDiv.innerHTML = `
+                            <div class="modal-input-group">
+                                <label>Ocupación Miércoles (%):</label>
+                                <input type="number" id="occ-mie" value="25" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
+                            <div class="modal-input-group">
+                                <label>Ocupación Jueves (%):</label>
+                                <input type="number" id="occ-jue" value="25" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
+                            <div class="modal-input-group">
+                                <label>Ocupación Viernes (%):</label>
+                                <input type="number" id="occ-vie" value="45" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
+                            <div class="modal-input-group">
+                                <label>Ocupación Sábado (%):</label>
+                                <input type="number" id="occ-sab" value="45" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
+                            <div class="modal-input-group">
+                                <label>Ocupación Domingo (%):</label>
+                                <input type="number" id="occ-dom" value="45" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
+                        `;
+                    }
+                };
+            }, 100);
         }
 
         // Update monthly statistics
@@ -3488,6 +3939,24 @@
             parseCalendarData();
             renderCalendar();
             updateAllCalculations(); // Actualiza todos los cálculos, incluyendo totales de pestañas, charts y resultados
+
+            // Initialize mobile enhancements
+            setTimeout(() => {
+                initSwipeGestures();
+
+                // Add swipe indicators on mobile
+                if (window.innerWidth <= 768) {
+                    document.querySelectorAll('.month-section').forEach((section, index) => {
+                        const monthContent = section.querySelector('.month-content');
+                        if (monthContent && !monthContent.querySelector('.swipe-indicator')) {
+                            const indicator = document.createElement('div');
+                            indicator.className = 'swipe-indicator';
+                            indicator.textContent = '← Desliza para navegar entre meses →';
+                            monthContent.insertBefore(indicator, monthContent.firstChild);
+                        }
+                    });
+                }
+            }, 500);
         });
     </script>
 </body>
