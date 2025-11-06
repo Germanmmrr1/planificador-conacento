@@ -3223,9 +3223,11 @@
                 const isSaturday = dayName === 'sábado';
                 const isSunday = dayName === 'domingo';
 
-                // Restaurant opens on November 5, 2025 (close Nov 1-4)
+                // Restaurant opens on November 8, 2025 (close Nov 1-7 for soft opening)
                 const isBeforeOpening = row.fecha === '2025-11-01' || row.fecha === '2025-11-02' ||
-                                       row.fecha === '2025-11-03' || row.fecha === '2025-11-04';
+                                       row.fecha === '2025-11-03' || row.fecha === '2025-11-04' ||
+                                       row.fecha === '2025-11-05' || row.fecha === '2025-11-06' ||
+                                       row.fecha === '2025-11-07';
 
                 // August is closed (all of August 2026)
                 const isAugust = parseInt(row.mes) === 8 && parseInt(row.año) === 2026;
@@ -3252,6 +3254,11 @@
                 let defaultOccupancy = 25; // martes-miércoles-jueves
                 if (isFriday || isSaturday || isSunday) {
                     defaultOccupancy = 45; // viernes-domingo
+                }
+
+                // Special occupancy for first weekend (Nov 8-9): 30%
+                if (row.fecha === '2025-11-08' || row.fecha === '2025-11-09') {
+                    defaultOccupancy = 30;
                 }
 
                 // Shifts: 1 shift on Tuesday, Wednesday and Sunday; 2 shifts on Thu-Sat
