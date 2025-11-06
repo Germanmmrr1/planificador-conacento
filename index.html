@@ -1699,7 +1699,19 @@
                         <strong>Instrucciones:</strong> Selecciona el tipo de grupo para ver una sugerencia de pedido típico. Puedes añadir o quitar platos y ver el ticket medio, coste y margen.
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+                    <!-- Mode Selector -->
+                    <div style="display: flex; gap: 10px; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <button id="mode-single" class="mode-button active" onclick="switchMode('single')" style="flex: 1; padding: 12px; border: 2px solid #667eea; background: #667eea; color: white; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                            Modo Individual
+                        </button>
+                        <button id="mode-compare" class="mode-button" onclick="switchMode('compare')" style="flex: 1; padding: 12px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                            Comparar Escenarios
+                        </button>
+                    </div>
+
+                    <!-- Single Mode -->
+                    <div id="single-mode-container">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                         <div>
                             <label style="font-weight: bold; margin-bottom: 10px; display: block;">Tipo de Grupo:</label>
                             <select id="group-type" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px;" onchange="loadScenario()">
@@ -1720,6 +1732,13 @@
                                    style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px;"
                                    oninput="calculateScenario()">
                         </div>
+                    </div>
+
+                    <div style="margin-top: 15px;">
+                        <button onclick="generateRandomMenu()" style="padding: 12px 24px; background: #ff6b35; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.3s;">
+                            🎲 Generar Menú Aleatorio
+                        </button>
+                        <span style="font-size: 14px; color: #666; margin-left: 10px;">Crea una combinación aleatoria de platos para el grupo seleccionado</span>
                     </div>
 
                     <div id="menu-selection" style="margin-top: 30px; display: none;">
@@ -1785,6 +1804,53 @@
                             </div>
                         </div>
                     </div>
+                    </div> <!-- End single-mode-container -->
+
+                    <!-- Compare Mode -->
+                    <div id="compare-mode-container" style="display: none; margin-top: 20px;">
+                        <div style="margin-bottom: 20px;">
+                            <label style="font-weight: bold; margin-bottom: 10px; display: block;">Selecciona escenarios para comparar:</label>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="pareja" onchange="updateComparison()" style="margin-right: 8px;">
+                                    Pareja (2)
+                                </label>
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="familia4" onchange="updateComparison()" style="margin-right: 8px;">
+                                    Familia (4)
+                                </label>
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="familia6" onchange="updateComparison()" style="margin-right: 8px;">
+                                    Familia (6)
+                                </label>
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="dos-parejas" onchange="updateComparison()" style="margin-right: 8px;">
+                                    2 Parejas (4)
+                                </label>
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="amigos4" onchange="updateComparison()" style="margin-right: 8px;">
+                                    Amigos (4)
+                                </label>
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="amigos6" onchange="updateComparison()" style="margin-right: 8px;">
+                                    Amigos (6)
+                                </label>
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="amigos8" onchange="updateComparison()" style="margin-right: 8px;">
+                                    Amigos (8)
+                                </label>
+                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
+                                    <input type="checkbox" value="amigos10" onchange="updateComparison()" style="margin-right: 8px;">
+                                    Amigos (10)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="comparison-results" style="margin-top: 30px;">
+                            <!-- Comparison table will be added here -->
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -2377,6 +2443,244 @@
             document.getElementById('summary-cost').textContent = totalCost.toFixed(2) + '€';
             document.getElementById('summary-margin').textContent = margin.toFixed(2) + '€';
             document.getElementById('summary-margin-pct').textContent = marginPct.toFixed(1) + '%';
+        }
+
+        // Switch between single and compare mode
+        function switchMode(mode) {
+            const singleContainer = document.getElementById('single-mode-container');
+            const compareContainer = document.getElementById('compare-mode-container');
+            const singleBtn = document.getElementById('mode-single');
+            const compareBtn = document.getElementById('mode-compare');
+
+            if (mode === 'single') {
+                singleContainer.style.display = 'block';
+                compareContainer.style.display = 'none';
+                singleBtn.style.background = '#667eea';
+                singleBtn.style.color = 'white';
+                compareBtn.style.background = 'white';
+                compareBtn.style.color = '#667eea';
+            } else {
+                singleContainer.style.display = 'none';
+                compareContainer.style.display = 'block';
+                singleBtn.style.background = 'white';
+                singleBtn.style.color = '#667eea';
+                compareBtn.style.background = '#667eea';
+                compareBtn.style.color = 'white';
+                updateComparison();
+            }
+        }
+
+        // Generate random menu for selected group
+        function generateRandomMenu() {
+            const groupType = document.getElementById('group-type').value;
+            if (!groupType) {
+                alert('Por favor selecciona un tipo de grupo primero');
+                return;
+            }
+
+            const scenario = scenarios[groupType];
+            const people = scenario.people;
+
+            // Calculate number of items based on group size
+            const numAperitivos = Math.floor(people / 3) + Math.floor(Math.random() * 2);
+            const numEntrantes = Math.floor(people / 2) + Math.floor(Math.random() * 2);
+            const numCarnes = people;
+            const numGuarniciones = Math.floor(people / 3) + 1;
+            const numPostres = Math.floor(people * 0.7) + Math.floor(Math.random() * 2);
+
+            // Generate random selection
+            const randomItems = [];
+
+            // Add random aperitivos
+            for (let i = 0; i < numAperitivos; i++) {
+                const items = menuItems.aperitivos;
+                const item = items[Math.floor(Math.random() * items.length)];
+                const existing = randomItems.find(ri => ri.category === 'aperitivos' && ri.item === item.name);
+                if (existing) {
+                    existing.qty++;
+                } else {
+                    randomItems.push({ category: 'aperitivos', item: item.name, qty: 1 });
+                }
+            }
+
+            // Add random entrantes
+            for (let i = 0; i < numEntrantes; i++) {
+                const items = menuItems.entrantes;
+                const item = items[Math.floor(Math.random() * items.length)];
+                const existing = randomItems.find(ri => ri.category === 'entrantes' && ri.item === item.name);
+                if (existing) {
+                    existing.qty++;
+                } else {
+                    randomItems.push({ category: 'entrantes', item: item.name, qty: 1 });
+                }
+            }
+
+            // Add random carnes
+            for (let i = 0; i < numCarnes; i++) {
+                const items = menuItems.carnes;
+                const item = items[Math.floor(Math.random() * items.length)];
+                const existing = randomItems.find(ri => ri.category === 'carnes' && ri.item === item.name);
+                if (existing) {
+                    existing.qty++;
+                } else {
+                    randomItems.push({ category: 'carnes', item: item.name, qty: 1 });
+                }
+            }
+
+            // Add random guarniciones
+            for (let i = 0; i < numGuarniciones; i++) {
+                const items = menuItems.guarniciones;
+                const item = items[Math.floor(Math.random() * items.length)];
+                const existing = randomItems.find(ri => ri.category === 'guarniciones' && ri.item === item.name);
+                if (existing) {
+                    existing.qty++;
+                } else {
+                    randomItems.push({ category: 'guarniciones', item: item.name, qty: 1 });
+                }
+            }
+
+            // Add random postres
+            for (let i = 0; i < numPostres; i++) {
+                const items = menuItems.postres;
+                const item = items[Math.floor(Math.random() * items.length)];
+                const existing = randomItems.find(ri => ri.category === 'postres' && ri.item === item.name);
+                if (existing) {
+                    existing.qty++;
+                } else {
+                    randomItems.push({ category: 'postres', item: item.name, qty: 1 });
+                }
+            }
+
+            // Update current scenario with random items
+            currentScenario.items = randomItems;
+            document.getElementById('menu-selection').style.display = 'block';
+            renderScenario();
+            calculateScenario();
+        }
+
+        // Update comparison table
+        function updateComparison() {
+            const checkboxes = document.querySelectorAll('#compare-mode-container input[type="checkbox"]');
+            const selectedScenarios = [];
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    selectedScenarios.push(cb.value);
+                }
+            });
+
+            if (selectedScenarios.length === 0) {
+                document.getElementById('comparison-results').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Selecciona al menos un escenario para ver la comparación</p>';
+                return;
+            }
+
+            // Calculate metrics for each scenario
+            const comparisons = selectedScenarios.map(scenarioType => {
+                const scenario = scenarios[scenarioType];
+                let totalPrice = 0;
+                let totalCost = 0;
+
+                scenario.items.forEach(item => {
+                    const menuItem = menuItems[item.category].find(mi => mi.name === item.item);
+                    if (menuItem) {
+                        totalPrice += menuItem.price * item.qty;
+                        totalCost += menuItem.cost * item.qty;
+                    }
+                });
+
+                // Add drinks
+                const drinksPerPerson = 2;
+                const totalDrinks = drinksPerPerson * scenario.people;
+                totalPrice += totalDrinks * avgDrinkPrice;
+                totalCost += totalDrinks * avgDrinkCost;
+
+                const margin = totalPrice - totalCost;
+                const marginPct = (margin / totalPrice) * 100;
+                const avgPerPerson = totalPrice / scenario.people;
+
+                return {
+                    type: scenarioType,
+                    name: getScenarioName(scenarioType),
+                    people: scenario.people,
+                    totalPrice,
+                    totalCost,
+                    margin,
+                    marginPct,
+                    avgPerPerson
+                };
+            });
+
+            // Sort by total price descending
+            comparisons.sort((a, b) => b.totalPrice - a.totalPrice);
+
+            // Render comparison table
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <th style="padding: 15px; text-align: left;">Escenario</th>
+                                <th style="padding: 15px; text-align: center;">Personas</th>
+                                <th style="padding: 15px; text-align: right;">Ticket Total</th>
+                                <th style="padding: 15px; text-align: right;">Ticket/Persona</th>
+                                <th style="padding: 15px; text-align: right;">Coste Total</th>
+                                <th style="padding: 15px; text-align: right;">Margen €</th>
+                                <th style="padding: 15px; text-align: right;">Margen %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            comparisons.forEach((comp, index) => {
+                const bgColor = index % 2 === 0 ? '#f8f9fa' : 'white';
+                html += `
+                    <tr style="background: ${bgColor};">
+                        <td style="padding: 12px; font-weight: 600; color: #333;">${comp.name}</td>
+                        <td style="padding: 12px; text-align: center;">${comp.people}</td>
+                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #667eea;">${comp.totalPrice.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right;">${comp.avgPerPerson.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right; color: #f44336;">${comp.totalCost.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right; color: #4caf50; font-weight: 600;">${comp.margin.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right;">
+                            <span style="background: #4caf50; color: white; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                ${comp.marginPct.toFixed(1)}%
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: #f0f7ff; border-left: 4px solid #667eea; border-radius: 6px;">
+                    <h4 style="margin-top: 0; color: #667eea;">💡 Insights</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px; color: #555;">
+                        <li><strong>Mejor ticket medio:</strong> ${comparisons.reduce((max, c) => c.avgPerPerson > max.avgPerPerson ? c : max).name} con ${comparisons.reduce((max, c) => c.avgPerPerson > max.avgPerPerson ? c : max).avgPerPerson.toFixed(2)}€/persona</li>
+                        <li><strong>Mejor margen %:</strong> ${comparisons.reduce((max, c) => c.marginPct > max.marginPct ? c : max).name} con ${comparisons.reduce((max, c) => c.marginPct > max.marginPct ? c : max).marginPct.toFixed(1)}%</li>
+                        <li><strong>Mayor ingreso total:</strong> ${comparisons[0].name} con ${comparisons[0].totalPrice.toFixed(2)}€</li>
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('comparison-results').innerHTML = html;
+        }
+
+        // Helper function to get scenario display name
+        function getScenarioName(type) {
+            const names = {
+                'pareja': 'Pareja (2 personas)',
+                'familia4': 'Familia (4 personas)',
+                'familia6': 'Familia (6 personas)',
+                'dos-parejas': '2 Parejas (4 personas)',
+                'amigos4': 'Grupo amigos (4 personas)',
+                'amigos6': 'Grupo amigos (6 personas)',
+                'amigos8': 'Grupo amigos (8 personas)',
+                'amigos10': 'Grupo amigos (10 personas)'
+            };
+            return names[type] || type;
         }
 
         // ==================== END MENU SIMULATOR ====================
