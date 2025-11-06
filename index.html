@@ -1754,12 +1754,28 @@
                                     <label>Categoría:</label>
                                     <select id="add-category" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ddd;" onchange="updateItemSelect()">
                                         <option value="">-- Selecciona categoría --</option>
-                                        <option value="aperitivos">Aperitivos</option>
-                                        <option value="entrantes">Entrantes</option>
-                                        <option value="ensaladas">Ensaladas</option>
-                                        <option value="carnes">Carnes</option>
-                                        <option value="guarniciones">Guarniciones</option>
-                                        <option value="postres">Postres</option>
+                                        <optgroup label="Comida">
+                                            <option value="aperitivos">Aperitivos</option>
+                                            <option value="entrantes">Entrantes</option>
+                                            <option value="ensaladas">Ensaladas</option>
+                                            <option value="carnes">Carnes</option>
+                                            <option value="guarniciones">Guarniciones</option>
+                                            <option value="postres">Postres</option>
+                                        </optgroup>
+                                        <optgroup label="Vinos">
+                                            <option value="vinosblancos">Vinos Blancos</option>
+                                            <option value="vinosrosados">Vinos Rosados</option>
+                                            <option value="vinostintos">Vinos Tintos</option>
+                                            <option value="espumosos">Espumosos & Champagne</option>
+                                        </optgroup>
+                                        <optgroup label="Otras Bebidas">
+                                            <option value="aperitivos_bebidas">Aperitivos (Finos, Vermut...)</option>
+                                            <option value="cervezas">Cervezas</option>
+                                            <option value="refrescos">Refrescos</option>
+                                            <option value="zumos">Zumos</option>
+                                            <option value="aguas">Aguas</option>
+                                            <option value="cafes">Cafés</option>
+                                        </optgroup>
                                     </select>
                                 </div>
                                 <div>
@@ -2115,6 +2131,122 @@
                 { name: 'Tarta de Queso', desc: 'Estilo New York, cremosa y suave', price: 7, cost: 2.2 },
                 { name: 'Brownie', desc: 'Brownie casero de chocolate con nueces', price: 7, cost: 2.09 },
                 { name: 'Helados Artesanales', desc: 'Helados de elaboración artesanal', price: 6, cost: 1.5 }
+            ],
+            vinosblancos: [
+                { name: 'La Levantadas', desc: 'Vino blanco - Botella', price: 22, cost: 6.6 },
+                { name: 'Solagüen', desc: 'Vino blanco - Botella', price: 21, cost: 6.3 },
+                { name: 'Solagüen Copa', desc: 'Vino blanco - Copa', price: 4, cost: 1.2 },
+                { name: 'Neve Carbonica', desc: 'Vino blanco - Botella', price: 30, cost: 9 },
+                { name: 'Viña Zorzal', desc: 'Vino blanco - Botella', price: 21, cost: 6.3 },
+                { name: 'Viña Zorzal Copa', desc: 'Vino blanco - Copa', price: 4, cost: 1.2 },
+                { name: 'Juan Gil Moscatel', desc: 'Vino blanco - Botella', price: 20, cost: 6 },
+                { name: 'Juan Gil Moscatel Copa', desc: 'Vino blanco - Copa', price: 4, cost: 1.2 },
+                { name: 'Pazo San Mauro', desc: 'Vino blanco - Botella', price: 35, cost: 10.5 },
+                { name: 'Finca Las Yeguas', desc: 'Vino blanco - Botella', price: 33, cost: 9.9 },
+                { name: 'Javier Sanz Fermentado', desc: 'Vino blanco - Botella', price: 35, cost: 10.5 },
+                { name: 'Casal de Arman', desc: 'Vino blanco - Botella', price: 33, cost: 9.9 },
+                { name: 'Finca Monteperdoso', desc: 'Vino blanco - Botella', price: 21, cost: 6.3 },
+                { name: 'Finca Monteperdoso Copa', desc: 'Vino blanco - Copa', price: 4, cost: 1.2 },
+                { name: 'Nivarius', desc: 'Vino blanco - Botella', price: 21, cost: 6.3 },
+                { name: 'Nivarius Copa', desc: 'Vino blanco - Copa', price: 4, cost: 1.2 }
+            ],
+            vinosrosados: [
+                { name: 'Sierra Cantabria Rosado', desc: 'Vino rosado - Botella', price: 27, cost: 8.1 }
+            ],
+            espumosos: [
+                { name: 'Alma Atlantica', desc: 'Espumoso - Botella', price: 20, cost: 6 },
+                { name: 'Alma Atlantica Copa', desc: 'Espumoso - Copa', price: 4, cost: 1.2 },
+                { name: 'Cross Twist', desc: 'Espumoso - Botella', price: 21, cost: 6.3 },
+                { name: 'Umbretum', desc: 'Espumoso - Botella', price: 38, cost: 11.4 },
+                { name: 'Umbretum Copa', desc: 'Espumoso - Copa', price: 7, cost: 2.1 },
+                { name: 'Andre Clouet Champagne', desc: 'Champagne - Botella', price: 90, cost: 27 }
+            ],
+            vinostintos: [
+                { name: 'Tandem', desc: 'Vino tinto - Botella', price: 37, cost: 11.1 },
+                { name: 'Primitivo', desc: 'Vino tinto - Botella', price: 35, cost: 10.5 },
+                { name: 'Victorino', desc: 'Vino tinto - Botella', price: 88, cost: 26.4 },
+                { name: 'Camins del Priorat', desc: 'Vino tinto - Botella', price: 48, cost: 14.4 },
+                { name: 'Petalos del Bierzo', desc: 'Vino tinto - Botella', price: 40, cost: 12 },
+                { name: 'Antidoto', desc: 'Vino tinto - Botella', price: 36, cost: 10.8 },
+                { name: 'La Nieta', desc: 'Vino tinto - Botella', price: 207, cost: 62.1 },
+                { name: 'Flor de Pingus', desc: 'Vino tinto - Botella', price: 213, cost: 63.9 },
+                { name: 'Sierra Cantabria Col. Privada', desc: 'Vino tinto - Botella', price: 77, cost: 23.1 },
+                { name: 'Venta La Vacas', desc: 'Vino tinto - Botella', price: 42, cost: 12.6 },
+                { name: 'Pago de Capellanes', desc: 'Vino tinto - Botella', price: 39, cost: 11.7 },
+                { name: 'Viuda Negra', desc: 'Vino tinto - Botella', price: 28, cost: 8.4 },
+                { name: 'Las Tetas De La Sacristana', desc: 'Vino tinto - Botella', price: 29, cost: 8.7 },
+                { name: 'Mataromera', desc: 'Vino tinto - Botella', price: 52, cost: 15.6 },
+                { name: 'Juan Gil ET. Plata', desc: 'Vino tinto - Botella', price: 29, cost: 8.7 },
+                { name: 'Disfrutando 0,0', desc: 'Vino tinto sin alcohol - Botella', price: 22, cost: 6.6 },
+                { name: 'Disfrutando 0,0 Copa', desc: 'Vino tinto sin alcohol - Copa', price: 4, cost: 1.2 },
+                { name: 'Palomo Cazador', desc: 'Vino tinto - Botella', price: 22, cost: 6.6 },
+                { name: 'Palomo Cazador Copa', desc: 'Vino tinto - Copa', price: 4, cost: 1.2 },
+                { name: 'Malleolus Cosecha', desc: 'Vino tinto - Botella', price: 56, cost: 16.8 },
+                { name: 'Malabrigo', desc: 'Vino tinto - Botella', price: 54, cost: 16.2 },
+                { name: 'Bosque De Matasnos Blanca', desc: 'Vino tinto - Botella', price: 55, cost: 16.5 },
+                { name: 'Pago De Carraovejas', desc: 'Vino tinto - Botella', price: 58, cost: 17.4 },
+                { name: 'Habla 29', desc: 'Vino tinto - Botella', price: 48, cost: 14.4 },
+                { name: 'San Roman', desc: 'Vino tinto - Botella', price: 56, cost: 16.8 },
+                { name: 'Finca Antigua Unico', desc: 'Vino tinto - Botella', price: 24, cost: 7.2 },
+                { name: 'Finca Antigua Unico Copa', desc: 'Vino tinto - Copa', price: 4, cost: 1.2 }
+            ],
+            aperitivos_bebidas: [
+                { name: 'Fino Eléctrico', desc: 'Fino', price: 2.5, cost: 1.25 },
+                { name: 'Fino Gran Baquero', desc: 'Fino', price: 3.5, cost: 1.75 },
+                { name: 'Amontillado Gran Baquero', desc: 'Amontillado', price: 4.5, cost: 2.25 },
+                { name: 'Oloroso Gran Baquero', desc: 'Oloroso', price: 4.5, cost: 2.25 },
+                { name: 'Palo Cortado Gran Baquero', desc: 'Palo Cortado', price: 6, cost: 3 },
+                { name: 'Pedro Ximénez Gran Baquero', desc: 'Pedro Ximénez', price: 4.5, cost: 2.25 },
+                { name: 'Vermouth Baquero', desc: 'Vermut', price: 3.5, cost: 1.75 },
+                { name: 'Martini Rosso', desc: 'Aperitivo', price: 3.5, cost: 1.75 },
+                { name: 'Campari', desc: 'Aperitivo', price: 3.5, cost: 1.75 },
+                { name: 'Campari Soda', desc: 'Combinado', price: 5, cost: 2.5 },
+                { name: 'Campari Orange', desc: 'Combinado', price: 5, cost: 2.5 },
+                { name: 'Aperol Spritz', desc: 'Combinado', price: 7.5, cost: 3.75 }
+            ],
+            cervezas: [
+                { name: 'Caña Estrella Galicia Bodega', desc: 'Cerveza caña', price: 2.9, cost: 1.45 },
+                { name: 'Copa Estrella Galicia Bodega', desc: 'Cerveza copa', price: 3.6, cost: 1.8 },
+                { name: 'Jarra Estrella Galicia Bodega', desc: 'Cerveza jarra', price: 5.5, cost: 2.75 },
+                { name: 'Milnueve Estrella Galicia', desc: 'Cerveza especial', price: 4.5, cost: 2.25 },
+                { name: 'Black Coupage Estrella Galicia', desc: 'Cerveza negra', price: 4.5, cost: 2.25 },
+                { name: 'Estrella Galicia 0,0', desc: 'Cerveza sin alcohol', price: 3.5, cost: 1.75 },
+                { name: 'Estrella Galicia 0,0 Tostada', desc: 'Cerveza sin alcohol', price: 3.5, cost: 1.75 },
+                { name: 'Estrella Galicia Sin Gluten', desc: 'Cerveza sin gluten', price: 3.5, cost: 1.75 },
+                { name: 'Radler Estrella Galicia', desc: 'Cerveza con limón', price: 3.5, cost: 1.75 }
+            ],
+            refrescos: [
+                { name: 'Coca Cola', desc: 'Refresco cola', price: 2.6, cost: 1.3 },
+                { name: 'Coca Cola 0', desc: 'Refresco sin azúcar', price: 2.6, cost: 1.3 },
+                { name: 'Coca Cola 0,0', desc: 'Refresco sin azúcar', price: 2.6, cost: 1.3 },
+                { name: 'Fanta de Naranja', desc: 'Refresco naranja', price: 2.6, cost: 1.3 },
+                { name: 'Fanta de Limón', desc: 'Refresco limón', price: 2.6, cost: 1.3 },
+                { name: 'Sprite', desc: 'Refresco lima-limón', price: 2.6, cost: 1.3 },
+                { name: 'Aquarius de Naranja', desc: 'Bebida isotónica', price: 2.6, cost: 1.3 },
+                { name: 'Aquarius de Limón', desc: 'Bebida isotónica', price: 2.6, cost: 1.3 },
+                { name: 'Fuze Limón', desc: 'Té frío', price: 2.6, cost: 1.3 },
+                { name: 'Fuze Maracuyá', desc: 'Té frío', price: 2.6, cost: 1.3 },
+                { name: 'Bliss Tónica', desc: 'Tónica', price: 2.6, cost: 1.3 },
+                { name: 'Bliss Limón', desc: 'Refresco limón', price: 2.6, cost: 1.3 },
+                { name: 'Bliss Ginger Ale', desc: 'Ginger Ale', price: 2.6, cost: 1.3 },
+                { name: 'Bliss Soda', desc: 'Soda', price: 2.6, cost: 1.3 },
+                { name: 'Monster Energy', desc: 'Bebida energética', price: 2.6, cost: 1.3 }
+            ],
+            zumos: [
+                { name: 'Minute Maid Naranja', desc: 'Zumo naranja', price: 3, cost: 1.5 },
+                { name: 'Minute Maid Piña', desc: 'Zumo piña', price: 3, cost: 1.5 },
+                { name: 'Minute Maid Tomate', desc: 'Zumo tomate', price: 3, cost: 1.5 }
+            ],
+            aguas: [
+                { name: 'Vilas 1 Litro', desc: 'Agua mineral 1L', price: 2.5, cost: 1.25 },
+                { name: 'Vilas 33 Cl', desc: 'Agua mineral 33cl', price: 2, cost: 1 },
+                { name: 'San Pellegrino 50 Cl', desc: 'Agua con gas 50cl', price: 2.5, cost: 1.25 }
+            ],
+            cafes: [
+                { name: 'Espresso Lavazza', desc: 'Café espresso', price: 1.8, cost: 0.9 },
+                { name: 'Americano Lavazza', desc: 'Café americano', price: 2.2, cost: 1.1 },
+                { name: 'Cappuccino Lavazza', desc: 'Café cappuccino', price: 2.5, cost: 1.25 },
+                { name: 'Café con Leche Lavazza', desc: 'Café con leche', price: 2.5, cost: 1.25 }
             ]
         };
 
