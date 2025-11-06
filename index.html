@@ -1617,6 +1617,7 @@
         <!-- Tabs Navigation -->
         <div class="tabs-container">
             <button class="tab-button active" onclick="switchTab('planificacion', this)">Planificación y Variables</button>
+            <button class="tab-button" onclick="switchTab('escenarios', this)">Escenarios Menú</button>
             <button class="tab-button" onclick="switchTab('salarios', this)">Personal y Salarios</button>
             <button class="tab-button" onclick="switchTab('gastos', this)">Gastos Operativos</button>
             <button class="tab-button" onclick="switchTab('resultados', this)">Resultados</button>
@@ -1652,8 +1653,33 @@
                     </div>
                 </div>
 
-                <!-- Menu Simulator Section -->
+                <!-- Planning Section -->
                 <div class="section full-width" style="margin-top: 30px;">
+                    <h2>Planificación Detallada por Día</h2>
+                    <div class="info-box">
+                        <strong>Instrucciones:</strong> Expande cada mes para ver el calendario completo. Marca los días abiertos/cerrados y ajusta la ocupación prevista para cada día. Los cálculos se actualizarán automáticamente.
+                    </div>
+
+                    <div id="planning-months-container">
+                        <!-- Los meses se generarán dinámicamente aquí -->
+                    </div>
+
+                    <!-- Resumen de Tesorería -->
+                    <div style="margin-top: 30px;">
+                        <h2>Flujo de Tesorería Acumulado</h2>
+                        <div class="chart-container" style="height: 400px;">
+                            <canvas id="treasuryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Escenarios Menú -->
+        <div id="tab-escenarios" class="tab-content">
+            <div style="padding: 30px;">
+                <!-- Menu Simulator Section -->
+                <div class="section full-width">
                     <h2>Simulador de Escenarios de Menú</h2>
                     <div class="info-box">
                         <strong>Instrucciones:</strong> Selecciona el tipo de grupo para ver una sugerencia de pedido típico. Puedes añadir o quitar platos y ver el ticket medio, coste y margen.
@@ -1743,26 +1769,6 @@
                                     <div style="font-size: 24px; font-weight: bold;" id="summary-margin-pct">0%</div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Planning Section -->
-                <div class="section full-width" style="margin-top: 30px;">
-                    <h2>Planificación Detallada por Día</h2>
-                    <div class="info-box">
-                        <strong>Instrucciones:</strong> Expande cada mes para ver el calendario completo. Marca los días abiertos/cerrados y ajusta la ocupación prevista para cada día. Los cálculos se actualizarán automáticamente.
-                    </div>
-
-                    <div id="planning-months-container">
-                        <!-- Los meses se generarán dinámicamente aquí -->
-                    </div>
-
-                    <!-- Resumen de Tesorería -->
-                    <div style="margin-top: 30px;">
-                        <h2>Flujo de Tesorería Acumulado</h2>
-                        <div class="chart-container" style="height: 400px;">
-                            <canvas id="treasuryChart"></canvas>
                         </div>
                     </div>
                 </div>
