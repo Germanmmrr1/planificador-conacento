@@ -1726,12 +1726,6 @@
                                 <option value="amigos10">Grupo amigos (10 personas)</option>
                             </select>
                         </div>
-                        <div>
-                            <label style="font-weight: bold; margin-bottom: 10px; display: block;">Bebidas por persona:</label>
-                            <input type="number" id="drinks-per-person" value="2" min="0" max="10" step="0.5"
-                                   style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px;"
-                                   oninput="calculateScenario()">
-                        </div>
                     </div>
 
                     <div style="margin-top: 15px;">
@@ -2241,16 +2235,11 @@
             water: { name: 'Agua', price: 2, cost: 0.3 }
         };
 
-        // Average drink price and cost
-        const avgDrinkPrice = 3.5;
-        const avgDrinkCost = 1.0;
-
         // Current scenario state
         let currentScenario = {
             groupType: '',
             people: 0,
-            items: [],
-            drinksPerPerson: 2
+            items: []
         };
 
         // Predefined scenarios
@@ -2442,20 +2431,6 @@
                 `;
                 container.appendChild(div);
             });
-
-            // Add drinks
-            const drinksDiv = document.createElement('div');
-            drinksDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #e3f2fd; margin-top: 10px; border-radius: 5px;';
-            drinksDiv.innerHTML = `
-                <div style="flex: 1;">
-                    <strong>Bebidas</strong>
-                    <div style="font-size: 12px; color: #666;">Precio medio: ${avgDrinkPrice.toFixed(2)}€ | Coste medio: ${avgDrinkCost.toFixed(2)}€</div>
-                </div>
-                <div style="font-weight: bold;">
-                    ${(currentScenario.drinksPerPerson * currentScenario.people).toFixed(1)} unidades
-                </div>
-            `;
-            container.appendChild(drinksDiv);
         }
 
         // Change quantity
@@ -2528,12 +2503,10 @@
         function calculateScenario() {
             if (!currentScenario.groupType) return;
 
-            currentScenario.drinksPerPerson = parseFloat(document.getElementById('drinks-per-person').value) || 2;
-
             let totalPrice = 0;
             let totalCost = 0;
 
-            // Calculate food
+            // Calculate food and drinks
             currentScenario.items.forEach(item => {
                 const menuItem = menuItems[item.category].find(mi => mi.name === item.item);
                 if (menuItem) {
@@ -2541,11 +2514,6 @@
                     totalCost += menuItem.cost * item.qty;
                 }
             });
-
-            // Add drinks
-            const totalDrinks = currentScenario.drinksPerPerson * currentScenario.people;
-            totalPrice += totalDrinks * avgDrinkPrice;
-            totalCost += totalDrinks * avgDrinkCost;
 
             const margin = totalPrice - totalCost;
             const marginPct = (margin / totalPrice) * 100;
@@ -2693,6 +2661,31 @@
                 }
             }
 
+            // Add random drinks (beers, wines, soft drinks) - 2 per person on average
+            const numDrinks = Math.floor(people * 2);
+            const drinkCategories = ['cervezas', 'vinostintos', 'vinosblancos', 'refrescos'];
+
+            for (let i = 0; i < numDrinks; i++) {
+                // Random category weighted towards beers and wines
+                const rand = Math.random();
+                let category;
+                if (rand < 0.35) category = 'cervezas';
+                else if (rand < 0.60) category = 'vinostintos';
+                else if (rand < 0.80) category = 'vinosblancos';
+                else category = 'refrescos';
+
+                const items = menuItems[category];
+                if (items && items.length > 0) {
+                    const item = items[Math.floor(Math.random() * items.length)];
+                    const existing = randomItems.find(ri => ri.category === category && ri.item === item.name);
+                    if (existing) {
+                        existing.qty++;
+                    } else {
+                        randomItems.push({ category: category, item: item.name, qty: 1 });
+                    }
+                }
+            }
+
             // Update current scenario with random items
             currentScenario.items = randomItems;
             document.getElementById('menu-selection').style.display = 'block';
@@ -2729,12 +2722,6 @@
                         totalCost += menuItem.cost * item.qty;
                     }
                 });
-
-                // Add drinks
-                const drinksPerPerson = 2;
-                const totalDrinks = drinksPerPerson * scenario.people;
-                totalPrice += totalDrinks * avgDrinkPrice;
-                totalCost += totalDrinks * avgDrinkCost;
 
                 const margin = totalPrice - totalCost;
                 const marginPct = (margin / totalPrice) * 100;
@@ -2957,12 +2944,6 @@
                         totalCost += menuItem.cost * item.qty;
                     }
                 });
-
-                // Add drinks
-                const drinksPerPerson = 2;
-                const totalDrinks = drinksPerPerson * scenario.people;
-                totalPrice += totalDrinks * avgDrinkPrice;
-                totalCost += totalDrinks * avgDrinkCost;
 
                 const margin = totalPrice - totalCost;
                 const marginPct = (margin / totalPrice) * 100;
