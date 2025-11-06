@@ -2747,11 +2747,37 @@
                 'Plato de queso': Math.ceil(people / 4)
             };
 
+            // Wine bottle limit (1 per 2 people)
+            const wineBottleLimit = Math.ceil(people / 2);
+
+            // Helper function to check if item is a wine bottle
+            function isWineBottle(itemName, category) {
+                const wineCategories = ['vinosblancos', 'vinostintos', 'vinosrosados'];
+                return wineCategories.includes(category) && itemName.includes('Botella');
+            }
+
+            // Helper function to count current wine bottles
+            function countWineBottles() {
+                return randomItems.reduce((count, item) => {
+                    if (isWineBottle(item.item, item.category)) {
+                        return count + item.qty;
+                    }
+                    return count;
+                }, 0);
+            }
+
             // Helper function to check if item can be added
-            function canAddPremiumItem(itemName, currentQty) {
+            function canAddPremiumItem(itemName, currentQty, category) {
+                // Check specific premium items
                 if (premiumItemLimits[itemName] !== undefined) {
                     return currentQty < premiumItemLimits[itemName];
                 }
+
+                // Check wine bottles limit
+                if (isWineBottle(itemName, category)) {
+                    return countWineBottles() < wineBottleLimit;
+                }
+
                 return true;
             }
 
@@ -2767,7 +2793,7 @@
                     const existing = randomItems.find(ri => ri.category === 'aperitivos' && ri.item === item.name);
                     const currentQty = existing ? existing.qty : 0;
 
-                    if (canAddPremiumItem(item.name, currentQty)) {
+                    if (canAddPremiumItem(item.name, currentQty, 'aperitivos')) {
                         if (existing) {
                             existing.qty++;
                         } else {
@@ -2791,7 +2817,7 @@
                     const existing = randomItems.find(ri => ri.category === 'entrantes' && ri.item === item.name);
                     const currentQty = existing ? existing.qty : 0;
 
-                    if (canAddPremiumItem(item.name, currentQty)) {
+                    if (canAddPremiumItem(item.name, currentQty, 'entrantes')) {
                         if (existing) {
                             existing.qty++;
                         } else {
@@ -2878,13 +2904,26 @@
 
                 const items = menuItems[category];
                 if (items && items.length > 0) {
-                    const item = items[Math.floor(Math.random() * items.length)];
-                    const existing = randomItems.find(ri => ri.category === category && ri.item === item.name);
-                    if (existing) {
-                        existing.qty++;
-                    } else {
-                        randomItems.push({ category: category, item: item.name, qty: 1 });
-                    }
+                    let attempts = 0;
+                    let item;
+
+                    // Try to find a valid item (max 10 attempts to avoid infinite loop)
+                    do {
+                        item = items[Math.floor(Math.random() * items.length)];
+                        const existing = randomItems.find(ri => ri.category === category && ri.item === item.name);
+                        const currentQty = existing ? existing.qty : 0;
+
+                        // Check if we can add this item (respects wine bottle limits)
+                        if (canAddPremiumItem(item.name, currentQty, category)) {
+                            if (existing) {
+                                existing.qty++;
+                            } else {
+                                randomItems.push({ category: category, item: item.name, qty: 1 });
+                            }
+                            break;
+                        }
+                        attempts++;
+                    } while (attempts < 10);
                 }
             }
 
@@ -4595,10 +4634,20 @@
                 const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
                 const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
 
-                // Default occupancy: 25% martes-miércoles-jueves, 45% viernes-domingo
-                let defaultOccupancy = 25; // martes-miércoles-jueves
-                if (isFriday || isSaturday || isSunday) {
-                    defaultOccupancy = 45; // viernes-domingo
+                // Check if it's December
+                const isDecember = parseInt(row.mes) === 12;
+
+                // Default occupancy based on day and month
+                let defaultOccupancy = 40; // Default
+
+                if (isTuesday || isWednesday) {
+                    defaultOccupancy = isDecember ? 30 : 15; // 30% in December, 15% rest of year
+                } else if (isThursday) {
+                    defaultOccupancy = isDecember ? 35 : 20; // 35% in December, 20% rest of year
+                } else if (isFriday) {
+                    defaultOccupancy = isDecember ? 50 : 30; // 50% in December, 30% rest of year
+                } else if (isSaturday || isSunday) {
+                    defaultOccupancy = isDecember ? 60 : 40; // 60% in December, 40% rest of year
                 }
 
                 // Special occupancy for first weekend (Nov 8-9): 30%
