@@ -2672,28 +2672,66 @@
             // Generate random selection
             const randomItems = [];
 
+            // Premium items limits (1 per 4 people)
+            const premiumItemLimits = {
+                'Plato de jamón': Math.ceil(people / 4),
+                'Plato de queso': Math.ceil(people / 4)
+            };
+
+            // Helper function to check if item can be added
+            function canAddPremiumItem(itemName, currentQty) {
+                if (premiumItemLimits[itemName] !== undefined) {
+                    return currentQty < premiumItemLimits[itemName];
+                }
+                return true;
+            }
+
             // Add random aperitivos
             for (let i = 0; i < numAperitivos; i++) {
                 const items = menuItems.aperitivos;
-                const item = items[Math.floor(Math.random() * items.length)];
-                const existing = randomItems.find(ri => ri.category === 'aperitivos' && ri.item === item.name);
-                if (existing) {
-                    existing.qty++;
-                } else {
-                    randomItems.push({ category: 'aperitivos', item: item.name, qty: 1 });
-                }
+                let attempts = 0;
+                let item;
+
+                // Try to find a valid item (max 10 attempts to avoid infinite loop)
+                do {
+                    item = items[Math.floor(Math.random() * items.length)];
+                    const existing = randomItems.find(ri => ri.category === 'aperitivos' && ri.item === item.name);
+                    const currentQty = existing ? existing.qty : 0;
+
+                    if (canAddPremiumItem(item.name, currentQty)) {
+                        if (existing) {
+                            existing.qty++;
+                        } else {
+                            randomItems.push({ category: 'aperitivos', item: item.name, qty: 1 });
+                        }
+                        break;
+                    }
+                    attempts++;
+                } while (attempts < 10);
             }
 
             // Add random entrantes
             for (let i = 0; i < numEntrantes; i++) {
                 const items = menuItems.entrantes;
-                const item = items[Math.floor(Math.random() * items.length)];
-                const existing = randomItems.find(ri => ri.category === 'entrantes' && ri.item === item.name);
-                if (existing) {
-                    existing.qty++;
-                } else {
-                    randomItems.push({ category: 'entrantes', item: item.name, qty: 1 });
-                }
+                let attempts = 0;
+                let item;
+
+                // Try to find a valid item (max 10 attempts to avoid infinite loop)
+                do {
+                    item = items[Math.floor(Math.random() * items.length)];
+                    const existing = randomItems.find(ri => ri.category === 'entrantes' && ri.item === item.name);
+                    const currentQty = existing ? existing.qty : 0;
+
+                    if (canAddPremiumItem(item.name, currentQty)) {
+                        if (existing) {
+                            existing.qty++;
+                        } else {
+                            randomItems.push({ category: 'entrantes', item: item.name, qty: 1 });
+                        }
+                        break;
+                    }
+                    attempts++;
+                } while (attempts < 10);
             }
 
             // Add random carnes
