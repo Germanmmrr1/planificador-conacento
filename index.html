@@ -3713,7 +3713,7 @@
                 // August is closed (all of August 2026)
                 const isAugust = parseInt(row.mes) === 8 && parseInt(row.año) === 2026;
 
-                // Festivos (días cerrados)
+                // Festivos nacionales (se señalan en calendario, no cierran automáticamente)
                 const holidays = [
                     '2025-12-08', // Inmaculada Concepción
                     '2025-12-25', // Navidad
@@ -3729,7 +3729,7 @@
                 const isHoliday = holidays.includes(row.fecha);
 
                 const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
-                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust && !isHoliday;
+                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
 
                 // Default occupancy: 25% martes-miércoles-jueves, 45% viernes-domingo
                 let defaultOccupancy = 25; // martes-miércoles-jueves
@@ -3751,7 +3751,8 @@
                 dailyPlanning[row.fecha] = {
                     open: isOpen,
                     occupancy: defaultOccupancy,
-                    shifts: isOpen ? defaultShifts : 0
+                    shifts: isOpen ? defaultShifts : 0,
+                    isHoliday: isHoliday
                 };
             }
         }
@@ -3957,6 +3958,7 @@
                 const isOpen = planning?.open || false;
                 const occupancy = planning?.occupancy || 40;
                 const shifts = planning?.shifts || 0;
+                const isHoliday = planning?.isHoliday || false;
 
                 // Calcular comensales
                 const capacidad = parseFloat(document.getElementById('capacidad').value);
@@ -3972,6 +3974,7 @@
                         <span>${day.dia}</span>
                         <span class="day-name">${day.dia_semana.substring(0, 3)}</span>
                     </div>
+                    ${isHoliday ? '<div style="background: #ff9800; color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 10px; text-align: center; margin: 4px 0; font-weight: 600;">🎉 Festivo</div>' : ''}
                     <div class="toggle-switch">
                         <label class="switch">
                             <input type="checkbox" id="open-${day.fecha}" ${isOpen ? 'checked' : ''}
@@ -4012,6 +4015,7 @@
             const isOpen = planning?.open || false;
             const occupancy = planning?.occupancy || 40;
             const shifts = planning?.shifts || 0;
+            const isHoliday = planning?.isHoliday || false;
 
             // Calcular comensales
             const capacidad = parseFloat(document.getElementById('capacidad').value);
@@ -4026,6 +4030,7 @@
                     <span>${dayData.dia}</span>
                     <span class="day-name">${dayData.dia_semana.substring(0, 3)}</span>
                 </div>
+                ${isHoliday ? '<div style="background: #ff9800; color: white; font-size: 0.7em; padding: 2px 6px; border-radius: 10px; text-align: center; margin: 4px 0; font-weight: 600;">🎉 Festivo</div>' : ''}
                 <div class="toggle-switch">
                     <label class="switch">
                         <input type="checkbox" id="open-${date}" ${isOpen ? 'checked' : ''}
