@@ -1702,10 +1702,10 @@
                     <!-- Mode Selector -->
                     <div style="display: flex; gap: 10px; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
                         <button id="mode-single" class="mode-button active" onclick="switchMode('single')" style="flex: 1; padding: 12px; border: 2px solid #667eea; background: #667eea; color: white; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-                            Modo Individual
+                            Crear Escenario
                         </button>
-                        <button id="mode-compare" class="mode-button" onclick="switchMode('compare')" style="flex: 1; padding: 12px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
-                            Comparar Escenarios
+                        <button id="mode-compare" class="mode-button" onclick="switchMode('saved')" style="flex: 1; padding: 12px; border: 2px solid #667eea; background: white; color: #667eea; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                            Escenarios Guardados
                         </button>
                     </div>
 
@@ -1819,46 +1819,29 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Save Scenario Section -->
+                        <div id="save-scenario-section" style="display: none; margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white;">
+                            <h3 style="margin: 0 0 15px 0; font-size: 18px;">Guardar Este Escenario</h3>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="scenario-name" placeholder="Nombre del escenario (ej: Cena romántica, Comida familiar...)" style="flex: 1; padding: 12px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white; border-radius: 6px; font-size: 14px;" />
+                                <button onclick="saveCurrentScenario()" style="padding: 12px 24px; background: white; color: #667eea; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.3s;">
+                                    Guardar
+                                </button>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 13px; opacity: 0.9;">
+                                Guarda este escenario para compararlo más tarde con otros
+                            </div>
+                        </div>
                     </div>
                     </div> <!-- End single-mode-container -->
 
-                    <!-- Compare Mode -->
+                    <!-- Saved Scenarios Mode -->
                     <div id="compare-mode-container" style="display: none; margin-top: 20px;">
                         <div style="margin-bottom: 20px;">
-                            <label style="font-weight: bold; margin-bottom: 10px; display: block;">Selecciona escenarios para comparar:</label>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="pareja" onchange="updateComparison()" style="margin-right: 8px;">
-                                    Pareja (2)
-                                </label>
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="familia4" onchange="updateComparison()" style="margin-right: 8px;">
-                                    Familia (4)
-                                </label>
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="familia6" onchange="updateComparison()" style="margin-right: 8px;">
-                                    Familia (6)
-                                </label>
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="dos-parejas" onchange="updateComparison()" style="margin-right: 8px;">
-                                    2 Parejas (4)
-                                </label>
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="amigos4" onchange="updateComparison()" style="margin-right: 8px;">
-                                    Amigos (4)
-                                </label>
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="amigos6" onchange="updateComparison()" style="margin-right: 8px;">
-                                    Amigos (6)
-                                </label>
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="amigos8" onchange="updateComparison()" style="margin-right: 8px;">
-                                    Amigos (8)
-                                </label>
-                                <label style="display: flex; align-items: center; padding: 10px; background: #f8f9fa; border-radius: 6px; cursor: pointer;">
-                                    <input type="checkbox" value="amigos10" onchange="updateComparison()" style="margin-right: 8px;">
-                                    Amigos (10)
-                                </label>
+                            <h3 style="margin: 0 0 15px 0;">Mis Escenarios Guardados</h3>
+                            <div id="saved-scenarios-list">
+                                <!-- Saved scenarios will be rendered here -->
                             </div>
                         </div>
 
@@ -2575,6 +2558,11 @@
             document.getElementById('summary-cost').textContent = totalCost.toFixed(2) + '€';
             document.getElementById('summary-margin').textContent = margin.toFixed(2) + '€';
             document.getElementById('summary-margin-pct').textContent = marginPct.toFixed(1) + '%';
+
+            // Show save scenario section if there are items
+            if (currentScenario.items.length > 0) {
+                document.getElementById('save-scenario-section').style.display = 'block';
+            }
         }
 
         // Switch between single and compare mode
@@ -2591,14 +2579,14 @@
                 singleBtn.style.color = 'white';
                 compareBtn.style.background = 'white';
                 compareBtn.style.color = '#667eea';
-            } else {
+            } else if (mode === 'saved') {
                 singleContainer.style.display = 'none';
                 compareContainer.style.display = 'block';
                 singleBtn.style.background = 'white';
                 singleBtn.style.color = '#667eea';
                 compareBtn.style.background = '#667eea';
                 compareBtn.style.color = 'white';
-                updateComparison();
+                renderSavedScenarios();
             }
         }
 
@@ -2614,11 +2602,21 @@
             const people = scenario.people;
 
             // Calculate number of items based on group size
-            const numAperitivos = Math.floor(people / 3) + Math.floor(Math.random() * 2);
-            const numEntrantes = Math.floor(people / 2) + Math.floor(Math.random() * 2);
-            const numCarnes = people;
+            // Max 1 aperitivo/entrante combined per person
+            const numAperitivosEntrantes = Math.max(1, Math.floor(people * (0.5 + Math.random() * 0.4))); // 0.5-0.9 per person
+            const numAperitivos = Math.floor(numAperitivosEntrantes * 0.3); // 30% aperitivos
+            const numEntrantes = numAperitivosEntrantes - numAperitivos; // Rest entrantes
+
+            // Max 1 carne per person
+            const numCarnes = Math.max(1, Math.floor(people * (0.7 + Math.random() * 0.2))); // 0.7-0.9 per person
+
             const numGuarniciones = Math.floor(people / 3) + 1;
-            const numPostres = Math.floor(people * 0.7) + Math.floor(Math.random() * 2);
+
+            // Max 1 postre per person
+            const numPostres = Math.max(1, Math.floor(people * (0.6 + Math.random() * 0.3))); // 0.6-0.9 per person
+
+            // Max 1 coffee per person (some people don't take coffee)
+            const numCoffees = Math.floor(people * (0.4 + Math.random() * 0.3)); // 0.4-0.7 per person
 
             // Generate random selection
             const randomItems = [];
@@ -2680,6 +2678,18 @@
                     existing.qty++;
                 } else {
                     randomItems.push({ category: 'postres', item: item.name, qty: 1 });
+                }
+            }
+
+            // Add random coffees
+            for (let i = 0; i < numCoffees; i++) {
+                const items = menuItems.cafes;
+                const item = items[Math.floor(Math.random() * items.length)];
+                const existing = randomItems.find(ri => ri.category === 'cafes' && ri.item === item.name);
+                if (existing) {
+                    existing.qty++;
+                } else {
+                    randomItems.push({ category: 'cafes', item: item.name, qty: 1 });
                 }
             }
 
@@ -2813,6 +2823,219 @@
                 'amigos10': 'Grupo amigos (10 personas)'
             };
             return names[type] || type;
+        }
+
+        // Save/Load Scenario Functions
+        function saveCurrentScenario() {
+            const nameInput = document.getElementById('scenario-name');
+            const name = nameInput.value.trim();
+
+            if (!name) {
+                alert('Por favor introduce un nombre para el escenario');
+                return;
+            }
+
+            const groupType = document.getElementById('group-type').value;
+            if (!groupType) {
+                alert('Selecciona un tipo de grupo primero');
+                return;
+            }
+
+            if (currentScenario.items.length === 0) {
+                alert('Añade al menos un plato al escenario');
+                return;
+            }
+
+            // Get saved scenarios from localStorage
+            let savedScenarios = JSON.parse(localStorage.getItem('savedMenuScenarios') || '[]');
+
+            // Create new scenario object
+            const newScenario = {
+                id: Date.now().toString(),
+                name: name,
+                groupType: groupType,
+                people: scenarios[groupType].people,
+                items: [...currentScenario.items],
+                createdAt: new Date().toISOString()
+            };
+
+            // Add to saved scenarios
+            savedScenarios.push(newScenario);
+            localStorage.setItem('savedMenuScenarios', JSON.stringify(savedScenarios));
+
+            // Clear input and show success
+            nameInput.value = '';
+            alert('Escenario guardado correctamente!');
+        }
+
+        function loadSavedScenarios() {
+            return JSON.parse(localStorage.getItem('savedMenuScenarios') || '[]');
+        }
+
+        function renderSavedScenarios() {
+            const savedScenarios = loadSavedScenarios();
+            const container = document.getElementById('saved-scenarios-list');
+
+            if (savedScenarios.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 60px 20px; background: #f8f9fa; border-radius: 8px; border: 2px dashed #ddd;">
+                        <div style="font-size: 48px; margin-bottom: 15px; opacity: 0.3;">📋</div>
+                        <p style="color: #666; font-size: 16px; margin: 0;">No hay escenarios guardados todavía</p>
+                        <p style="color: #999; font-size: 14px; margin: 10px 0 0 0;">Crea un escenario en "Crear Escenario" y guárdalo para comparar</p>
+                    </div>
+                `;
+                document.getElementById('comparison-results').innerHTML = '';
+                return;
+            }
+
+            let html = '<div style="margin-bottom: 20px;"><label style="font-weight: bold; margin-bottom: 10px; display: block;">Selecciona escenarios para comparar:</label></div>';
+            html += '<div style="display: grid; gap: 15px;">';
+
+            savedScenarios.forEach(scenario => {
+                html += `
+                    <div style="display: flex; align-items: center; padding: 15px; background: white; border: 2px solid #e0e0e0; border-radius: 8px; transition: all 0.2s;">
+                        <input type="checkbox" id="scenario-${scenario.id}" value="${scenario.id}" onchange="updateSavedComparison()" style="margin-right: 12px; width: 18px; height: 18px; cursor: pointer;">
+                        <label for="scenario-${scenario.id}" style="flex: 1; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; color: #333; margin-bottom: 4px;">${scenario.name}</div>
+                                <div style="font-size: 13px; color: #666;">${scenario.people} personas • ${scenario.items.length} items • ${new Date(scenario.createdAt).toLocaleDateString()}</div>
+                            </div>
+                        </label>
+                        <button onclick="deleteScenario('${scenario.id}')" style="padding: 8px 12px; background: #f44336; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; margin-left: 10px;">
+                            Eliminar
+                        </button>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            // Clear comparison results initially
+            document.getElementById('comparison-results').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Selecciona al menos un escenario para ver la comparación</p>';
+        }
+
+        function deleteScenario(id) {
+            if (!confirm('¿Seguro que quieres eliminar este escenario?')) {
+                return;
+            }
+
+            let savedScenarios = loadSavedScenarios();
+            savedScenarios = savedScenarios.filter(s => s.id !== id);
+            localStorage.setItem('savedMenuScenarios', JSON.stringify(savedScenarios));
+            renderSavedScenarios();
+        }
+
+        function updateSavedComparison() {
+            const savedScenarios = loadSavedScenarios();
+            const checkboxes = document.querySelectorAll('#saved-scenarios-list input[type="checkbox"]');
+            const selectedIds = [];
+
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    selectedIds.push(cb.value);
+                }
+            });
+
+            if (selectedIds.length === 0) {
+                document.getElementById('comparison-results').innerHTML = '<p style="text-align: center; color: #666; padding: 40px;">Selecciona al menos un escenario para ver la comparación</p>';
+                return;
+            }
+
+            // Calculate metrics for each selected scenario
+            const comparisons = selectedIds.map(id => {
+                const scenario = savedScenarios.find(s => s.id === id);
+                if (!scenario) return null;
+
+                let totalPrice = 0;
+                let totalCost = 0;
+
+                scenario.items.forEach(item => {
+                    const menuItem = menuItems[item.category].find(mi => mi.name === item.item);
+                    if (menuItem) {
+                        totalPrice += menuItem.price * item.qty;
+                        totalCost += menuItem.cost * item.qty;
+                    }
+                });
+
+                // Add drinks
+                const drinksPerPerson = 2;
+                const totalDrinks = drinksPerPerson * scenario.people;
+                totalPrice += totalDrinks * avgDrinkPrice;
+                totalCost += totalDrinks * avgDrinkCost;
+
+                const margin = totalPrice - totalCost;
+                const marginPct = (margin / totalPrice) * 100;
+                const avgPerPerson = totalPrice / scenario.people;
+
+                return {
+                    id: scenario.id,
+                    name: scenario.name,
+                    people: scenario.people,
+                    totalPrice,
+                    totalCost,
+                    margin,
+                    marginPct,
+                    avgPerPerson
+                };
+            }).filter(c => c !== null);
+
+            // Sort by total price descending
+            comparisons.sort((a, b) => b.totalPrice - a.totalPrice);
+
+            // Render comparison table
+            let html = `
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                <th style="padding: 15px; text-align: left;">Escenario</th>
+                                <th style="padding: 15px; text-align: center;">Personas</th>
+                                <th style="padding: 15px; text-align: right;">Ticket Total</th>
+                                <th style="padding: 15px; text-align: right;">Ticket/Persona</th>
+                                <th style="padding: 15px; text-align: right;">Coste Total</th>
+                                <th style="padding: 15px; text-align: right;">Margen €</th>
+                                <th style="padding: 15px; text-align: right;">Margen %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            comparisons.forEach((comp, index) => {
+                const bgColor = index % 2 === 0 ? '#f8f9fa' : 'white';
+                html += `
+                    <tr style="background: ${bgColor};">
+                        <td style="padding: 12px; font-weight: 600; color: #333;">${comp.name}</td>
+                        <td style="padding: 12px; text-align: center;">${comp.people}</td>
+                        <td style="padding: 12px; text-align: right; font-weight: 600; color: #667eea;">${comp.totalPrice.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right;">${comp.avgPerPerson.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right; color: #f44336;">${comp.totalCost.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right; color: #4caf50; font-weight: 600;">${comp.margin.toFixed(2)}€</td>
+                        <td style="padding: 12px; text-align: right;">
+                            <span style="background: #4caf50; color: white; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
+                                ${comp.marginPct.toFixed(1)}%
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 30px; padding: 20px; background: #f0f7ff; border-left: 4px solid #667eea; border-radius: 6px;">
+                    <h4 style="margin-top: 0; color: #667eea;">💡 Insights</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px; color: #555;">
+                        <li><strong>Mejor ticket medio:</strong> ${comparisons.reduce((max, c) => c.avgPerPerson > max.avgPerPerson ? c : max).name} con ${comparisons.reduce((max, c) => c.avgPerPerson > max.avgPerPerson ? c : max).avgPerPerson.toFixed(2)}€/persona</li>
+                        <li><strong>Mejor margen %:</strong> ${comparisons.reduce((max, c) => c.marginPct > max.marginPct ? c : max).name} con ${comparisons.reduce((max, c) => c.marginPct > max.marginPct ? c : max).marginPct.toFixed(1)}%</li>
+                        <li><strong>Mayor ingreso total:</strong> ${comparisons[0].name} con ${comparisons[0].totalPrice.toFixed(2)}€</li>
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('comparison-results').innerHTML = html;
         }
 
         // ==================== END MENU SIMULATOR ====================
