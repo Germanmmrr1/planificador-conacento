@@ -3230,8 +3230,23 @@
                 // August is closed (all of August 2026)
                 const isAugust = parseInt(row.mes) === 8 && parseInt(row.año) === 2026;
 
+                // Festivos (días cerrados)
+                const holidays = [
+                    '2025-12-08', // Inmaculada Concepción
+                    '2025-12-25', // Navidad
+                    '2026-04-02', // Jueves Santo
+                    '2026-04-03', // Viernes Santo
+                    '2026-05-01', // Día del Trabajo
+                    '2026-10-12', // Fiesta Nacional de España
+                    '2026-11-02', // Todos los Santos (trasladado del 1)
+                    '2026-12-07', // Día de la Constitución (trasladado del 6)
+                    '2026-12-08', // Inmaculada Concepción
+                    '2026-12-25'  // Navidad
+                ];
+                const isHoliday = holidays.includes(row.fecha);
+
                 const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
-                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
+                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust && !isHoliday;
 
                 // Default occupancy: 25% martes-miércoles-jueves, 45% viernes-domingo
                 let defaultOccupancy = 25; // martes-miércoles-jueves
