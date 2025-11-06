@@ -2096,7 +2096,7 @@
                 { name: 'Entraña', desc: 'Entraña argentina de vacuno jugosa', price: 21, cost: 7.31 },
                 { name: 'Abanico Ibérico', desc: 'Abanico ibérico de bellota jugoso', price: 22, cost: 6.79 },
                 { name: 'Presa Ibérica', desc: 'Presa ibérica de bellota a la brasa', price: 24, cost: 8.24 },
-                { name: 'Chuletón Premium', desc: 'Chuletón madurado (aprox. 600g)', price: 72, cost: 27.22 },
+                { name: 'Chuletón Premium', desc: 'Chuletón madurado (aprox. 800g)', price: 96, cost: 36.29 },
                 { name: 'Lomo Bajo Premium', desc: 'Lomo bajo madurado (aprox. 400g)', price: 48, cost: 18.15 },
                 { name: 'Hamburguesa', desc: 'Hamburguesa gourmet de ternera madurada', price: 16, cost: 6.23 }
             ],
@@ -2806,7 +2806,20 @@
             // Add random carnes
             for (let i = 0; i < numCarnes; i++) {
                 const items = menuItems.carnes;
-                const item = items[Math.floor(Math.random() * items.length)];
+                let item;
+
+                // For Steak Lovers, 70% chance to select premium cuts (Chuletón or Entrecot)
+                if (personaType === 'steaklovers' && Math.random() < 0.7) {
+                    const premiumCuts = items.filter(meat =>
+                        meat.name === 'Chuletón Premium' ||
+                        meat.name === 'Entrecot' ||
+                        meat.name === 'Lomo Bajo Premium'
+                    );
+                    item = premiumCuts[Math.floor(Math.random() * premiumCuts.length)];
+                } else {
+                    item = items[Math.floor(Math.random() * items.length)];
+                }
+
                 const existing = randomItems.find(ri => ri.category === 'carnes' && ri.item === item.name);
                 if (existing) {
                     existing.qty++;
