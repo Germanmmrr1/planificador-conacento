@@ -2747,8 +2747,8 @@
                 'Plato de queso': Math.ceil(people / 4)
             };
 
-            // Wine bottle limit (1 per 2 people)
-            const wineBottleLimit = Math.ceil(people / 2);
+            // Wine bottle limit (1 per 2 people, strict)
+            const wineBottleLimit = Math.floor(people / 2);
 
             // Helper function to check if item is a wine bottle
             function isWineBottle(itemName, category) {
