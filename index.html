@@ -3213,8 +3213,10 @@
                 calendarData.push(row);
 
                 // Initialize daily planning with default values
-                // Restaurant is open Wed-Sat (lunch+dinner) and Sunday (lunch only)
+                // Restaurant is open Tue-Sat (lunch+dinner) and Sunday (lunch only)
+                // Wednesday has only 1 shift
                 const dayName = row.dia_semana.toLowerCase();
+                const isTuesday = dayName === 'martes';
                 const isWednesday = dayName === 'miércoles';
                 const isThursday = dayName === 'jueves';
                 const isFriday = dayName === 'viernes';
@@ -3228,19 +3230,25 @@
                 // August is closed (all of August 2026)
                 const isAugust = parseInt(row.mes) === 8 && parseInt(row.año) === 2026;
 
-                const isNormallyOpen = isWednesday || isThursday || isFriday || isSaturday || isSunday;
+                const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
                 const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
 
-                // Default occupancy: 25% miércoles-jueves, 45% viernes-domingo
-                let defaultOccupancy = 25; // miércoles-jueves
+                // Default occupancy: 25% martes-miércoles-jueves, 45% viernes-domingo
+                let defaultOccupancy = 25; // martes-miércoles-jueves
                 if (isFriday || isSaturday || isSunday) {
                     defaultOccupancy = 45; // viernes-domingo
+                }
+
+                // Shifts: 1 shift on Tuesday, Wednesday and Sunday; 2 shifts on Thu-Sat
+                let defaultShifts = 2;
+                if (isTuesday || isWednesday || isSunday) {
+                    defaultShifts = 1;
                 }
 
                 dailyPlanning[row.fecha] = {
                     open: isOpen,
                     occupancy: defaultOccupancy,
-                    shifts: isSunday ? 1 : (isOpen ? 2 : 0) // 1 shift on Sunday, 2 on other open days
+                    shifts: isOpen ? defaultShifts : 0
                 };
             }
         }
@@ -3646,6 +3654,7 @@
                         }
                     });
                 } else if (choice === 'by-day') {
+                    const occMar = parseInt(document.getElementById('occ-mar').value);
                     const occMie = parseInt(document.getElementById('occ-mie').value);
                     const occJue = parseInt(document.getElementById('occ-jue').value);
                     const occVie = parseInt(document.getElementById('occ-vie').value);
@@ -3653,7 +3662,7 @@
                     const occDom = parseInt(document.getElementById('occ-dom').value);
 
                     // Validar que todos estén en rango
-                    if ([occMie, occJue, occVie, occSab, occDom].some(v => v < 10 || v > 100)) {
+                    if ([occMar, occMie, occJue, occVie, occSab, occDom].some(v => v < 10 || v > 100)) {
                         alert('Todas las ocupaciones deben estar entre 10% y 100%');
                         return;
                     }
@@ -3661,7 +3670,9 @@
                     monthDays.forEach(day => {
                         if (dailyPlanning[day.fecha].open) {
                             const dayName = day.dia_semana.toLowerCase();
-                            if (dayName === 'miércoles') {
+                            if (dayName === 'martes') {
+                                dailyPlanning[day.fecha].occupancy = occMar;
+                            } else if (dayName === 'miércoles') {
                                 dailyPlanning[day.fecha].occupancy = occMie;
                             } else if (dayName === 'jueves') {
                                 dailyPlanning[day.fecha].occupancy = occJue;
@@ -3703,6 +3714,10 @@
                         `;
                     } else {
                         inputsDiv.innerHTML = `
+                            <div class="modal-input-group">
+                                <label>Ocupación Martes (%):</label>
+                                <input type="number" id="occ-mar" value="25" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
                             <div class="modal-input-group">
                                 <label>Ocupación Miércoles (%):</label>
                                 <input type="number" id="occ-mie" value="25" min="10" max="100" step="5" inputmode="decimal">
