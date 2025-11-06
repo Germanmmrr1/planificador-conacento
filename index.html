@@ -1696,7 +1696,7 @@
                 <div class="section full-width">
                     <h2>Simulador de Escenarios de Menú</h2>
                     <div class="info-box">
-                        <strong>Instrucciones:</strong> Selecciona el tipo de grupo para ver una sugerencia de pedido típico. Puedes añadir o quitar platos y ver el ticket medio, coste y margen.
+                        <strong>Instrucciones:</strong> Introduce el número de clientes y selecciona el tipo de persona para generar un menú basado en patrones de consumo. Puedes añadir o quitar platos y ver el ticket medio, coste y margen.
                     </div>
 
                     <!-- Mode Selector -->
@@ -1713,17 +1713,20 @@
                     <div id="single-mode-container">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                         <div>
-                            <label style="font-weight: bold; margin-bottom: 10px; display: block;">Tipo de Grupo:</label>
-                            <select id="group-type" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px;" onchange="loadScenario()">
-                                <option value="">-- Selecciona un grupo --</option>
-                                <option value="pareja">Pareja (2 personas)</option>
-                                <option value="familia4">Familia (4 personas)</option>
-                                <option value="familia6">Familia (6 personas)</option>
-                                <option value="dos-parejas">2 Parejas (4 personas)</option>
-                                <option value="amigos4">Grupo amigos (4 personas)</option>
-                                <option value="amigos6">Grupo amigos (6 personas)</option>
-                                <option value="amigos8">Grupo amigos (8 personas)</option>
-                                <option value="amigos10">Grupo amigos (10 personas)</option>
+                            <label style="font-weight: bold; margin-bottom: 10px; display: block;">Número de Clientes:</label>
+                            <input type="number" id="client-count" min="1" max="20" value="2" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px;" onchange="updateScenarioInputs()">
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; margin-bottom: 10px; display: block;">Tipo de Persona:</label>
+                            <select id="persona-type" style="width: 100%; padding: 10px; font-size: 16px; border: 2px solid #ddd; border-radius: 8px;" onchange="updateScenarioInputs()">
+                                <option value="">-- Selecciona tipo de persona --</option>
+                                <option value="tapeadores">🍽️ Los Tapeadores (Comparten raciones)</option>
+                                <option value="steaklovers">🥩 Los Steak Lovers (Premium, carnes)</option>
+                                <option value="valuehunters">💸 Los Value Hunters (Precio contenido)</option>
+                                <option value="foodies">🍷 Los Foodies Experienciales</option>
+                                <option value="familias">👨‍👩‍👧 Las Familias Tradicionales</option>
+                                <option value="grupos">🥂 Los Grupos Sociales</option>
+                                <option value="festivos">🎉 Los Festivos / Ocasión Especial</option>
                             </select>
                         </div>
                     </div>
@@ -2242,6 +2245,80 @@
             items: []
         };
 
+        // Persona consumption patterns (units per person per visit)
+        const personaPatterns = {
+            tapeadores: {
+                name: 'Los Tapeadores',
+                description: 'Locals o grupos casuales que vienen a compartir raciones',
+                aperitivos: 0.8,
+                entrantes: 0.8,
+                carnes: 0.3,
+                guarniciones: 0.3,
+                postres: 0.3,
+                bebidas: 2.0
+            },
+            steaklovers: {
+                name: 'Los Steak Lovers',
+                description: 'Buscan calidad, vienen por las brasas y el producto premium',
+                aperitivos: 0.2,
+                entrantes: 0.2,
+                carnes: 1.0,
+                guarniciones: 0.4,
+                postres: 0.5,
+                bebidas: 2.0
+            },
+            valuehunters: {
+                name: 'Los Value Hunters',
+                description: 'Clientes de menú o gasto contenido, familias y parejas jóvenes',
+                aperitivos: 0.3,
+                entrantes: 0.3,
+                carnes: 1.0,
+                guarniciones: 0.3,
+                postres: 0.2,
+                bebidas: 1.5
+            },
+            foodies: {
+                name: 'Los Foodies Experienciales',
+                description: 'Les gusta probar cosas distintas (tartar, nigiri, carpaccio)',
+                aperitivos: 0.6,
+                entrantes: 0.8,
+                carnes: 0.5,
+                guarniciones: 0.3,
+                postres: 0.4,
+                bebidas: 2.0
+            },
+            familias: {
+                name: 'Las Familias Tradicionales',
+                description: 'Grupos familiares de fin de semana, priorizan cantidad',
+                aperitivos: 0.4,
+                entrantes: 0.4,
+                carnes: 1.0,
+                guarniciones: 0.4,
+                postres: 0.6,
+                bebidas: 1.8
+            },
+            grupos: {
+                name: 'Los Grupos Sociales',
+                description: 'Amigos o colegas, celebración o cena informal',
+                aperitivos: 0.8,
+                entrantes: 0.8,
+                carnes: 0.6,
+                guarniciones: 0.4,
+                postres: 0.5,
+                bebidas: 2.0
+            },
+            festivos: {
+                name: 'Los Festivos / Ocasión Especial',
+                description: 'Clientes de celebración (cumpleaños, aniversario, visita)',
+                aperitivos: 0.4,
+                entrantes: 0.6,
+                carnes: 1.0,
+                guarniciones: 0.4,
+                postres: 0.8,
+                bebidas: 2.2
+            }
+        };
+
         // Predefined scenarios
         const scenarios = {
             pareja: {
@@ -2382,22 +2459,24 @@
             }
         };
 
-        // Load a scenario
-        function loadScenario() {
-            const groupType = document.getElementById('group-type').value;
-            if (!groupType) {
+        // Update scenario inputs (replaces loadScenario)
+        function updateScenarioInputs() {
+            const clientCount = parseInt(document.getElementById('client-count').value);
+            const personaType = document.getElementById('persona-type').value;
+
+            if (!clientCount || !personaType) {
                 document.getElementById('menu-selection').style.display = 'none';
                 return;
             }
 
-            const scenario = scenarios[groupType];
+            // Update current scenario with client count and persona
             currentScenario = {
-                groupType: groupType,
-                people: scenario.people,
-                items: JSON.parse(JSON.stringify(scenario.items)), // Deep copy
-                drinksPerPerson: parseFloat(document.getElementById('drinks-per-person').value) || 2
+                groupType: personaType,
+                people: clientCount,
+                items: []
             };
 
+            // Show the menu selection area
             document.getElementById('menu-selection').style.display = 'block';
             renderScenario();
             calculateScenario();
@@ -2558,33 +2637,37 @@
             }
         }
 
-        // Generate random menu for selected group
+        // Generate random menu based on persona patterns
         function generateRandomMenu() {
-            const groupType = document.getElementById('group-type').value;
-            if (!groupType) {
-                alert('Por favor selecciona un tipo de grupo primero');
+            const clientCount = parseInt(document.getElementById('client-count').value);
+            const personaType = document.getElementById('persona-type').value;
+
+            if (!clientCount || !personaType) {
+                alert('Por favor introduce el número de clientes y selecciona el tipo de persona primero');
                 return;
             }
 
-            const scenario = scenarios[groupType];
-            const people = scenario.people;
+            const persona = personaPatterns[personaType];
+            const people = clientCount;
 
-            // Calculate number of items based on group size
-            // Max 1 aperitivo/entrante combined per person
-            const numAperitivosEntrantes = Math.max(1, Math.floor(people * (0.5 + Math.random() * 0.4))); // 0.5-0.9 per person
-            const numAperitivos = Math.floor(numAperitivosEntrantes * 0.3); // 30% aperitivos
-            const numEntrantes = numAperitivosEntrantes - numAperitivos; // Rest entrantes
+            // Update current scenario
+            currentScenario = {
+                groupType: personaType,
+                people: people,
+                items: []
+            };
 
-            // Max 1 carne per person
-            const numCarnes = Math.max(1, Math.floor(people * (0.7 + Math.random() * 0.2))); // 0.7-0.9 per person
+            // Calculate number of items based on persona patterns
+            const numAperitivos = Math.max(0, Math.round(people * persona.aperitivos));
+            const numEntrantes = Math.max(0, Math.round(people * persona.entrantes));
+            const numCarnes = Math.max(1, Math.round(people * persona.carnes)); // At least 1 main course
+            const numGuarniciones = Math.max(0, Math.round(people * persona.guarniciones));
+            const numPostres = Math.max(0, Math.round(people * persona.postres));
 
-            const numGuarniciones = Math.floor(people / 3) + 1;
-
-            // Max 1 postre per person
-            const numPostres = Math.max(1, Math.floor(people * (0.6 + Math.random() * 0.3))); // 0.6-0.9 per person
-
-            // Max 1 coffee per person (some people don't take coffee)
-            const numCoffees = Math.floor(people * (0.4 + Math.random() * 0.3)); // 0.4-0.7 per person
+            // Calculate drinks - 30% coffees from total bebidas, rest are alcoholic/soft drinks
+            const totalBebidas = Math.round(people * persona.bebidas);
+            const numCoffees = Math.round(totalBebidas * 0.2);
+            const numDrinks = totalBebidas - numCoffees;
 
             // Generate random selection
             const randomItems = [];
@@ -2661,8 +2744,7 @@
                 }
             }
 
-            // Add random drinks (beers, wines, soft drinks) - 2 per person on average
-            const numDrinks = Math.floor(people * 2);
+            // Add random drinks (beers, wines, soft drinks) based on persona
             const drinkCategories = ['cervezas', 'vinostintos', 'vinosblancos', 'refrescos'];
 
             for (let i = 0; i < numDrinks; i++) {
@@ -2822,9 +2904,11 @@
                 return;
             }
 
-            const groupType = document.getElementById('group-type').value;
-            if (!groupType) {
-                alert('Selecciona un tipo de grupo primero');
+            const clientCount = parseInt(document.getElementById('client-count').value);
+            const personaType = document.getElementById('persona-type').value;
+
+            if (!clientCount || !personaType) {
+                alert('Introduce el número de clientes y selecciona el tipo de persona primero');
                 return;
             }
 
@@ -2840,8 +2924,8 @@
             const newScenario = {
                 id: Date.now().toString(),
                 name: name,
-                groupType: groupType,
-                people: scenarios[groupType].people,
+                groupType: personaType,
+                people: clientCount,
                 items: [...currentScenario.items],
                 createdAt: new Date().toISOString()
             };
