@@ -168,6 +168,20 @@
             border-bottom-color: #667eea;
         }
 
+        .tab-button-special {
+            color: #ff6b35 !important;
+        }
+
+        .tab-button-special:hover {
+            color: #ff8c61 !important;
+            background: #fff5f2 !important;
+        }
+
+        .tab-button-special.active {
+            color: #ff6b35 !important;
+            border-bottom-color: #ff6b35 !important;
+        }
+
         .tab-content {
             display: none;
         }
@@ -1617,10 +1631,10 @@
         <!-- Tabs Navigation -->
         <div class="tabs-container">
             <button class="tab-button active" onclick="switchTab('planificacion', this)">Planificación y Variables</button>
-            <button class="tab-button" onclick="switchTab('escenarios', this)">Escenarios Menú</button>
             <button class="tab-button" onclick="switchTab('salarios', this)">Personal y Salarios</button>
             <button class="tab-button" onclick="switchTab('gastos', this)">Gastos Operativos</button>
             <button class="tab-button" onclick="switchTab('resultados', this)">Resultados</button>
+            <button class="tab-button tab-button-special" onclick="switchTab('escenarios', this)">Escenarios Menú</button>
         </div>
 
         <!-- Tab: Planificación y Variables (Merged) -->
