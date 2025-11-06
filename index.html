@@ -1638,16 +1638,16 @@
                         </div>
 
                         <div class="input-group">
-                            <label>Ticket Medio (€): <span class="range-value" id="ticket-value">30</span></label>
-                            <input type="range" id="ticket" min="20" max="60" value="30" step="1" oninput="updateAllCalculations()">
+                            <label>Ticket Medio (€): <span class="range-value" id="ticket-value">35</span></label>
+                            <input type="range" id="ticket" min="20" max="60" value="35" step="1" oninput="updateAllCalculations()">
                         </div>
 
                         <div class="input-group">
                             <label>
-                                Aprovisionamiento (% sobre ventas): <span class="range-value" id="aprovisionamiento-value">35</span>
+                                Aprovisionamiento (% sobre ventas): <span class="range-value" id="aprovisionamiento-value">40</span>
                                 <span class="tooltip-icon" data-tooltip="35% es el histórico de Leo y está en línea con el sector" onclick="showTooltip(this.getAttribute('data-tooltip'), this)">i</span>
                             </label>
-                            <input type="range" id="aprovisionamiento" min="25" max="45" value="35" step="1" oninput="updateAllCalculations()">
+                            <input type="range" id="aprovisionamiento" min="25" max="45" value="40" step="1" oninput="updateAllCalculations()">
                         </div>
                     </div>
                 </div>
@@ -1872,7 +1872,7 @@
         // Datos de empleados (solo salario neto mensual como input)
         const employees = [
             { name: 'Vito (Jefe de Sala + Gerente)', netMonthly: 2000 },
-            { name: 'Ferrari (Jefe cocina)', netMonthly: 1650 },
+            { name: 'Francisco (Ayudante cocina)', netMonthly: 1450 },
             { name: 'Elena (Ayudante cocina)', netMonthly: 1550 },
             { name: 'Elena U (Camarero)', netMonthly: 1450 },
             { name: 'Extra cocina (fin de semana)', netMonthly: 550 },
@@ -3213,8 +3213,10 @@
                 calendarData.push(row);
 
                 // Initialize daily planning with default values
-                // Restaurant is open Wed-Sat (lunch+dinner) and Sunday (lunch only)
+                // Restaurant is open Tue-Sat (lunch+dinner) and Sunday (lunch only)
+                // Wednesday has only 1 shift
                 const dayName = row.dia_semana.toLowerCase();
+                const isTuesday = dayName === 'martes';
                 const isWednesday = dayName === 'miércoles';
                 const isThursday = dayName === 'jueves';
                 const isFriday = dayName === 'viernes';
@@ -3228,19 +3230,40 @@
                 // August is closed (all of August 2026)
                 const isAugust = parseInt(row.mes) === 8 && parseInt(row.año) === 2026;
 
-                const isNormallyOpen = isWednesday || isThursday || isFriday || isSaturday || isSunday;
-                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
+                // Festivos (días cerrados)
+                const holidays = [
+                    '2025-12-08', // Inmaculada Concepción
+                    '2025-12-25', // Navidad
+                    '2026-04-02', // Jueves Santo
+                    '2026-04-03', // Viernes Santo
+                    '2026-05-01', // Día del Trabajo
+                    '2026-10-12', // Fiesta Nacional de España
+                    '2026-11-02', // Todos los Santos (trasladado del 1)
+                    '2026-12-07', // Día de la Constitución (trasladado del 6)
+                    '2026-12-08', // Inmaculada Concepción
+                    '2026-12-25'  // Navidad
+                ];
+                const isHoliday = holidays.includes(row.fecha);
 
-                // Default occupancy: 25% miércoles-jueves, 45% viernes-domingo
-                let defaultOccupancy = 25; // miércoles-jueves
+                const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
+                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust && !isHoliday;
+
+                // Default occupancy: 25% martes-miércoles-jueves, 45% viernes-domingo
+                let defaultOccupancy = 25; // martes-miércoles-jueves
                 if (isFriday || isSaturday || isSunday) {
                     defaultOccupancy = 45; // viernes-domingo
+                }
+
+                // Shifts: 1 shift on Tuesday, Wednesday and Sunday; 2 shifts on Thu-Sat
+                let defaultShifts = 2;
+                if (isTuesday || isWednesday || isSunday) {
+                    defaultShifts = 1;
                 }
 
                 dailyPlanning[row.fecha] = {
                     open: isOpen,
                     occupancy: defaultOccupancy,
-                    shifts: isSunday ? 1 : (isOpen ? 2 : 0) // 1 shift on Sunday, 2 on other open days
+                    shifts: isOpen ? defaultShifts : 0
                 };
             }
         }
@@ -3646,6 +3669,7 @@
                         }
                     });
                 } else if (choice === 'by-day') {
+                    const occMar = parseInt(document.getElementById('occ-mar').value);
                     const occMie = parseInt(document.getElementById('occ-mie').value);
                     const occJue = parseInt(document.getElementById('occ-jue').value);
                     const occVie = parseInt(document.getElementById('occ-vie').value);
@@ -3653,7 +3677,7 @@
                     const occDom = parseInt(document.getElementById('occ-dom').value);
 
                     // Validar que todos estén en rango
-                    if ([occMie, occJue, occVie, occSab, occDom].some(v => v < 10 || v > 100)) {
+                    if ([occMar, occMie, occJue, occVie, occSab, occDom].some(v => v < 10 || v > 100)) {
                         alert('Todas las ocupaciones deben estar entre 10% y 100%');
                         return;
                     }
@@ -3661,7 +3685,9 @@
                     monthDays.forEach(day => {
                         if (dailyPlanning[day.fecha].open) {
                             const dayName = day.dia_semana.toLowerCase();
-                            if (dayName === 'miércoles') {
+                            if (dayName === 'martes') {
+                                dailyPlanning[day.fecha].occupancy = occMar;
+                            } else if (dayName === 'miércoles') {
                                 dailyPlanning[day.fecha].occupancy = occMie;
                             } else if (dayName === 'jueves') {
                                 dailyPlanning[day.fecha].occupancy = occJue;
@@ -3703,6 +3729,10 @@
                         `;
                     } else {
                         inputsDiv.innerHTML = `
+                            <div class="modal-input-group">
+                                <label>Ocupación Martes (%):</label>
+                                <input type="number" id="occ-mar" value="25" min="10" max="100" step="5" inputmode="decimal">
+                            </div>
                             <div class="modal-input-group">
                                 <label>Ocupación Miércoles (%):</label>
                                 <input type="number" id="occ-mie" value="25" min="10" max="100" step="5" inputmode="decimal">
