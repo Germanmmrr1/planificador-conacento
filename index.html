@@ -4595,9 +4595,17 @@
                 const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
                 const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
 
-                // Default occupancy: 25% martes-miércoles-jueves, 45% viernes-domingo
-                let defaultOccupancy = 25; // martes-miércoles-jueves
-                if (isFriday || isSaturday || isSunday) {
+                // Check if it's December
+                const isDecember = parseInt(row.mes) === 12;
+
+                // Default occupancy based on day and month
+                let defaultOccupancy = 45; // Default for Friday-Sunday
+
+                if (isTuesday || isWednesday) {
+                    defaultOccupancy = isDecember ? 30 : 15; // 30% in December, 15% rest of year
+                } else if (isThursday) {
+                    defaultOccupancy = isDecember ? 35 : 20; // 35% in December, 20% rest of year
+                } else if (isFriday || isSaturday || isSunday) {
                     defaultOccupancy = 45; // viernes-domingo
                 }
 
