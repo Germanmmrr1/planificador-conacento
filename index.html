@@ -4599,14 +4599,16 @@
                 const isDecember = parseInt(row.mes) === 12;
 
                 // Default occupancy based on day and month
-                let defaultOccupancy = 45; // Default for Friday-Sunday
+                let defaultOccupancy = 40; // Default
 
                 if (isTuesday || isWednesday) {
                     defaultOccupancy = isDecember ? 30 : 15; // 30% in December, 15% rest of year
                 } else if (isThursday) {
                     defaultOccupancy = isDecember ? 35 : 20; // 35% in December, 20% rest of year
-                } else if (isFriday || isSaturday || isSunday) {
-                    defaultOccupancy = 45; // viernes-domingo
+                } else if (isFriday) {
+                    defaultOccupancy = isDecember ? 50 : 30; // 50% in December, 30% rest of year
+                } else if (isSaturday || isSunday) {
+                    defaultOccupancy = isDecember ? 60 : 40; // 60% in December, 40% rest of year
                 }
 
                 // Special occupancy for first weekend (Nov 8-9): 30%
