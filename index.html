@@ -2487,25 +2487,94 @@
             const container = document.getElementById('selected-items');
             container.innerHTML = '';
 
-            currentScenario.items.forEach((item, index) => {
+            // Define category order: drinks/wines first, then food, postres, cafes
+            const categoryOrder = {
+                // Drinks/Wines first
+                'vinosblancos': 1,
+                'vinosrosados': 2,
+                'vinostintos': 3,
+                'espumosos': 4,
+                'aperitivos_bebidas': 5,
+                'cervezas': 6,
+                'refrescos': 7,
+                'zumos': 8,
+                'aguas': 9,
+                // Then food
+                'entrantes': 10,
+                'aperitivos': 11,
+                'ensaladas': 12,
+                'guarniciones': 13,
+                'carnes': 14,
+                // Then desserts and coffee
+                'postres': 15,
+                'cafes': 16
+            };
+
+            // Category display names
+            const categoryNames = {
+                'vinosblancos': '🍷 Vinos Blancos',
+                'vinosrosados': '🍷 Vinos Rosados',
+                'vinostintos': '🍷 Vinos Tintos',
+                'espumosos': '🥂 Espumosos & Champagne',
+                'aperitivos_bebidas': '🍸 Aperitivos (Bebidas)',
+                'cervezas': '🍺 Cervezas',
+                'refrescos': '🥤 Refrescos',
+                'zumos': '🧃 Zumos',
+                'aguas': '💧 Aguas',
+                'entrantes': '🍴 Entrantes',
+                'aperitivos': '🥖 Aperitivos',
+                'ensaladas': '🥗 Ensaladas',
+                'guarniciones': '🥔 Guarniciones',
+                'carnes': '🥩 Carnes',
+                'postres': '🍰 Postres',
+                'cafes': '☕ Cafés'
+            };
+
+            // Sort items by category order
+            const sortedItems = [...currentScenario.items].sort((a, b) => {
+                const orderA = categoryOrder[a.category] || 999;
+                const orderB = categoryOrder[b.category] || 999;
+                return orderA - orderB;
+            });
+
+            // Group items by category
+            let currentCategory = null;
+
+            sortedItems.forEach((item, displayIndex) => {
+                // Find the original index in currentScenario.items for button actions
+                const originalIndex = currentScenario.items.findIndex((original, idx) =>
+                    original.category === item.category &&
+                    original.item === item.item &&
+                    currentScenario.items.slice(0, idx).filter(i => i.category === item.category && i.item === item.item).length ===
+                    sortedItems.slice(0, displayIndex).filter(i => i.category === item.category && i.item === item.item).length
+                );
+
                 const menuItem = menuItems[item.category].find(mi => mi.name === item.item);
                 if (!menuItem) return;
 
+                // Add category header if this is a new category
+                if (currentCategory !== item.category) {
+                    currentCategory = item.category;
+                    const header = document.createElement('div');
+                    header.style.cssText = 'background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 15px; font-weight: bold; font-size: 16px; margin-top: 10px; border-radius: 6px 6px 0 0;';
+                    header.textContent = categoryNames[item.category] || item.category;
+                    container.appendChild(header);
+                }
+
                 const div = document.createElement('div');
-                div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ddd;';
+                div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid #ddd; background: white;';
                 div.innerHTML = `
                     <div style="flex: 1;">
-                        <strong>${menuItem.name}</strong> (${item.category})
-                        <div style="font-size: 12px; color: #666;">${menuItem.desc}</div>
-                        <div style="font-size: 14px; margin-top: 5px;">
+                        <strong>${menuItem.name}</strong>
+                        <div style="font-size: 14px; margin-top: 5px; color: #555;">
                             Precio: ${menuItem.price.toFixed(2)}€ | Coste: ${menuItem.cost.toFixed(2)}€ | Margen: ${((menuItem.price - menuItem.cost) / menuItem.price * 100).toFixed(1)}%
                         </div>
                     </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <button onclick="changeQty(${index}, -1)" style="width: 30px; height: 30px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">-</button>
+                        <button onclick="changeQty(${originalIndex}, -1)" style="width: 30px; height: 30px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">-</button>
                         <span style="min-width: 30px; text-align: center; font-weight: bold;">${item.qty}</span>
-                        <button onclick="changeQty(${index}, 1)" style="width: 30px; height: 30px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">+</button>
-                        <button onclick="removeItem(${index})" style="padding: 8px 12px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Quitar</button>
+                        <button onclick="changeQty(${originalIndex}, 1)" style="width: 30px; height: 30px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">+</button>
+                        <button onclick="removeItem(${originalIndex})" style="padding: 8px 12px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">Quitar</button>
                     </div>
                 `;
                 container.appendChild(div);
@@ -2672,28 +2741,66 @@
             // Generate random selection
             const randomItems = [];
 
+            // Premium items limits (1 per 4 people)
+            const premiumItemLimits = {
+                'Plato de jamón': Math.ceil(people / 4),
+                'Plato de queso': Math.ceil(people / 4)
+            };
+
+            // Helper function to check if item can be added
+            function canAddPremiumItem(itemName, currentQty) {
+                if (premiumItemLimits[itemName] !== undefined) {
+                    return currentQty < premiumItemLimits[itemName];
+                }
+                return true;
+            }
+
             // Add random aperitivos
             for (let i = 0; i < numAperitivos; i++) {
                 const items = menuItems.aperitivos;
-                const item = items[Math.floor(Math.random() * items.length)];
-                const existing = randomItems.find(ri => ri.category === 'aperitivos' && ri.item === item.name);
-                if (existing) {
-                    existing.qty++;
-                } else {
-                    randomItems.push({ category: 'aperitivos', item: item.name, qty: 1 });
-                }
+                let attempts = 0;
+                let item;
+
+                // Try to find a valid item (max 10 attempts to avoid infinite loop)
+                do {
+                    item = items[Math.floor(Math.random() * items.length)];
+                    const existing = randomItems.find(ri => ri.category === 'aperitivos' && ri.item === item.name);
+                    const currentQty = existing ? existing.qty : 0;
+
+                    if (canAddPremiumItem(item.name, currentQty)) {
+                        if (existing) {
+                            existing.qty++;
+                        } else {
+                            randomItems.push({ category: 'aperitivos', item: item.name, qty: 1 });
+                        }
+                        break;
+                    }
+                    attempts++;
+                } while (attempts < 10);
             }
 
             // Add random entrantes
             for (let i = 0; i < numEntrantes; i++) {
                 const items = menuItems.entrantes;
-                const item = items[Math.floor(Math.random() * items.length)];
-                const existing = randomItems.find(ri => ri.category === 'entrantes' && ri.item === item.name);
-                if (existing) {
-                    existing.qty++;
-                } else {
-                    randomItems.push({ category: 'entrantes', item: item.name, qty: 1 });
-                }
+                let attempts = 0;
+                let item;
+
+                // Try to find a valid item (max 10 attempts to avoid infinite loop)
+                do {
+                    item = items[Math.floor(Math.random() * items.length)];
+                    const existing = randomItems.find(ri => ri.category === 'entrantes' && ri.item === item.name);
+                    const currentQty = existing ? existing.qty : 0;
+
+                    if (canAddPremiumItem(item.name, currentQty)) {
+                        if (existing) {
+                            existing.qty++;
+                        } else {
+                            randomItems.push({ category: 'entrantes', item: item.name, qty: 1 });
+                        }
+                        break;
+                    }
+                    attempts++;
+                } while (attempts < 10);
             }
 
             // Add random carnes
