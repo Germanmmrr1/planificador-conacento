@@ -3274,12 +3274,62 @@
                     totalCost,
                     margin,
                     marginPct,
-                    avgPerPerson
+                    avgPerPerson,
+                    items: scenario.items
                 };
             }).filter(c => c !== null);
 
             // Sort by total price descending
             comparisons.sort((a, b) => b.totalPrice - a.totalPrice);
+
+            // Helper function to group items by category
+            function getItemsSummary(items) {
+                const categoryNames = {
+                    'aperitivos': '🥖 Aperitivos',
+                    'entrantes': '🍽️ Entrantes',
+                    'ensaladas': '🥗 Ensaladas',
+                    'carnes': '🥩 Carnes',
+                    'guarniciones': '🥔 Guarniciones',
+                    'postres': '🍰 Postres',
+                    'cafes': '☕ Cafés',
+                    'cervezas': '🍺 Cervezas',
+                    'vinosblancos': '🍷 Vinos Blancos',
+                    'vinosrosados': '🍷 Vinos Rosados',
+                    'vinostintos': '🍷 Vinos Tintos',
+                    'refrescos': '🥤 Refrescos'
+                };
+
+                const grouped = {};
+                items.forEach(item => {
+                    if (!grouped[item.category]) {
+                        grouped[item.category] = [];
+                    }
+                    grouped[item.category].push(item);
+                });
+
+                let summary = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; padding: 15px;">';
+
+                Object.keys(grouped).forEach(category => {
+                    const categoryItems = grouped[category];
+                    summary += `
+                        <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; border-left: 3px solid #667eea;">
+                            <div style="font-weight: 600; margin-bottom: 8px; color: #667eea;">
+                                ${categoryNames[category] || category}
+                            </div>
+                            <ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #555;">
+                    `;
+                    categoryItems.forEach(item => {
+                        summary += `<li>${item.item} <span style="color: #888;">(×${item.qty})</span></li>`;
+                    });
+                    summary += `
+                            </ul>
+                        </div>
+                    `;
+                });
+
+                summary += '</div>';
+                return summary;
+            }
 
             // Render comparison table
             let html = `
@@ -3294,6 +3344,7 @@
                                 <th style="padding: 15px; text-align: right;">Coste Total</th>
                                 <th style="padding: 15px; text-align: right;">Margen €</th>
                                 <th style="padding: 15px; text-align: right;">Margen %</th>
+                                <th style="padding: 15px; text-align: center;">Detalle</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -3301,6 +3352,8 @@
 
             comparisons.forEach((comp, index) => {
                 const bgColor = index % 2 === 0 ? '#f8f9fa' : 'white';
+                const detailId = `detail-saved-${comp.id}`;
+
                 html += `
                     <tr style="background: ${bgColor};">
                         <td style="padding: 12px; font-weight: 600; color: #333;">${comp.name}</td>
@@ -3313,6 +3366,16 @@
                             <span style="background: #4caf50; color: white; padding: 4px 12px; border-radius: 12px; font-weight: 600;">
                                 ${comp.marginPct.toFixed(1)}%
                             </span>
+                        </td>
+                        <td style="padding: 12px; text-align: center;">
+                            <button onclick="toggleDetail('${detailId}')" style="background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500;">
+                                Ver Items
+                            </button>
+                        </td>
+                    </tr>
+                    <tr id="${detailId}" style="display: none; background: ${bgColor};">
+                        <td colspan="8" style="padding: 0; border-top: 1px solid #e0e0e0;">
+                            ${getItemsSummary(comp.items)}
                         </td>
                     </tr>
                 `;
