@@ -4809,8 +4809,11 @@
                 ];
                 const isHoliday = holidays.includes(row.fecha);
 
+                // Special closures in November 2025 (first operational weekend)
+                const isNovemberClosure = row.fecha === '2025-11-08' || row.fecha === '2025-11-09' || row.fecha === '2025-11-11';
+
                 const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
-                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
+                const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust && !isNovemberClosure;
 
                 // Occupancy matrix by day of week and month
                 // Rows: day of week (0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday)
@@ -4839,11 +4842,6 @@
                 // Get default occupancy from matrix
                 const month = parseInt(row.mes);
                 let defaultOccupancy = occupancyMatrix[month] ? occupancyMatrix[month][dayOfWeek] : 40;
-
-                // Special occupancy for first weekend (Nov 8-9): 30%
-                if (row.fecha === '2025-11-08' || row.fecha === '2025-11-09') {
-                    defaultOccupancy = 30;
-                }
 
                 // Shifts: 1 shift on Tuesday, Wednesday and Sunday; 2 shifts on Thu-Sat
                 let defaultShifts = 2;
