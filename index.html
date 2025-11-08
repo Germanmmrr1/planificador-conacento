@@ -2490,6 +2490,7 @@
             // Categories that should be grouped
             const drinkCategories = ['vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'cervezas', 'refrescos', 'zumos', 'aguas'];
             const entrantesCategories = ['aperitivos', 'entrantes'];
+            const carnesCategories = ['carnes', 'guarniciones'];
             const postresCategories = ['postres', 'cafes'];
 
             // Define category order
@@ -2497,9 +2498,8 @@
                 'bebidas': 1,
                 'entrantes_aperitivos': 2,
                 'ensaladas': 3,
-                'guarniciones': 4,
-                'carnes': 5,
-                'postres_cafes': 6
+                'carnes_guarniciones': 4,
+                'postres_cafes': 5
             };
 
             // Category display names
@@ -2507,8 +2507,7 @@
                 'bebidas': '🍹 Bebidas',
                 'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                 'ensaladas': '🥗 Ensaladas',
-                'guarniciones': '🥔 Guarniciones',
-                'carnes': '🥩 Carnes',
+                'carnes_guarniciones': '🥩 Carnes y Guarniciones',
                 'postres_cafes': '🍰 Postres y Cafés'
             };
 
@@ -2519,6 +2518,8 @@
                     displayCategory = 'bebidas';
                 } else if (entrantesCategories.includes(item.category)) {
                     displayCategory = 'entrantes_aperitivos';
+                } else if (carnesCategories.includes(item.category)) {
+                    displayCategory = 'carnes_guarniciones';
                 } else if (postresCategories.includes(item.category)) {
                     displayCategory = 'postres_cafes';
                 }
@@ -2990,14 +2991,14 @@
             function getItemsSummary(items) {
                 const drinkCategories = ['cervezas', 'vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'refrescos', 'zumos', 'aguas'];
                 const entrantesCategories = ['aperitivos', 'entrantes'];
+                const carnesCategories = ['carnes', 'guarniciones'];
                 const postresCategories = ['postres', 'cafes'];
 
                 const categoryNames = {
                     'bebidas': '🍹 Bebidas',
                     'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                     'ensaladas': '🥗 Ensaladas',
-                    'carnes': '🥩 Carnes',
-                    'guarniciones': '🥔 Guarniciones',
+                    'carnes_guarniciones': '🥩 Carnes y Guarniciones',
                     'postres_cafes': '🍰 Postres y Cafés'
                 };
 
@@ -3009,6 +3010,8 @@
                         category = 'bebidas';
                     } else if (entrantesCategories.includes(item.category)) {
                         category = 'entrantes_aperitivos';
+                    } else if (carnesCategories.includes(item.category)) {
+                        category = 'carnes_guarniciones';
                     } else if (postresCategories.includes(item.category)) {
                         category = 'postres_cafes';
                     }
@@ -3305,14 +3308,14 @@
             function getItemsSummary(items) {
                 const drinkCategories = ['cervezas', 'vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'refrescos', 'zumos', 'aguas'];
                 const entrantesCategories = ['aperitivos', 'entrantes'];
+                const carnesCategories = ['carnes', 'guarniciones'];
                 const postresCategories = ['postres', 'cafes'];
 
                 const categoryNames = {
                     'bebidas': '🍹 Bebidas',
                     'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                     'ensaladas': '🥗 Ensaladas',
-                    'carnes': '🥩 Carnes',
-                    'guarniciones': '🥔 Guarniciones',
+                    'carnes_guarniciones': '🥩 Carnes y Guarniciones',
                     'postres_cafes': '🍰 Postres y Cafés'
                 };
 
@@ -3324,6 +3327,8 @@
                         category = 'bebidas';
                     } else if (entrantesCategories.includes(item.category)) {
                         category = 'entrantes_aperitivos';
+                    } else if (carnesCategories.includes(item.category)) {
+                        category = 'carnes_guarniciones';
                     } else if (postresCategories.includes(item.category)) {
                         category = 'postres_cafes';
                     }
