@@ -3089,17 +3089,6 @@
                     </table>
                 </div>
 
-                <script>
-                    function toggleDetail(detailId) {
-                        const detailRow = document.getElementById(detailId);
-                        if (detailRow.style.display === 'none') {
-                            detailRow.style.display = 'table-row';
-                        } else {
-                            detailRow.style.display = 'none';
-                        }
-                    }
-                </script>
-
                 <div style="margin-top: 30px; padding: 20px; background: #f0f7ff; border-left: 4px solid #667eea; border-radius: 6px;">
                     <h4 style="margin-top: 0; color: #667eea;">💡 Insights</h4>
                     <ul style="margin: 10px 0; padding-left: 20px; color: #555;">
@@ -3111,6 +3100,16 @@
             `;
 
             document.getElementById('comparison-results').innerHTML = html;
+        }
+
+        // Toggle detail row in comparison table
+        function toggleDetail(detailId) {
+            const detailRow = document.getElementById(detailId);
+            if (detailRow.style.display === 'none') {
+                detailRow.style.display = 'table-row';
+            } else {
+                detailRow.style.display = 'none';
+            }
         }
 
         // Helper function to get scenario display name
