@@ -2487,41 +2487,43 @@
             const container = document.getElementById('selected-items');
             container.innerHTML = '';
 
-            // Categories that should be grouped as drinks
+            // Categories that should be grouped
             const drinkCategories = ['vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'cervezas', 'refrescos', 'zumos', 'aguas'];
+            const entrantesCategories = ['aperitivos', 'entrantes'];
+            const postresCategories = ['postres', 'cafes'];
 
-            // Define category order: drinks first, then food, postres, cafes
+            // Define category order
             const categoryOrder = {
-                // Drinks grouped together
                 'bebidas': 1,
-                // Then food
-                'entrantes': 2,
-                'aperitivos': 3,
-                'ensaladas': 4,
-                'guarniciones': 5,
-                'carnes': 6,
-                // Then desserts and coffee
-                'postres': 7,
-                'cafes': 8
+                'entrantes_aperitivos': 2,
+                'ensaladas': 3,
+                'guarniciones': 4,
+                'carnes': 5,
+                'postres_cafes': 6
             };
 
             // Category display names
             const categoryNames = {
                 'bebidas': '🍹 Bebidas',
-                'entrantes': '🍴 Entrantes',
-                'aperitivos': '🥖 Aperitivos',
+                'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                 'ensaladas': '🥗 Ensaladas',
                 'guarniciones': '🥔 Guarniciones',
                 'carnes': '🥩 Carnes',
-                'postres': '🍰 Postres',
-                'cafes': '☕ Cafés'
+                'postres_cafes': '🍰 Postres y Cafés'
             };
 
-            // Group items, converting drink categories to 'bebidas'
-            const itemsWithDisplayCategory = currentScenario.items.map(item => ({
-                ...item,
-                displayCategory: drinkCategories.includes(item.category) ? 'bebidas' : item.category
-            }));
+            // Group items by display category
+            const itemsWithDisplayCategory = currentScenario.items.map(item => {
+                let displayCategory = item.category;
+                if (drinkCategories.includes(item.category)) {
+                    displayCategory = 'bebidas';
+                } else if (entrantesCategories.includes(item.category)) {
+                    displayCategory = 'entrantes_aperitivos';
+                } else if (postresCategories.includes(item.category)) {
+                    displayCategory = 'postres_cafes';
+                }
+                return { ...item, displayCategory };
+            });
 
             // Sort items by category order
             const sortedItems = [...itemsWithDisplayCategory].sort((a, b) => {
@@ -2980,22 +2982,30 @@
             // Helper function to group items by category
             function getItemsSummary(items) {
                 const drinkCategories = ['cervezas', 'vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'refrescos', 'zumos', 'aguas'];
+                const entrantesCategories = ['aperitivos', 'entrantes'];
+                const postresCategories = ['postres', 'cafes'];
 
                 const categoryNames = {
                     'bebidas': '🍹 Bebidas',
-                    'aperitivos': '🥖 Aperitivos',
-                    'entrantes': '🍽️ Entrantes',
+                    'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                     'ensaladas': '🥗 Ensaladas',
                     'carnes': '🥩 Carnes',
                     'guarniciones': '🥔 Guarniciones',
-                    'postres': '🍰 Postres',
-                    'cafes': '☕ Cafés'
+                    'postres_cafes': '🍰 Postres y Cafés'
                 };
 
                 const grouped = {};
                 items.forEach(item => {
-                    // Group all drinks under "bebidas"
-                    const category = drinkCategories.includes(item.category) ? 'bebidas' : item.category;
+                    // Group categories
+                    let category = item.category;
+                    if (drinkCategories.includes(item.category)) {
+                        category = 'bebidas';
+                    } else if (entrantesCategories.includes(item.category)) {
+                        category = 'entrantes_aperitivos';
+                    } else if (postresCategories.includes(item.category)) {
+                        category = 'postres_cafes';
+                    }
+
                     if (!grouped[category]) {
                         grouped[category] = [];
                     }
@@ -3280,22 +3290,30 @@
             // Helper function to group items by category
             function getItemsSummary(items) {
                 const drinkCategories = ['cervezas', 'vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'refrescos', 'zumos', 'aguas'];
+                const entrantesCategories = ['aperitivos', 'entrantes'];
+                const postresCategories = ['postres', 'cafes'];
 
                 const categoryNames = {
                     'bebidas': '🍹 Bebidas',
-                    'aperitivos': '🥖 Aperitivos',
-                    'entrantes': '🍽️ Entrantes',
+                    'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                     'ensaladas': '🥗 Ensaladas',
                     'carnes': '🥩 Carnes',
                     'guarniciones': '🥔 Guarniciones',
-                    'postres': '🍰 Postres',
-                    'cafes': '☕ Cafés'
+                    'postres_cafes': '🍰 Postres y Cafés'
                 };
 
                 const grouped = {};
                 items.forEach(item => {
-                    // Group all drinks under "bebidas"
-                    const category = drinkCategories.includes(item.category) ? 'bebidas' : item.category;
+                    // Group categories
+                    let category = item.category;
+                    if (drinkCategories.includes(item.category)) {
+                        category = 'bebidas';
+                    } else if (entrantesCategories.includes(item.category)) {
+                        category = 'entrantes_aperitivos';
+                    } else if (postresCategories.includes(item.category)) {
+                        category = 'postres_cafes';
+                    }
+
                     if (!grouped[category]) {
                         grouped[category] = [];
                     }
