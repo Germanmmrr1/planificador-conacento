@@ -1646,10 +1646,10 @@
                     <div class="results-grid variables-grid">
                         <div class="input-group">
                             <label>
-                                Capacidad Total (comensales): <span class="range-value" id="capacidad-value">90</span>
+                                Capacidad Total (comensales): <span class="range-value" id="capacidad-value">80</span>
                                 <span class="tooltip-icon" data-tooltip="40 plazas en terraza + 50 plazas aprox. en interior" onclick="showTooltip(this.getAttribute('data-tooltip'), this)">i</span>
                             </label>
-                            <input type="range" id="capacidad" min="40" max="120" value="90" step="5" oninput="updateAllCalculations()">
+                            <input type="range" id="capacidad" min="40" max="120" value="80" step="5" oninput="updateAllCalculations()">
                         </div>
 
                         <div class="input-group">
@@ -2490,6 +2490,7 @@
             // Categories that should be grouped
             const drinkCategories = ['vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'cervezas', 'refrescos', 'zumos', 'aguas'];
             const entrantesCategories = ['aperitivos', 'entrantes'];
+            const carnesCategories = ['carnes', 'guarniciones'];
             const postresCategories = ['postres', 'cafes'];
 
             // Define category order
@@ -2497,9 +2498,8 @@
                 'bebidas': 1,
                 'entrantes_aperitivos': 2,
                 'ensaladas': 3,
-                'guarniciones': 4,
-                'carnes': 5,
-                'postres_cafes': 6
+                'carnes_guarniciones': 4,
+                'postres_cafes': 5
             };
 
             // Category display names
@@ -2507,8 +2507,7 @@
                 'bebidas': '🍹 Bebidas',
                 'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                 'ensaladas': '🥗 Ensaladas',
-                'guarniciones': '🥔 Guarniciones',
-                'carnes': '🥩 Carnes',
+                'carnes_guarniciones': '🥩 Carnes y Guarniciones',
                 'postres_cafes': '🍰 Postres y Cafés'
             };
 
@@ -2519,6 +2518,8 @@
                     displayCategory = 'bebidas';
                 } else if (entrantesCategories.includes(item.category)) {
                     displayCategory = 'entrantes_aperitivos';
+                } else if (carnesCategories.includes(item.category)) {
+                    displayCategory = 'carnes_guarniciones';
                 } else if (postresCategories.includes(item.category)) {
                     displayCategory = 'postres_cafes';
                 }
@@ -2990,14 +2991,14 @@
             function getItemsSummary(items) {
                 const drinkCategories = ['cervezas', 'vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'refrescos', 'zumos', 'aguas'];
                 const entrantesCategories = ['aperitivos', 'entrantes'];
+                const carnesCategories = ['carnes', 'guarniciones'];
                 const postresCategories = ['postres', 'cafes'];
 
                 const categoryNames = {
                     'bebidas': '🍹 Bebidas',
                     'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                     'ensaladas': '🥗 Ensaladas',
-                    'carnes': '🥩 Carnes',
-                    'guarniciones': '🥔 Guarniciones',
+                    'carnes_guarniciones': '🥩 Carnes y Guarniciones',
                     'postres_cafes': '🍰 Postres y Cafés'
                 };
 
@@ -3009,6 +3010,8 @@
                         category = 'bebidas';
                     } else if (entrantesCategories.includes(item.category)) {
                         category = 'entrantes_aperitivos';
+                    } else if (carnesCategories.includes(item.category)) {
+                        category = 'carnes_guarniciones';
                     } else if (postresCategories.includes(item.category)) {
                         category = 'postres_cafes';
                     }
@@ -3305,14 +3308,14 @@
             function getItemsSummary(items) {
                 const drinkCategories = ['cervezas', 'vinosblancos', 'vinosrosados', 'vinostintos', 'espumosos', 'aperitivos_bebidas', 'refrescos', 'zumos', 'aguas'];
                 const entrantesCategories = ['aperitivos', 'entrantes'];
+                const carnesCategories = ['carnes', 'guarniciones'];
                 const postresCategories = ['postres', 'cafes'];
 
                 const categoryNames = {
                     'bebidas': '🍹 Bebidas',
                     'entrantes_aperitivos': '🍽️ Entrantes y Aperitivos',
                     'ensaladas': '🥗 Ensaladas',
-                    'carnes': '🥩 Carnes',
-                    'guarniciones': '🥔 Guarniciones',
+                    'carnes_guarniciones': '🥩 Carnes y Guarniciones',
                     'postres_cafes': '🍰 Postres y Cafés'
                 };
 
@@ -3324,6 +3327,8 @@
                         category = 'bebidas';
                     } else if (entrantesCategories.includes(item.category)) {
                         category = 'entrantes_aperitivos';
+                    } else if (carnesCategories.includes(item.category)) {
+                        category = 'carnes_guarniciones';
                     } else if (postresCategories.includes(item.category)) {
                         category = 'postres_cafes';
                     }
@@ -4807,21 +4812,32 @@
                 const isNormallyOpen = isTuesday || isWednesday || isThursday || isFriday || isSaturday || isSunday;
                 const isOpen = isNormallyOpen && !isBeforeOpening && !isAugust;
 
-                // Check if it's December
-                const isDecember = parseInt(row.mes) === 12;
+                // Occupancy matrix by day of week and month
+                // Rows: day of week (0=Sunday, 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday, 5=Friday, 6=Saturday)
+                // Columns: month (1-12 for Jan-Dec)
+                const occupancyMatrix = {
+                    1: [48.75, 25.09, 16.64, 13.47, 14.18, 27.72, 57.79], // Enero
+                    2: [38.63, 11.02, 16.10, 24.06, 11.41, 17.43, 49.83], // Febrero
+                    3: [37.55, 14.57, 21.31, 10.95, 26.73, 26.81, 46.19], // Marzo
+                    4: [35.54, 11.60, 11.57, 8.83, 9.36, 24.01, 44.02],   // Abril
+                    5: [29.36, 12.59, 13.21, 16.59, 11.35, 21.33, 47.45], // Mayo
+                    6: [24.53, 19.43, 14.80, 7.36, 15.38, 18.40, 33.35],  // Junio
+                    7: [18.59, 15.32, 15.83, 13.22, 13.11, 29.33, 25.94], // Julio
+                    8: [18.18, 18.70, 15.36, 13.63, 12.81, 23.88, 28.43], // Agosto
+                    9: [24.30, 14.36, 13.54, 5.26, 10.09, 14.16, 32.01],  // Septiembre
+                    10: [28.97, 9.33, 12.48, 16.06, 14.66, 15.45, 45.38], // Octubre
+                    11: [32.03, 5.66, 11.25, 11.25, 15.84, 23.65, 48.95], // Noviembre
+                    12: [53.88, 35.21, 34.81, 25.61, 36.27, 57.35, 63.84] // Diciembre
+                };
 
-                // Default occupancy based on day and month
-                let defaultOccupancy = 40; // Default
+                // Get day of week for this date (0=Sunday, 1=Monday, ..., 6=Saturday)
+                const dateParts = row.fecha.split('-');
+                const dateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                const dayOfWeek = dateObj.getDay();
 
-                if (isTuesday || isWednesday) {
-                    defaultOccupancy = isDecember ? 30 : 15; // 30% in December, 15% rest of year
-                } else if (isThursday) {
-                    defaultOccupancy = isDecember ? 35 : 20; // 35% in December, 20% rest of year
-                } else if (isFriday) {
-                    defaultOccupancy = isDecember ? 50 : 30; // 50% in December, 30% rest of year
-                } else if (isSaturday || isSunday) {
-                    defaultOccupancy = isDecember ? 60 : 40; // 60% in December, 40% rest of year
-                }
+                // Get default occupancy from matrix
+                const month = parseInt(row.mes);
+                let defaultOccupancy = occupancyMatrix[month] ? occupancyMatrix[month][dayOfWeek] : 40;
 
                 // Special occupancy for first weekend (Nov 8-9): 30%
                 if (row.fecha === '2025-11-08' || row.fecha === '2025-11-09') {
