@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Análisis Financiero - Restaurante ConAcento</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -2101,6 +2102,12 @@
     <div id="tooltip-content" class="tooltip-content"></div>
 
     <script>
+        // ==================== SUPABASE CONFIGURATION ====================
+        const SUPABASE_URL = 'https://drmareaqvenjqdhidzeb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRybWFyZWFxdmVuanFkaGlkemViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2OTQ4MzksImV4cCI6MjA3ODI3MDgzOX0.ovZuNqB5kD1RUIX03LJKmQucnsMxxCZfXkNDjwlTYvo';
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         // Datos de empleados (solo salario neto mensual como input)
         const employees = [
             { name: 'Vito (Jefe de Sala + Gerente)', netMonthly: 2000 },
@@ -2290,35 +2297,229 @@
 
         // ==================== MENU DATABASE MANAGEMENT ====================
 
-        // Save menu to localStorage
-        function saveMenuToStorage() {
+        // Load menu from Supabase
+        async function loadMenuFromStorage() {
             try {
-                localStorage.setItem('menuDatabase', JSON.stringify(menuItems));
-                console.log('Menu saved to localStorage');
-            } catch (e) {
-                console.error('Error saving menu to localStorage:', e);
-                alert('Error al guardar el menú. Puede que el almacenamiento local esté lleno.');
-            }
-        }
+                console.log('Loading menu from Supabase...');
+                const { data, error } = await supabaseClient
+                    .from('menu_items')
+                    .select('*');
 
-        // Load menu from localStorage
-        function loadMenuFromStorage() {
-            try {
-                const savedMenu = localStorage.getItem('menuDatabase');
-                if (savedMenu) {
-                    menuItems = JSON.parse(savedMenu);
-                    console.log('Menu loaded from localStorage');
+                if (error) {
+                    console.error('Error loading menu from Supabase:', error);
+                    alert('Error al cargar el menú desde la base de datos: ' + error.message);
+                    return false;
+                }
+
+                if (!data || data.length === 0) {
+                    console.log('No menu items found, initializing default menu...');
+                    await initializeDefaultMenu();
                     return true;
                 }
-                return false;
+
+                // Convert from DB format to app format
+                menuItems = {};
+                data.forEach(item => {
+                    if (!menuItems[item.category]) {
+                        menuItems[item.category] = [];
+                    }
+                    menuItems[item.category].push({
+                        name: item.name,
+                        desc: item.description,
+                        price: item.price,
+                        cost: item.cost
+                    });
+                });
+
+                console.log('Menu loaded from Supabase successfully');
+                return true;
             } catch (e) {
-                console.error('Error loading menu from localStorage:', e);
+                console.error('Exception loading menu from Supabase:', e);
+                alert('Error al cargar el menú: ' + e.message);
                 return false;
             }
         }
 
-        // Load menu on page load
-        loadMenuFromStorage();
+        // Initialize default menu in Supabase
+        async function initializeDefaultMenu() {
+            try {
+                console.log('Initializing default menu in Supabase...');
+
+                // First, clear any existing data
+                const { error: deleteError } = await supabaseClient
+                    .from('menu_items')
+                    .delete()
+                    .neq('id', 0); // Delete all rows
+
+                if (deleteError) {
+                    console.error('Error clearing menu:', deleteError);
+                }
+
+                // Convert menuItems to DB format
+                const itemsToInsert = [];
+                Object.keys(defaultMenuItems).forEach(category => {
+                    defaultMenuItems[category].forEach(item => {
+                        itemsToInsert.push({
+                            category: category,
+                            name: item.name,
+                            description: item.desc,
+                            price: item.price,
+                            cost: item.cost
+                        });
+                    });
+                });
+
+                // Insert all items
+                const { error: insertError } = await supabaseClient
+                    .from('menu_items')
+                    .insert(itemsToInsert);
+
+                if (insertError) {
+                    console.error('Error initializing menu:', insertError);
+                    alert('Error al inicializar el menú por defecto: ' + insertError.message);
+                    return false;
+                }
+
+                console.log('Default menu initialized successfully');
+                // Reload menuItems from what we just inserted
+                menuItems = JSON.parse(JSON.stringify(defaultMenuItems));
+                return true;
+            } catch (e) {
+                console.error('Exception initializing menu:', e);
+                alert('Error al inicializar el menú: ' + e.message);
+                return false;
+            }
+        }
+
+        // Save single menu item to Supabase
+        async function saveMenuItem(category, item, oldName = null) {
+            try {
+                console.log(`Saving menu item: ${category} - ${item.name}`);
+
+                if (oldName && oldName !== item.name) {
+                    // If name changed, delete old entry and insert new one
+                    const { error: deleteError } = await supabaseClient
+                        .from('menu_items')
+                        .delete()
+                        .eq('category', category)
+                        .eq('name', oldName);
+
+                    if (deleteError) {
+                        console.error('Error deleting old item:', deleteError);
+                        throw deleteError;
+                    }
+                }
+
+                // Check if item already exists
+                const { data: existing } = await supabaseClient
+                    .from('menu_items')
+                    .select('id')
+                    .eq('category', category)
+                    .eq('name', item.name)
+                    .maybeSingle();
+
+                const itemData = {
+                    category: category,
+                    name: item.name,
+                    description: item.desc,
+                    price: item.price,
+                    cost: item.cost
+                };
+
+                if (existing) {
+                    // Update existing item
+                    const { error } = await supabaseClient
+                        .from('menu_items')
+                        .update(itemData)
+                        .eq('id', existing.id);
+
+                    if (error) throw error;
+                } else {
+                    // Insert new item
+                    const { error } = await supabaseClient
+                        .from('menu_items')
+                        .insert([itemData]);
+
+                    if (error) throw error;
+                }
+
+                console.log('Menu item saved successfully');
+                return true;
+            } catch (e) {
+                console.error('Error saving menu item:', e);
+                alert('Error al guardar el producto: ' + e.message);
+                return false;
+            }
+        }
+
+        // Delete menu item from Supabase
+        async function deleteMenuItemFromDB(category, name) {
+            try {
+                console.log(`Deleting menu item: ${category} - ${name}`);
+
+                const { error } = await supabaseClient
+                    .from('menu_items')
+                    .delete()
+                    .eq('category', category)
+                    .eq('name', name);
+
+                if (error) throw error;
+
+                console.log('Menu item deleted successfully');
+                return true;
+            } catch (e) {
+                console.error('Error deleting menu item:', e);
+                alert('Error al eliminar el producto: ' + e.message);
+                return false;
+            }
+        }
+
+        // Restore default menu to Supabase
+        async function restoreDefaultMenuToDB() {
+            try {
+                console.log('Restoring default menu to Supabase...');
+
+                // Clear all existing items
+                const { error: deleteError } = await supabaseClient
+                    .from('menu_items')
+                    .delete()
+                    .neq('id', 0); // Delete all rows
+
+                if (deleteError) throw deleteError;
+
+                // Insert default items
+                const itemsToInsert = [];
+                Object.keys(defaultMenuItems).forEach(category => {
+                    defaultMenuItems[category].forEach(item => {
+                        itemsToInsert.push({
+                            category: category,
+                            name: item.name,
+                            description: item.desc,
+                            price: item.price,
+                            cost: item.cost
+                        });
+                    });
+                });
+
+                const { error: insertError } = await supabaseClient
+                    .from('menu_items')
+                    .insert(itemsToInsert);
+
+                if (insertError) throw insertError;
+
+                console.log('Default menu restored successfully');
+                return true;
+            } catch (e) {
+                console.error('Error restoring default menu:', e);
+                alert('Error al restaurar el menú por defecto: ' + e.message);
+                return false;
+            }
+        }
+
+        // Load menu on page load (wrapped in async function)
+        (async () => {
+            await loadMenuFromStorage();
+        })();
 
         // Bebidas (precio promedio y coste)
         const drinks = {
@@ -3615,8 +3816,9 @@
         }
 
         // Edit menu item
-        function editMenuItem(category, index) {
+        async function editMenuItem(category, index) {
             const item = menuItems[category][index];
+            const oldName = item.name;
 
             const newName = prompt('Nombre del producto:', item.name);
             if (newName === null) return; // User cancelled
@@ -3639,35 +3841,46 @@
                 return;
             }
 
-            // Update item
-            menuItems[category][index] = {
+            // Create updated item
+            const updatedItem = {
                 name: newName.trim(),
                 desc: newDesc.trim(),
                 price: priceNum,
                 cost: costNum
             };
 
-            saveMenuToStorage();
-            renderMenuManagement();
-            alert('Producto actualizado correctamente');
+            // Save to Supabase
+            const success = await saveMenuItem(category, updatedItem, oldName);
+
+            if (success) {
+                // Reload menu from Supabase
+                await loadMenuFromStorage();
+                renderMenuManagement();
+                alert('Producto actualizado correctamente');
+            }
         }
 
         // Delete menu item
-        function deleteMenuItem(category, index) {
+        async function deleteMenuItem(category, index) {
             const item = menuItems[category][index];
 
             if (!confirm(`¿Estás seguro de que quieres eliminar "${item.name}"?\n\nEsta acción no se puede deshacer.`)) {
                 return;
             }
 
-            menuItems[category].splice(index, 1);
-            saveMenuToStorage();
-            renderMenuManagement();
-            alert('Producto eliminado correctamente');
+            // Delete from Supabase
+            const success = await deleteMenuItemFromDB(category, item.name);
+
+            if (success) {
+                // Reload menu from Supabase
+                await loadMenuFromStorage();
+                renderMenuManagement();
+                alert('Producto eliminado correctamente');
+            }
         }
 
         // Add new menu item
-        function addNewMenuItem() {
+        async function addNewMenuItem() {
             const categoryNames = {
                 aperitivos: 'Aperitivos',
                 entrantes: 'Entrantes',
@@ -3722,35 +3935,40 @@
                 return;
             }
 
-            // Add new item
-            menuItems[category].push({
+            // Create new item
+            const newItem = {
                 name: name.trim(),
                 desc: desc.trim(),
                 price: priceNum,
                 cost: costNum
-            });
+            };
 
-            saveMenuToStorage();
-            renderMenuManagement();
-            alert('Producto añadido correctamente a ' + categoryNames[category]);
+            // Save to Supabase
+            const success = await saveMenuItem(category, newItem);
+
+            if (success) {
+                // Reload menu from Supabase
+                await loadMenuFromStorage();
+                renderMenuManagement();
+                alert('Producto añadido correctamente a ' + categoryNames[category]);
+            }
         }
 
         // Restore default menu
-        function restoreDefaultMenu() {
+        async function restoreDefaultMenu() {
             if (!confirm('¿Estás seguro de que quieres restaurar el menú a los valores por defecto?\n\nEsto eliminará todos los cambios que hayas hecho y no se puede deshacer.')) {
                 return;
             }
 
-            // Restore from default backup
-            menuItems = JSON.parse(JSON.stringify(defaultMenuItems));
+            // Restore to Supabase
+            const success = await restoreDefaultMenuToDB();
 
-            // Save to localStorage
-            saveMenuToStorage();
-
-            // Re-render
-            renderMenuManagement();
-
-            alert('Menú restaurado a los valores por defecto correctamente');
+            if (success) {
+                // Reload menu from Supabase
+                await loadMenuFromStorage();
+                renderMenuManagement();
+                alert('Menú restaurado a los valores por defecto correctamente');
+            }
         }
 
         // ==================== END MENU MANAGEMENT ====================
