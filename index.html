@@ -398,6 +398,35 @@
             outline: none;
         }
 
+        /* Menu Management Styles */
+        #menu-management-table-container table {
+            font-size: 14px;
+        }
+
+        #menu-management-table-container table th {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        #menu-management-table-container table td {
+            vertical-align: middle;
+        }
+
+        #menu-management-table-container table tr:hover {
+            background: #f0f7ff !important;
+            transition: background 0.2s;
+        }
+
+        #menu-management-table-container button:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+            transition: all 0.2s;
+        }
+
+        #menu-management-table-container button:active {
+            transform: translateY(0);
+        }
+
         .employee-item .name {
             font-weight: bold;
             color: #333;
@@ -1635,6 +1664,7 @@
             <button class="tab-button" onclick="switchTab('gastos', this)">Gastos Operativos</button>
             <button class="tab-button" onclick="switchTab('resultados', this)">Resultados</button>
             <button class="tab-button tab-button-special" onclick="switchTab('escenarios', this)">Escenarios Menú</button>
+            <button class="tab-button" onclick="switchTab('menu-management', this)">📋 Gestión de Menú</button>
         </div>
 
         <!-- Tab: Planificación y Variables (Merged) -->
@@ -1851,6 +1881,31 @@
             </div>
         </div>
 
+        <!-- Tab: Gestión de Menú -->
+        <div id="tab-menu-management" class="tab-content">
+            <div style="padding: 30px;">
+                <div class="section full-width">
+                    <h2>Gestión de Menú</h2>
+                    <div class="info-box">
+                        <strong>Información:</strong> Desde aquí puedes editar, añadir o eliminar productos del menú. Los cambios se guardan automáticamente en tu navegador (localStorage) y se aplicarán inmediatamente al simulador de escenarios y comparadores.
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin: 20px 0;">
+                        <button onclick="addNewMenuItem()" style="padding: 12px 24px; background: #28a745; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.3s;">
+                            ➕ Añadir Nuevo Producto
+                        </button>
+                        <button onclick="restoreDefaultMenu()" style="padding: 12px 24px; background: #dc3545; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.3s;">
+                            🔄 Restaurar Valores por Defecto
+                        </button>
+                    </div>
+
+                    <div id="menu-management-table-container" style="overflow-x: auto;">
+                        <!-- La tabla se renderizará aquí dinámicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Tab: Personal y Salarios -->
         <div id="tab-salarios" class="tab-content">
             <div style="padding: 30px;">
@@ -2060,7 +2115,7 @@
         // ==================== MENU SIMULATOR ====================
 
         // Menu database with prices and costs
-        const menuItems = {
+        let menuItems = {
             aperitivos: [
                 { name: 'Aceitunas', desc: 'Aceituna en panko con mayonesa de piparra', price: 5, cost: 0.72 },
                 { name: 'Gilda coronada', desc: 'Aceituna gordal, piparra, anchoa y alcachofa a la brasa', price: 4.20, cost: 1.1 },
@@ -2229,6 +2284,41 @@
                 { name: 'Café con Leche Lavazza', desc: 'Café con leche', price: 2.5, cost: 1.25 }
             ]
         };
+
+        // Default menu backup for restore functionality
+        const defaultMenuItems = JSON.parse(JSON.stringify(menuItems));
+
+        // ==================== MENU DATABASE MANAGEMENT ====================
+
+        // Save menu to localStorage
+        function saveMenuToStorage() {
+            try {
+                localStorage.setItem('menuDatabase', JSON.stringify(menuItems));
+                console.log('Menu saved to localStorage');
+            } catch (e) {
+                console.error('Error saving menu to localStorage:', e);
+                alert('Error al guardar el menú. Puede que el almacenamiento local esté lleno.');
+            }
+        }
+
+        // Load menu from localStorage
+        function loadMenuFromStorage() {
+            try {
+                const savedMenu = localStorage.getItem('menuDatabase');
+                if (savedMenu) {
+                    menuItems = JSON.parse(savedMenu);
+                    console.log('Menu loaded from localStorage');
+                    return true;
+                }
+                return false;
+            } catch (e) {
+                console.error('Error loading menu from localStorage:', e);
+                return false;
+            }
+        }
+
+        // Load menu on page load
+        loadMenuFromStorage();
 
         // Bebidas (precio promedio y coste)
         const drinks = {
@@ -3442,6 +3532,229 @@
 
         // ==================== END MENU SIMULATOR ====================
 
+        // ==================== MENU MANAGEMENT FUNCTIONS ====================
+
+        // Render menu management table
+        function renderMenuManagement() {
+            const container = document.getElementById('menu-management-table-container');
+            if (!container) return;
+
+            const categoryNames = {
+                aperitivos: 'Aperitivos',
+                entrantes: 'Entrantes',
+                ensaladas: 'Ensaladas',
+                carnes: 'Carnes',
+                guarniciones: 'Guarniciones',
+                postres: 'Postres',
+                vinosblancos: 'Vinos Blancos',
+                vinosrosados: 'Vinos Rosados',
+                vinostintos: 'Vinos Tintos',
+                espumosos: 'Espumosos',
+                aperitivos_bebidas: 'Aperitivos y Bebidas',
+                cervezas: 'Cervezas',
+                refrescos: 'Refrescos',
+                zumos: 'Zumos',
+                aguas: 'Aguas',
+                cafes: 'Cafés'
+            };
+
+            let html = `
+                <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; margin-top: 20px;">
+                    <thead>
+                        <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <th style="padding: 12px; text-align: left;">Categoría</th>
+                            <th style="padding: 12px; text-align: left;">Nombre</th>
+                            <th style="padding: 12px; text-align: left;">Descripción</th>
+                            <th style="padding: 12px; text-align: right;">Precio (€)</th>
+                            <th style="padding: 12px; text-align: right;">Coste (€)</th>
+                            <th style="padding: 12px; text-align: right;">Margen (%)</th>
+                            <th style="padding: 12px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            let rowCount = 0;
+            Object.keys(menuItems).forEach(category => {
+                menuItems[category].forEach((item, index) => {
+                    const margin = ((item.price - item.cost) / item.price * 100).toFixed(1);
+                    const bgColor = rowCount % 2 === 0 ? '#f8f9fa' : 'white';
+                    rowCount++;
+
+                    html += `
+                        <tr style="background: ${bgColor};" id="menu-row-${category}-${index}">
+                            <td style="padding: 10px; font-weight: 600; color: #667eea;">${categoryNames[category] || category}</td>
+                            <td style="padding: 10px;" id="name-${category}-${index}">${item.name}</td>
+                            <td style="padding: 10px; font-size: 14px; color: #666;" id="desc-${category}-${index}">${item.desc}</td>
+                            <td style="padding: 10px; text-align: right; font-weight: 600;" id="price-${category}-${index}">${item.price.toFixed(2)}</td>
+                            <td style="padding: 10px; text-align: right; color: #f44336;" id="cost-${category}-${index}">${item.cost.toFixed(2)}</td>
+                            <td style="padding: 10px; text-align: right;">
+                                <span style="background: #4caf50; color: white; padding: 4px 10px; border-radius: 12px; font-weight: 600; font-size: 13px;">
+                                    ${margin}%
+                                </span>
+                            </td>
+                            <td style="padding: 10px; text-align: center;">
+                                <button onclick="editMenuItem('${category}', ${index})" style="background: #2196F3; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-right: 5px; font-size: 13px; font-weight: 500;">
+                                    ✏️ Editar
+                                </button>
+                                <button onclick="deleteMenuItem('${category}', ${index})" style="background: #f44336; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: 500;">
+                                    🗑️ Eliminar
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Edit menu item
+        function editMenuItem(category, index) {
+            const item = menuItems[category][index];
+
+            const newName = prompt('Nombre del producto:', item.name);
+            if (newName === null) return; // User cancelled
+
+            const newDesc = prompt('Descripción:', item.desc);
+            if (newDesc === null) return;
+
+            const newPrice = prompt('Precio (€):', item.price);
+            if (newPrice === null) return;
+
+            const newCost = prompt('Coste (€):', item.cost);
+            if (newCost === null) return;
+
+            // Validate inputs
+            const priceNum = parseFloat(newPrice);
+            const costNum = parseFloat(newCost);
+
+            if (isNaN(priceNum) || isNaN(costNum) || priceNum <= 0 || costNum < 0) {
+                alert('Por favor, introduce valores numéricos válidos para precio y coste.');
+                return;
+            }
+
+            // Update item
+            menuItems[category][index] = {
+                name: newName.trim(),
+                desc: newDesc.trim(),
+                price: priceNum,
+                cost: costNum
+            };
+
+            saveMenuToStorage();
+            renderMenuManagement();
+            alert('Producto actualizado correctamente');
+        }
+
+        // Delete menu item
+        function deleteMenuItem(category, index) {
+            const item = menuItems[category][index];
+
+            if (!confirm(`¿Estás seguro de que quieres eliminar "${item.name}"?\n\nEsta acción no se puede deshacer.`)) {
+                return;
+            }
+
+            menuItems[category].splice(index, 1);
+            saveMenuToStorage();
+            renderMenuManagement();
+            alert('Producto eliminado correctamente');
+        }
+
+        // Add new menu item
+        function addNewMenuItem() {
+            const categoryNames = {
+                aperitivos: 'Aperitivos',
+                entrantes: 'Entrantes',
+                ensaladas: 'Ensaladas',
+                carnes: 'Carnes',
+                guarniciones: 'Guarniciones',
+                postres: 'Postres',
+                vinosblancos: 'Vinos Blancos',
+                vinosrosados: 'Vinos Rosados',
+                vinostintos: 'Vinos Tintos',
+                espumosos: 'Espumosos',
+                aperitivos_bebidas: 'Aperitivos y Bebidas',
+                cervezas: 'Cervezas',
+                refrescos: 'Refrescos',
+                zumos: 'Zumos',
+                aguas: 'Aguas',
+                cafes: 'Cafés'
+            };
+
+            // Build category selection
+            let categoryOptions = '';
+            Object.keys(categoryNames).forEach(key => {
+                categoryOptions += key + ' - ' + categoryNames[key] + '\\n';
+            });
+
+            const category = prompt('Selecciona la categoría (escribe la clave):\\n\\n' + categoryOptions + '\\nEjemplo: aperitivos');
+            if (!category || !menuItems[category]) {
+                if (category !== null) {
+                    alert('Categoría no válida');
+                }
+                return;
+            }
+
+            const name = prompt('Nombre del producto:');
+            if (!name || name.trim() === '') return;
+
+            const desc = prompt('Descripción:');
+            if (desc === null) return;
+
+            const price = prompt('Precio (€):');
+            if (price === null) return;
+
+            const cost = prompt('Coste (€):');
+            if (cost === null) return;
+
+            // Validate inputs
+            const priceNum = parseFloat(price);
+            const costNum = parseFloat(cost);
+
+            if (isNaN(priceNum) || isNaN(costNum) || priceNum <= 0 || costNum < 0) {
+                alert('Por favor, introduce valores numéricos válidos para precio y coste.');
+                return;
+            }
+
+            // Add new item
+            menuItems[category].push({
+                name: name.trim(),
+                desc: desc.trim(),
+                price: priceNum,
+                cost: costNum
+            });
+
+            saveMenuToStorage();
+            renderMenuManagement();
+            alert('Producto añadido correctamente a ' + categoryNames[category]);
+        }
+
+        // Restore default menu
+        function restoreDefaultMenu() {
+            if (!confirm('¿Estás seguro de que quieres restaurar el menú a los valores por defecto?\n\nEsto eliminará todos los cambios que hayas hecho y no se puede deshacer.')) {
+                return;
+            }
+
+            // Restore from default backup
+            menuItems = JSON.parse(JSON.stringify(defaultMenuItems));
+
+            // Save to localStorage
+            saveMenuToStorage();
+
+            // Re-render
+            renderMenuManagement();
+
+            alert('Menú restaurado a los valores por defecto correctamente');
+        }
+
+        // ==================== END MENU MANAGEMENT ====================
+
         // Calcular IRPF progresivo según tramos de Andalucía 2025
         function calculateProgressiveIRPF(grossAnnual) {
             // Tramos IRPF Andalucía 2025 (base liquidable)
@@ -3710,6 +4023,11 @@
             // Scroll to top on tab change (mobile UX)
             if (window.innerWidth <= 768) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Special handling for menu management tab
+            if (tabName === 'menu-management') {
+                renderMenuManagement();
             }
         }
 
