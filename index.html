@@ -1635,6 +1635,7 @@
             <button class="tab-button" onclick="switchTab('gastos', this)">Gastos Operativos</button>
             <button class="tab-button" onclick="switchTab('resultados', this)">Resultados</button>
             <button class="tab-button tab-button-special" onclick="switchTab('escenarios', this)">Escenarios Menú</button>
+            <button class="tab-button" onclick="switchTab('menu-admin', this)">Administrar Menú</button>
         </div>
 
         <!-- Tab: Planificación y Variables (Merged) -->
@@ -1847,6 +1848,64 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab: Administrar Menú -->
+        <div id="tab-menu-admin" class="tab-content">
+            <div style="padding: 30px;">
+                <div class="section full-width">
+                    <h2>Administrar Menú</h2>
+                    <div class="info-box">
+                        Aquí puedes editar los productos del menú, filtrar por categorías y buscar por nombre. Haz clic en cualquier campo para editarlo directamente.
+                    </div>
+
+                    <!-- Controls -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 15px; margin: 20px 0; align-items: end;">
+                        <div>
+                            <label style="font-weight: bold; margin-bottom: 5px; display: block;">Buscar por nombre:</label>
+                            <input type="text" id="menu-search" placeholder="Buscar producto..." style="width: 100%; padding: 10px; font-size: 14px; border: 2px solid #ddd; border-radius: 8px;" oninput="filterMenuItems()">
+                        </div>
+                        <div>
+                            <label style="font-weight: bold; margin-bottom: 5px; display: block;">Filtrar por categoría:</label>
+                            <select id="menu-category-filter" style="width: 100%; padding: 10px; font-size: 14px; border: 2px solid #ddd; border-radius: 8px;" onchange="filterMenuItems()">
+                                <option value="">Todas las categorías</option>
+                                <optgroup label="Comida">
+                                    <option value="aperitivos">Aperitivos</option>
+                                    <option value="entrantes">Entrantes</option>
+                                    <option value="ensaladas">Ensaladas</option>
+                                    <option value="carnes">Carnes</option>
+                                    <option value="guarniciones">Guarniciones</option>
+                                    <option value="postres">Postres</option>
+                                </optgroup>
+                                <optgroup label="Vinos">
+                                    <option value="vinosblancos">Vinos Blancos</option>
+                                    <option value="vinosrosados">Vinos Rosados</option>
+                                    <option value="vinostintos">Vinos Tintos</option>
+                                    <option value="espumosos">Espumosos</option>
+                                </optgroup>
+                                <optgroup label="Otras Bebidas">
+                                    <option value="aperitivos_bebidas">Aperitivos (Bebidas)</option>
+                                    <option value="cervezas">Cervezas</option>
+                                    <option value="refrescos">Refrescos</option>
+                                    <option value="zumos">Zumos</option>
+                                    <option value="aguas">Aguas</option>
+                                    <option value="cafes">Cafés</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div>
+                            <button onclick="downloadMenuCSV()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; white-space: nowrap;">
+                                📥 Descargar CSV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Menu Items Table -->
+                    <div id="menu-items-container" style="margin-top: 20px;">
+                        <!-- Will be filled dynamically -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -5557,12 +5616,232 @@
             });
         }
 
+        // ==================== MENU ADMIN FUNCTIONS ====================
+
+        // Render menu items table
+        function renderMenuItems() {
+            const container = document.getElementById('menu-items-container');
+            if (!container) return;
+
+            const searchTerm = (document.getElementById('menu-search')?.value || '').toLowerCase();
+            const categoryFilter = document.getElementById('menu-category-filter')?.value || '';
+
+            // Category display names
+            const categoryNames = {
+                'aperitivos': 'Aperitivos',
+                'entrantes': 'Entrantes',
+                'ensaladas': 'Ensaladas',
+                'carnes': 'Carnes',
+                'guarniciones': 'Guarniciones',
+                'postres': 'Postres',
+                'vinosblancos': 'Vinos Blancos',
+                'vinosrosados': 'Vinos Rosados',
+                'vinostintos': 'Vinos Tintos',
+                'espumosos': 'Espumosos',
+                'aperitivos_bebidas': 'Aperitivos (Bebidas)',
+                'cervezas': 'Cervezas',
+                'refrescos': 'Refrescos',
+                'zumos': 'Zumos',
+                'aguas': 'Aguas',
+                'cafes': 'Cafés'
+            };
+
+            let html = '';
+            let totalCount = 0;
+
+            // Loop through all categories
+            Object.keys(menuItems).forEach(category => {
+                // Apply category filter
+                if (categoryFilter && category !== categoryFilter) return;
+
+                // Filter items by search term
+                const filteredItems = menuItems[category].filter(item =>
+                    item.name.toLowerCase().includes(searchTerm) ||
+                    item.desc.toLowerCase().includes(searchTerm)
+                );
+
+                if (filteredItems.length === 0) return;
+
+                totalCount += filteredItems.length;
+
+                // Category header
+                html += `
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 15px; font-weight: bold; font-size: 16px; margin-top: 15px; border-radius: 8px 8px 0 0;">
+                        ${categoryNames[category]} (${filteredItems.length})
+                    </div>
+                    <div style="background: white; border: 2px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; overflow: hidden;">
+                `;
+
+                // Table header
+                html += `
+                    <div style="display: grid; grid-template-columns: 2fr 3fr 1fr 1fr 1fr; gap: 10px; padding: 10px 15px; background: #f8f9fa; font-weight: 600; border-bottom: 2px solid #ddd;">
+                        <div>Nombre</div>
+                        <div>Descripción</div>
+                        <div>Precio (€)</div>
+                        <div>Coste (€)</div>
+                        <div>Margen %</div>
+                    </div>
+                `;
+
+                // Table rows
+                filteredItems.forEach((item, index) => {
+                    const margin = ((item.price - item.cost) / item.price * 100).toFixed(1);
+                    const marginColor = margin > 70 ? '#28a745' : margin > 50 ? '#ffc107' : '#dc3545';
+
+                    html += `
+                        <div style="display: grid; grid-template-columns: 2fr 3fr 1fr 1fr 1fr; gap: 10px; padding: 10px 15px; border-bottom: 1px solid #eee; align-items: center;">
+                            <div style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;"
+                                 onclick="editMenuField('${category}', ${index}, 'name', this)"
+                                 onmouseover="this.style.background='#f0f0f0'"
+                                 onmouseout="this.style.background='transparent'">
+                                ${item.name}
+                            </div>
+                            <div style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s; font-size: 13px; color: #666;"
+                                 onclick="editMenuField('${category}', ${index}, 'desc', this)"
+                                 onmouseover="this.style.background='#f0f0f0'"
+                                 onmouseout="this.style.background='transparent'">
+                                ${item.desc}
+                            </div>
+                            <div style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s; font-weight: 600;"
+                                 onclick="editMenuField('${category}', ${index}, 'price', this)"
+                                 onmouseover="this.style.background='#f0f0f0'"
+                                 onmouseout="this.style.background='transparent'">
+                                ${item.price.toFixed(2)}
+                            </div>
+                            <div style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s; font-weight: 600; color: #dc3545;"
+                                 onclick="editMenuField('${category}', ${index}, 'cost', this)"
+                                 onmouseover="this.style.background='#f0f0f0'"
+                                 onmouseout="this.style.background='transparent'">
+                                ${item.cost.toFixed(2)}
+                            </div>
+                            <div style="font-weight: 600; color: ${marginColor};">
+                                ${margin}%
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += '</div>';
+            });
+
+            if (totalCount === 0) {
+                html = '<div style="padding: 40px; text-align: center; color: #666; font-size: 16px;">No se encontraron productos</div>';
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Filter menu items
+        function filterMenuItems() {
+            renderMenuItems();
+        }
+
+        // Edit menu field inline
+        function editMenuField(category, index, field, element) {
+            const currentValue = menuItems[category][index][field];
+            const isNumeric = field === 'price' || field === 'cost';
+
+            // Create input element
+            const input = document.createElement('input');
+            input.type = isNumeric ? 'number' : 'text';
+            input.value = currentValue;
+            input.step = isNumeric ? '0.01' : '';
+            input.style.cssText = 'width: 100%; padding: 5px; border: 2px solid #667eea; border-radius: 4px; font-size: 14px;';
+
+            // Replace element content with input
+            const originalContent = element.innerHTML;
+            element.innerHTML = '';
+            element.appendChild(input);
+            input.focus();
+            if (isNumeric) input.select();
+
+            // Save on blur or enter
+            const save = () => {
+                let newValue = input.value.trim();
+
+                if (isNumeric) {
+                    newValue = parseFloat(newValue);
+                    if (isNaN(newValue) || newValue < 0) {
+                        alert('Por favor introduce un número válido mayor o igual a 0');
+                        element.innerHTML = originalContent;
+                        return;
+                    }
+                } else if (newValue === '') {
+                    alert('Este campo no puede estar vacío');
+                    element.innerHTML = originalContent;
+                    return;
+                }
+
+                // Update the value in menuItems
+                menuItems[category][index][field] = newValue;
+
+                // Re-render to show updated values
+                renderMenuItems();
+            };
+
+            input.addEventListener('blur', save);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    save();
+                } else if (e.key === 'Escape') {
+                    element.innerHTML = originalContent;
+                }
+            });
+        }
+
+        // Download menu as CSV
+        function downloadMenuCSV() {
+            let csv = 'Categoría,Nombre,Descripción,Precio (€),Coste (€),Margen (%)\n';
+
+            const categoryNames = {
+                'aperitivos': 'Aperitivos',
+                'entrantes': 'Entrantes',
+                'ensaladas': 'Ensaladas',
+                'carnes': 'Carnes',
+                'guarniciones': 'Guarniciones',
+                'postres': 'Postres',
+                'vinosblancos': 'Vinos Blancos',
+                'vinosrosados': 'Vinos Rosados',
+                'vinostintos': 'Vinos Tintos',
+                'espumosos': 'Espumosos',
+                'aperitivos_bebidas': 'Aperitivos (Bebidas)',
+                'cervezas': 'Cervezas',
+                'refrescos': 'Refrescos',
+                'zumos': 'Zumos',
+                'aguas': 'Aguas',
+                'cafes': 'Cafés'
+            };
+
+            Object.keys(menuItems).forEach(category => {
+                menuItems[category].forEach(item => {
+                    const margin = ((item.price - item.cost) / item.price * 100).toFixed(1);
+                    const escapedDesc = item.desc.replace(/"/g, '""');
+                    csv += `"${categoryNames[category]}","${item.name}","${escapedDesc}",${item.price.toFixed(2)},${item.cost.toFixed(2)},${margin}\n`;
+                });
+            });
+
+            // Create download link
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'menu_conacento.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // ==================== END MENU ADMIN FUNCTIONS ====================
+
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             initEmployees();
             parseCalendarData();
             renderCalendar();
             updateAllCalculations(); // Actualiza todos los cálculos, incluyendo totales de pestañas, charts y resultados
+            renderMenuItems(); // Initialize menu admin table
 
             // Initialize mobile enhancements
             setTimeout(() => {
