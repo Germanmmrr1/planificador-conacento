@@ -1867,6 +1867,9 @@
                         <button id="menu-tab-rules" class="menu-sub-tab" onclick="switchMenuTab('rules')" style="padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
                             Reglas de Simulación
                         </button>
+                        <button id="menu-tab-history" class="menu-sub-tab" onclick="switchMenuTab('history')" style="padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                            Historial
+                        </button>
                     </div>
 
                     <!-- Products Tab Content -->
@@ -1987,6 +1990,64 @@
                             <!-- Will be filled dynamically -->
                         </div>
                     </div> <!-- End Rules Tab Content -->
+
+                    <!-- History Tab Content -->
+                    <div id="menu-content-history" class="menu-tab-content" style="display: none;">
+                        <div class="info-box">
+                            Historial completo de cambios en productos del menú: ediciones, añadidos y eliminaciones.
+                        </div>
+
+                        <!-- History Filters -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin: 20px 0;">
+                            <div>
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Filtrar por acción:</label>
+                                <select id="history-action-filter" onchange="filterHistory()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                                    <option value="">Todas las acciones</option>
+                                    <option value="edit">Ediciones</option>
+                                    <option value="add">Añadidos</option>
+                                    <option value="delete">Eliminados</option>
+                                    <option value="bulk_edit">Edición Masiva</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Filtrar por categoría:</label>
+                                <select id="history-category-filter" onchange="filterHistory()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                                    <option value="">Todas las categorías</option>
+                                    <optgroup label="Comida">
+                                        <option value="aperitivos">Aperitivos</option>
+                                        <option value="entrantes">Entrantes</option>
+                                        <option value="ensaladas">Ensaladas</option>
+                                        <option value="carnes">Carnes</option>
+                                        <option value="guarniciones">Guarniciones</option>
+                                        <option value="postres">Postres</option>
+                                    </optgroup>
+                                    <optgroup label="Vinos">
+                                        <option value="vinosblancos">Vinos Blancos</option>
+                                        <option value="vinosrosados">Vinos Rosados</option>
+                                        <option value="vinostintos">Vinos Tintos</option>
+                                        <option value="espumosos">Espumosos</option>
+                                    </optgroup>
+                                    <optgroup label="Otras Bebidas">
+                                        <option value="aperitivos_bebidas">Aperitivos (Bebidas)</option>
+                                        <option value="cervezas">Cervezas</option>
+                                        <option value="refrescos">Refrescos</option>
+                                        <option value="zumos">Zumos</option>
+                                        <option value="aguas">Aguas</option>
+                                        <option value="cafes">Cafés</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Buscar producto:</label>
+                                <input type="text" id="history-search" placeholder="Nombre del producto..." oninput="filterHistory()" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                            </div>
+                        </div>
+
+                        <!-- History Table -->
+                        <div id="history-container" style="margin-top: 20px;">
+                            <!-- Will be filled dynamically -->
+                        </div>
+                    </div> <!-- End History Tab Content -->
 
                 </div>
             </div>
@@ -5783,6 +5844,9 @@
         // Selected products for bulk edit
         let selectedProducts = [];
 
+        // Audit log storage
+        let auditLog = [];
+
         // Switch between menu admin tabs
         function switchMenuTab(tabName) {
             // Hide all tab contents
@@ -6042,6 +6106,15 @@
                 }
             }
 
+            // Log bulk edit action
+            if (successCount > 0) {
+                for (const product of selectedProducts.slice(0, successCount)) {
+                    await logAction('bulk_edit', product.category, product.name, {
+                        oldValue: `Precio ajustado ${adjustment > 0 ? '+' : ''}${adjustment}%`
+                    });
+                }
+            }
+
             document.getElementById('price-adjustment').value = '';
             clearSelection();
             renderMenuItems();
@@ -6082,6 +6155,15 @@
                     }
                 } catch (err) {
                     console.error('Error updating cost:', err);
+                }
+            }
+
+            // Log bulk edit action
+            if (successCount > 0) {
+                for (const product of selectedProducts.slice(0, successCount)) {
+                    await logAction('bulk_edit', product.category, product.name, {
+                        oldValue: `Coste ajustado ${adjustment > 0 ? '+' : ''}${adjustment}%`
+                    });
                 }
             }
 
@@ -6126,6 +6208,15 @@
                     }
                 } catch (err) {
                     console.error('Error updating price:', err);
+                }
+            }
+
+            // Log bulk edit action
+            if (successCount > 0) {
+                for (const product of selectedProducts.slice(0, successCount)) {
+                    await logAction('bulk_edit', product.category, product.name, {
+                        oldValue: `Precio ajustado para margen ${targetMargin}%`
+                    });
                 }
             }
 
@@ -6209,6 +6300,12 @@
                         menuItems[category][index][field] = currentValue;
                     } else {
                         console.log('Successfully updated in Supabase:', data);
+                        // Log the action
+                        await logAction('edit', category, itemName, {
+                            field: dbFieldMap[field],
+                            oldValue: currentValue,
+                            newValue: newValue
+                        });
                     }
                 } catch (err) {
                     console.error('Supabase error:', err);
@@ -6397,6 +6494,9 @@
 
                 console.log('Successfully added to Supabase:', data);
 
+                // Log the action
+                await logAction('add', category, name, {});
+
                 // Add to local menuItems
                 if (!menuItems[category]) {
                     menuItems[category] = [];
@@ -6440,6 +6540,9 @@
                 }
 
                 console.log('Successfully deleted from Supabase');
+
+                // Log the action
+                await logAction('delete', category, productName, {});
 
                 // Remove from local menuItems
                 menuItems[category].splice(index, 1);
@@ -6862,6 +6965,189 @@
             return { valid: true };
         }
 
+        // ==================== AUDIT LOG FUNCTIONS ====================
+
+        // Log action to audit log
+        async function logAction(action, category, productName, details = {}) {
+            const logEntry = {
+                action,
+                category,
+                product_name: productName,
+                field_changed: details.field || null,
+                old_value: details.oldValue !== undefined ? String(details.oldValue) : null,
+                new_value: details.newValue !== undefined ? String(details.newValue) : null,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                const { data, error } = await supabase
+                    .from('menu_audit_log')
+                    .insert([logEntry])
+                    .select();
+
+                if (error) {
+                    console.error('Error logging action:', error);
+                } else {
+                    console.log('Action logged:', logEntry);
+                    if (data && data[0]) {
+                        auditLog.unshift(data[0]); // Add to start of array
+                    }
+                }
+            } catch (err) {
+                console.error('Error logging to audit:', err);
+            }
+        }
+
+        // Load audit log from Supabase
+        async function loadAuditLog() {
+            try {
+                const { data, error } = await supabase
+                    .from('menu_audit_log')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(500); // Last 500 entries
+
+                if (error) {
+                    console.error('Error loading audit log:', error);
+                    return false;
+                }
+
+                if (data) {
+                    auditLog = data;
+                    console.log('Successfully loaded audit log:', data.length, 'entries');
+                    return true;
+                }
+            } catch (err) {
+                console.error('Error loading audit log:', err);
+                return false;
+            }
+        }
+
+        // Render audit log
+        function renderAuditLog() {
+            const container = document.getElementById('history-container');
+            if (!container) return;
+
+            const actionFilter = document.getElementById('history-action-filter')?.value || '';
+            const categoryFilter = document.getElementById('history-category-filter')?.value || '';
+            const searchTerm = (document.getElementById('history-search')?.value || '').toLowerCase();
+
+            // Filter log entries
+            let filteredLog = auditLog.filter(entry => {
+                if (actionFilter && entry.action !== actionFilter) return false;
+                if (categoryFilter && entry.category !== categoryFilter) return false;
+                if (searchTerm && !entry.product_name.toLowerCase().includes(searchTerm)) return false;
+                return true;
+            });
+
+            if (filteredLog.length === 0) {
+                container.innerHTML = '<div style="padding: 40px; text-align: center; color: #666; font-size: 16px; background: #f9f9f9; border-radius: 8px;">No se encontraron registros</div>';
+                return;
+            }
+
+            const actionIcons = {
+                'edit': '✏️',
+                'add': '➕',
+                'delete': '🗑️',
+                'bulk_edit': '📝'
+            };
+
+            const actionLabels = {
+                'edit': 'Edición',
+                'add': 'Añadido',
+                'delete': 'Eliminado',
+                'bulk_edit': 'Edición Masiva'
+            };
+
+            const actionColors = {
+                'edit': '#ffc107',
+                'add': '#28a745',
+                'delete': '#dc3545',
+                'bulk_edit': '#667eea'
+            };
+
+            let html = `
+                <div style="background: white; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;">
+                    <div style="display: grid; grid-template-columns: 180px 120px 200px 200px 1fr; gap: 10px; padding: 10px 15px; background: #f8f9fa; font-weight: 600; border-bottom: 2px solid #ddd;">
+                        <div>Fecha/Hora</div>
+                        <div>Acción</div>
+                        <div>Categoría</div>
+                        <div>Producto</div>
+                        <div>Detalles</div>
+                    </div>
+            `;
+
+            filteredLog.forEach(entry => {
+                const date = new Date(entry.created_at);
+                const dateStr = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                const timeStr = date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+                const categoryNames = {
+                    'aperitivos': 'Aperitivos',
+                    'entrantes': 'Entrantes',
+                    'ensaladas': 'Ensaladas',
+                    'carnes': 'Carnes',
+                    'guarniciones': 'Guarniciones',
+                    'postres': 'Postres',
+                    'vinosblancos': 'Vinos Blancos',
+                    'vinosrosados': 'Vinos Rosados',
+                    'vinostintos': 'Vinos Tintos',
+                    'espumosos': 'Espumosos',
+                    'aperitivos_bebidas': 'Aperitivos (Bebidas)',
+                    'cervezas': 'Cervezas',
+                    'refrescos': 'Refrescos',
+                    'zumos': 'Zumos',
+                    'aguas': 'Aguas',
+                    'cafes': 'Cafés'
+                };
+
+                let details = '';
+                if (entry.action === 'edit' && entry.field_changed) {
+                    const fieldLabels = {
+                        'name': 'Nombre',
+                        'description': 'Descripción',
+                        'price': 'Precio',
+                        'cost': 'Coste'
+                    };
+                    details = `${fieldLabels[entry.field_changed] || entry.field_changed}: ${entry.old_value} → ${entry.new_value}`;
+                } else if (entry.action === 'add') {
+                    details = 'Producto nuevo añadido';
+                } else if (entry.action === 'delete') {
+                    details = 'Producto eliminado';
+                } else if (entry.action === 'bulk_edit') {
+                    details = entry.old_value || 'Actualización masiva';
+                }
+
+                html += `
+                    <div style="display: grid; grid-template-columns: 180px 120px 200px 200px 1fr; gap: 10px; padding: 12px 15px; border-bottom: 1px solid #eee; align-items: center;">
+                        <div style="font-size: 13px; color: #666;">
+                            ${dateStr}<br>${timeStr}
+                        </div>
+                        <div style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: ${actionColors[entry.action]}; color: white; border-radius: 4px; font-weight: 600; font-size: 12px; width: fit-content;">
+                            ${actionIcons[entry.action]} ${actionLabels[entry.action]}
+                        </div>
+                        <div style="font-size: 13px;">
+                            ${categoryNames[entry.category] || entry.category}
+                        </div>
+                        <div style="font-weight: 600; font-size: 14px;">
+                            ${entry.product_name}
+                        </div>
+                        <div style="font-size: 13px; color: #666;">
+                            ${details}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Filter history
+        function filterHistory() {
+            renderAuditLog();
+        }
+
         // ==================== END MENU ADMIN FUNCTIONS ====================
 
         // Inicializar
@@ -6869,12 +7155,14 @@
             // Load menu from Supabase first
             await loadMenuItemsFromSupabase();
             await loadRulesFromSupabase();
+            await loadAuditLog();
             initEmployees();
             parseCalendarData();
             renderCalendar();
             updateAllCalculations(); // Actualiza todos los cálculos, incluyendo totales de pestañas, charts y resultados
             renderMenuItems(); // Initialize menu admin table
             renderRules(); // Initialize rules table
+            renderAuditLog(); // Initialize audit log table
 
             // Initialize mobile enhancements
             setTimeout(() => {
