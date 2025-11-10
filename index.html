@@ -6251,7 +6251,11 @@
             if (isNumeric) input.select();
 
             // Save on blur or enter
+            let isSaving = false; // Prevent multiple executions
             const save = async () => {
+                if (isSaving) return; // Already saving, skip
+                isSaving = true;
+
                 let newValue = input.value.trim();
 
                 if (isNumeric) {
@@ -6259,11 +6263,13 @@
                     if (isNaN(newValue) || newValue < 0) {
                         alert('Por favor introduce un número válido mayor o igual a 0');
                         element.innerHTML = originalContent;
+                        isSaving = false;
                         return;
                     }
                 } else if (newValue === '') {
                     alert('Este campo no puede estar vacío');
                     element.innerHTML = originalContent;
+                    isSaving = false;
                     return;
                 }
 
@@ -6321,7 +6327,7 @@
             input.addEventListener('blur', save);
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
-                    save();
+                    input.blur(); // Trigger blur event instead of calling save directly
                 } else if (e.key === 'Escape') {
                     element.innerHTML = originalContent;
                 }
