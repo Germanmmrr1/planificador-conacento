@@ -1921,6 +1921,48 @@
                         </div>
                     </div>
 
+                    <!-- Bulk Edit Panel -->
+                    <div id="bulk-edit-panel" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <h3 style="margin: 0;">Edición Masiva - <span id="selected-count">0</span> productos seleccionados</h3>
+                            <button onclick="clearSelection()" style="padding: 8px 16px; background: white; color: #667eea; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                                Limpiar Selección
+                            </button>
+                        </div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;">
+                                <label style="font-weight: bold; display: block; margin-bottom: 8px;">Ajustar Precio:</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="number" id="price-adjustment" placeholder="%" step="1" style="flex: 1; padding: 8px; border: none; border-radius: 4px; font-size: 14px;">
+                                    <button onclick="applyBulkPriceAdjustment()" style="padding: 8px 12px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; white-space: nowrap;">
+                                        Aplicar %
+                                    </button>
+                                </div>
+                                <small style="opacity: 0.9; display: block; margin-top: 4px;">Ej: 10 = +10%, -5 = -5%</small>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;">
+                                <label style="font-weight: bold; display: block; margin-bottom: 8px;">Ajustar Coste:</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="number" id="cost-adjustment" placeholder="%" step="1" style="flex: 1; padding: 8px; border: none; border-radius: 4px; font-size: 14px;">
+                                    <button onclick="applyBulkCostAdjustment()" style="padding: 8px 12px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; white-space: nowrap;">
+                                        Aplicar %
+                                    </button>
+                                </div>
+                                <small style="opacity: 0.9; display: block; margin-top: 4px;">Ej: 10 = +10%, -5 = -5%</small>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 6px;">
+                                <label style="font-weight: bold; display: block; margin-bottom: 8px;">Margen Target:</label>
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="number" id="margin-target" placeholder="%" min="0" max="100" step="1" style="flex: 1; padding: 8px; border: none; border-radius: 4px; font-size: 14px;">
+                                    <button onclick="applyBulkMarginTarget()" style="padding: 8px 12px; background: #ffc107; color: #333; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; white-space: nowrap;">
+                                        Calcular
+                                    </button>
+                                </div>
+                                <small style="opacity: 0.9; display: block; margin-top: 4px;">Ajusta precio según margen</small>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Menu Items Table -->
                     <div id="menu-items-container" style="margin-top: 20px;">
                         <!-- Will be filled dynamically -->
@@ -5738,6 +5780,9 @@
         // Menu rules storage
         let menuRules = [];
 
+        // Selected products for bulk edit
+        let selectedProducts = [];
+
         // Switch between menu admin tabs
         function switchMenuTab(tabName) {
             // Hide all tab contents
@@ -5816,7 +5861,10 @@
 
                 // Table header
                 html += `
-                    <div style="display: grid; grid-template-columns: 2fr 3fr 1fr 1fr 1fr 80px; gap: 10px; padding: 10px 15px; background: #f8f9fa; font-weight: 600; border-bottom: 2px solid #ddd;">
+                    <div style="display: grid; grid-template-columns: 40px 2fr 3fr 1fr 1fr 1fr 80px; gap: 10px; padding: 10px 15px; background: #f8f9fa; font-weight: 600; border-bottom: 2px solid #ddd;">
+                        <div style="text-align: center;">
+                            <input type="checkbox" onchange="toggleCategorySelection('${category}', this.checked)" style="cursor: pointer;" title="Seleccionar todos">
+                        </div>
                         <div>Nombre</div>
                         <div>Descripción</div>
                         <div>Precio (€)</div>
@@ -5830,9 +5878,17 @@
                 filteredItems.forEach((item, index) => {
                     const margin = ((item.price - item.cost) / item.price * 100).toFixed(1);
                     const marginColor = margin > 70 ? '#28a745' : margin > 50 ? '#ffc107' : '#dc3545';
+                    const productId = `${category}-${item.name}`;
+                    const isSelected = selectedProducts.some(p => p.category === category && p.name === item.name);
 
                     html += `
-                        <div style="display: grid; grid-template-columns: 2fr 3fr 1fr 1fr 1fr 80px; gap: 10px; padding: 10px 15px; border-bottom: 1px solid #eee; align-items: center;">
+                        <div style="display: grid; grid-template-columns: 40px 2fr 3fr 1fr 1fr 1fr 80px; gap: 10px; padding: 10px 15px; border-bottom: 1px solid #eee; align-items: center;">
+                            <div style="text-align: center;">
+                                <input type="checkbox" class="product-checkbox" data-category="${category}" data-name="${item.name.replace(/"/g, '&quot;')}"
+                                       ${isSelected ? 'checked' : ''}
+                                       onchange="toggleProductSelection('${category}', '${item.name.replace(/'/g, "\\'")}')"
+                                       style="cursor: pointer;">
+                            </div>
                             <div style="cursor: pointer; padding: 5px; border-radius: 4px; transition: background 0.2s;"
                                  onclick="editMenuField('${category}', ${index}, 'name', this)"
                                  onmouseover="this.style.background='#f0f0f0'"
@@ -5879,6 +5935,204 @@
             }
 
             container.innerHTML = html;
+        }
+
+        // Toggle product selection
+        function toggleProductSelection(category, productName) {
+            const index = selectedProducts.findIndex(p => p.category === category && p.name === productName);
+
+            if (index >= 0) {
+                selectedProducts.splice(index, 1);
+            } else {
+                // Find product data
+                const product = menuItems[category].find(item => item.name === productName);
+                if (product) {
+                    selectedProducts.push({
+                        category,
+                        name: productName,
+                        price: product.price,
+                        cost: product.cost
+                    });
+                }
+            }
+
+            updateBulkEditPanel();
+        }
+
+        // Toggle category selection
+        function toggleCategorySelection(category, checked) {
+            const items = menuItems[category];
+
+            if (checked) {
+                // Add all items from this category
+                items.forEach(item => {
+                    const exists = selectedProducts.some(p => p.category === category && p.name === item.name);
+                    if (!exists) {
+                        selectedProducts.push({
+                            category,
+                            name: item.name,
+                            price: item.price,
+                            cost: item.cost
+                        });
+                    }
+                });
+            } else {
+                // Remove all items from this category
+                selectedProducts = selectedProducts.filter(p => p.category !== category);
+            }
+
+            renderMenuItems();
+            updateBulkEditPanel();
+        }
+
+        // Clear selection
+        function clearSelection() {
+            selectedProducts = [];
+            renderMenuItems();
+            updateBulkEditPanel();
+        }
+
+        // Update bulk edit panel visibility and count
+        function updateBulkEditPanel() {
+            const panel = document.getElementById('bulk-edit-panel');
+            const countSpan = document.getElementById('selected-count');
+
+            if (selectedProducts.length > 0) {
+                panel.style.display = 'block';
+                countSpan.textContent = selectedProducts.length;
+            } else {
+                panel.style.display = 'none';
+            }
+        }
+
+        // Apply bulk price adjustment
+        async function applyBulkPriceAdjustment() {
+            const adjustment = parseFloat(document.getElementById('price-adjustment').value);
+
+            if (isNaN(adjustment)) {
+                alert('Por favor introduce un porcentaje válido');
+                return;
+            }
+
+            if (!confirm(`¿Ajustar precio en ${adjustment}% para ${selectedProducts.length} productos?`)) {
+                return;
+            }
+
+            let successCount = 0;
+
+            for (const product of selectedProducts) {
+                const item = menuItems[product.category].find(i => i.name === product.name);
+                if (!item) continue;
+
+                const newPrice = item.price * (1 + adjustment / 100);
+
+                try {
+                    const { error } = await supabase
+                        .from('menu_items')
+                        .update({ price: newPrice })
+                        .eq('category', product.category)
+                        .eq('name', product.name);
+
+                    if (!error) {
+                        item.price = newPrice;
+                        successCount++;
+                    }
+                } catch (err) {
+                    console.error('Error updating price:', err);
+                }
+            }
+
+            document.getElementById('price-adjustment').value = '';
+            clearSelection();
+            renderMenuItems();
+            alert(`Precios actualizados: ${successCount}/${selectedProducts.length} productos`);
+        }
+
+        // Apply bulk cost adjustment
+        async function applyBulkCostAdjustment() {
+            const adjustment = parseFloat(document.getElementById('cost-adjustment').value);
+
+            if (isNaN(adjustment)) {
+                alert('Por favor introduce un porcentaje válido');
+                return;
+            }
+
+            if (!confirm(`¿Ajustar coste en ${adjustment}% para ${selectedProducts.length} productos?`)) {
+                return;
+            }
+
+            let successCount = 0;
+
+            for (const product of selectedProducts) {
+                const item = menuItems[product.category].find(i => i.name === product.name);
+                if (!item) continue;
+
+                const newCost = item.cost * (1 + adjustment / 100);
+
+                try {
+                    const { error } = await supabase
+                        .from('menu_items')
+                        .update({ cost: newCost })
+                        .eq('category', product.category)
+                        .eq('name', product.name);
+
+                    if (!error) {
+                        item.cost = newCost;
+                        successCount++;
+                    }
+                } catch (err) {
+                    console.error('Error updating cost:', err);
+                }
+            }
+
+            document.getElementById('cost-adjustment').value = '';
+            clearSelection();
+            renderMenuItems();
+            alert(`Costes actualizados: ${successCount}/${selectedProducts.length} productos`);
+        }
+
+        // Apply bulk margin target
+        async function applyBulkMarginTarget() {
+            const targetMargin = parseFloat(document.getElementById('margin-target').value);
+
+            if (isNaN(targetMargin) || targetMargin < 0 || targetMargin > 100) {
+                alert('Por favor introduce un margen válido entre 0 y 100');
+                return;
+            }
+
+            if (!confirm(`¿Calcular precio para margen del ${targetMargin}% en ${selectedProducts.length} productos?`)) {
+                return;
+            }
+
+            let successCount = 0;
+
+            for (const product of selectedProducts) {
+                const item = menuItems[product.category].find(i => i.name === product.name);
+                if (!item) continue;
+
+                // Calculate: price = cost / (1 - margin/100)
+                const newPrice = item.cost / (1 - targetMargin / 100);
+
+                try {
+                    const { error } = await supabase
+                        .from('menu_items')
+                        .update({ price: newPrice })
+                        .eq('category', product.category)
+                        .eq('name', product.name);
+
+                    if (!error) {
+                        item.price = newPrice;
+                        successCount++;
+                    }
+                } catch (err) {
+                    console.error('Error updating price:', err);
+                }
+            }
+
+            document.getElementById('margin-target').value = '';
+            clearSelection();
+            renderMenuItems();
+            alert(`Precios actualizados para margen target: ${successCount}/${selectedProducts.length} productos`);
         }
 
         // Filter menu items
