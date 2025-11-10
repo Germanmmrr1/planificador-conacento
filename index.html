@@ -2820,6 +2820,55 @@
             }
         }
 
+        // Adjust quantities to respect rules before generating random menu
+        function adjustQuantitiesForRules(quantities, people) {
+            const activeRules = menuRules.filter(r => r.is_active && r.rule_type === 'max');
+
+            // Create a copy to modify
+            const adjusted = { ...quantities };
+
+            // Check each rule
+            for (const rule of activeRules) {
+                // Calculate total for this rule's categories
+                let total = 0;
+                const relevantCategories = [];
+
+                for (const category of rule.categories) {
+                    if (adjusted[category] !== undefined) {
+                        total += adjusted[category];
+                        relevantCategories.push(category);
+                    }
+                }
+
+                if (relevantCategories.length === 0) continue;
+
+                // Calculate limit for this rule
+                let limit;
+                if (rule.per_people) {
+                    limit = Math.floor(people / rule.per_people) * rule.quantity;
+                } else {
+                    limit = rule.quantity;
+                }
+
+                // If total exceeds limit, proportionally reduce
+                if (total > limit) {
+                    console.log(`Rule violation detected: ${total} > ${limit} for categories: ${relevantCategories.join(', ')}`);
+                    console.log(`Adjusting quantities to respect rule...`);
+
+                    const ratio = limit / total;
+
+                    // Apply reduction proportionally to all categories in the rule
+                    for (const category of relevantCategories) {
+                        const originalQty = adjusted[category];
+                        adjusted[category] = Math.floor(originalQty * ratio);
+                        console.log(`  ${category}: ${originalQty} → ${adjusted[category]}`);
+                    }
+                }
+            }
+
+            return adjusted;
+        }
+
         // Generate random menu based on persona patterns
         function generateRandomMenu() {
             const clientCount = parseInt(document.getElementById('client-count').value);
@@ -2841,11 +2890,27 @@
             };
 
             // Calculate number of items based on persona patterns
-            const numAperitivos = Math.max(0, Math.round(people * persona.aperitivos));
-            const numEntrantes = Math.max(0, Math.round(people * persona.entrantes));
-            const numCarnes = Math.max(1, Math.round(people * persona.carnes)); // At least 1 main course
-            const numGuarniciones = Math.max(0, Math.round(people * persona.guarniciones));
-            const numPostres = Math.max(0, Math.round(people * persona.postres));
+            let numAperitivos = Math.max(0, Math.round(people * persona.aperitivos));
+            let numEntrantes = Math.max(0, Math.round(people * persona.entrantes));
+            let numCarnes = Math.max(1, Math.round(people * persona.carnes)); // At least 1 main course
+            let numGuarniciones = Math.max(0, Math.round(people * persona.guarniciones));
+            let numPostres = Math.max(0, Math.round(people * persona.postres));
+
+            // Adjust quantities to respect rules BEFORE generating
+            const adjustedQuantities = adjustQuantitiesForRules({
+                aperitivos: numAperitivos,
+                entrantes: numEntrantes,
+                ensaladas: 0,
+                carnes: numCarnes,
+                guarniciones: numGuarniciones,
+                postres: numPostres
+            }, people);
+
+            numAperitivos = adjustedQuantities.aperitivos;
+            numEntrantes = adjustedQuantities.entrantes;
+            numCarnes = adjustedQuantities.carnes;
+            numGuarniciones = adjustedQuantities.guarniciones;
+            numPostres = adjustedQuantities.postres;
 
             // Calculate drinks - 30% coffees from total bebidas, rest are alcoholic/soft drinks
             const totalBebidas = Math.round(people * persona.bebidas);
