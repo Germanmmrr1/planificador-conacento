@@ -1858,11 +1858,24 @@
             <div style="padding: 30px;">
                 <div class="section full-width">
                     <h2>Administrar Menú</h2>
-                    <div class="info-box">
-                        Aquí puedes editar los productos del menú, filtrar por categorías y buscar por nombre. Haz clic en cualquier campo para editarlo directamente.
+
+                    <!-- Sub-tabs for Menu Admin -->
+                    <div style="display: flex; gap: 10px; margin: 20px 0; border-bottom: 2px solid #ddd;">
+                        <button id="menu-tab-products" class="menu-sub-tab active" onclick="switchMenuTab('products')" style="padding: 12px 24px; background: none; border: none; border-bottom: 3px solid #667eea; color: #667eea; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                            Productos
+                        </button>
+                        <button id="menu-tab-rules" class="menu-sub-tab" onclick="switchMenuTab('rules')" style="padding: 12px 24px; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                            Reglas de Simulación
+                        </button>
                     </div>
 
-                    <!-- Controls -->
+                    <!-- Products Tab Content -->
+                    <div id="menu-content-products" class="menu-tab-content">
+                        <div class="info-box">
+                            Aquí puedes editar los productos del menú, filtrar por categorías y buscar por nombre. Haz clic en cualquier campo para editarlo directamente.
+                        </div>
+
+                        <!-- Controls -->
                     <div style="display: grid; grid-template-columns: 1fr 1fr auto auto; gap: 15px; margin: 20px 0; align-items: end;">
                         <div>
                             <label style="font-weight: bold; margin-bottom: 5px; display: block;">Buscar por nombre:</label>
@@ -1912,6 +1925,27 @@
                     <div id="menu-items-container" style="margin-top: 20px;">
                         <!-- Will be filled dynamically -->
                     </div>
+                    </div> <!-- End Products Tab Content -->
+
+                    <!-- Rules Tab Content -->
+                    <div id="menu-content-rules" class="menu-tab-content" style="display: none;">
+                        <div class="info-box">
+                            Define reglas estrictas que se aplicarán al crear escenarios. Los usuarios no podrán añadir productos que violen estas reglas.
+                        </div>
+
+                        <!-- Add Rule Button -->
+                        <div style="margin: 20px 0;">
+                            <button onclick="openAddRuleModal()" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600;">
+                                ➕ Añadir Nueva Regla
+                            </button>
+                        </div>
+
+                        <!-- Rules Table -->
+                        <div id="rules-container" style="margin-top: 20px;">
+                            <!-- Will be filled dynamically -->
+                        </div>
+                    </div> <!-- End Rules Tab Content -->
+
                 </div>
             </div>
         </div>
@@ -2694,6 +2728,13 @@
 
             if (!category || !itemName) {
                 alert('Por favor selecciona categoría y plato');
+                return;
+            }
+
+            // Validate against rules
+            const validation = validateAgainstRules(category, itemName);
+            if (!validation.valid) {
+                alert(validation.message);
                 return;
             }
 
@@ -5629,6 +5670,31 @@
 
         // ==================== MENU ADMIN FUNCTIONS ====================
 
+        // Menu rules storage
+        let menuRules = [];
+
+        // Switch between menu admin tabs
+        function switchMenuTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.menu-tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            // Remove active class from all buttons
+            document.querySelectorAll('.menu-sub-tab').forEach(btn => {
+                btn.style.borderBottomColor = 'transparent';
+                btn.style.color = '#666';
+            });
+
+            // Show selected tab content
+            document.getElementById('menu-content-' + tabName).style.display = 'block';
+
+            // Add active class to selected button
+            const activeBtn = document.getElementById('menu-tab-' + tabName);
+            activeBtn.style.borderBottomColor = '#667eea';
+            activeBtn.style.color = '#667eea';
+        }
+
         // Render menu items table
         function renderMenuItems() {
             const container = document.getElementById('menu-items-container');
@@ -6114,17 +6180,382 @@
             }
         }
 
+        // ==================== MENU RULES FUNCTIONS ====================
+
+        // Category display names for rules
+        const ruleCategoryNames = {
+            'aperitivos': 'Aperitivos',
+            'entrantes': 'Entrantes',
+            'ensaladas': 'Ensaladas',
+            'carnes': 'Carnes',
+            'guarniciones': 'Guarniciones',
+            'postres': 'Postres',
+            'vinosblancos': 'Vinos Blancos',
+            'vinosrosados': 'Vinos Rosados',
+            'vinostintos': 'Vinos Tintos',
+            'espumosos': 'Espumosos',
+            'aperitivos_bebidas': 'Aperitivos (Bebidas)',
+            'cervezas': 'Cervezas',
+            'refrescos': 'Refrescos',
+            'zumos': 'Zumos',
+            'aguas': 'Aguas',
+            'cafes': 'Cafés',
+            // Special groups
+            'vinos_botellas': 'Vinos (solo botellas)',
+            'bebidas_alcoholicas': 'Bebidas Alcohólicas'
+        };
+
+        // Render rules table
+        function renderRules() {
+            const container = document.getElementById('rules-container');
+            if (!container) return;
+
+            if (menuRules.length === 0) {
+                container.innerHTML = `
+                    <div style="padding: 40px; text-align: center; color: #666; font-size: 16px; background: #f9f9f9; border-radius: 8px;">
+                        No hay reglas definidas aún. Haz clic en "Añadir Nueva Regla" para comenzar.
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div style="background: white; border: 2px solid #ddd; border-radius: 8px; overflow: hidden;">
+                    <div style="display: grid; grid-template-columns: 100px 2fr 120px 150px 100px 100px; gap: 10px; padding: 10px 15px; background: #f8f9fa; font-weight: 600; border-bottom: 2px solid #ddd;">
+                        <div>Tipo</div>
+                        <div>Categorías</div>
+                        <div>Límite</div>
+                        <div>Por Personas</div>
+                        <div>Estado</div>
+                        <div style="text-align: center;">Acciones</div>
+                    </div>
+            `;
+
+            menuRules.forEach((rule, index) => {
+                const typeText = rule.rule_type === 'max' ? 'Máximo' : 'Mínimo';
+                const typeColor = rule.rule_type === 'max' ? '#dc3545' : '#28a745';
+
+                // Format categories display
+                const categoriesText = rule.categories.map(cat => ruleCategoryNames[cat] || cat).join(' + ');
+
+                // Format per_people text
+                const perPeopleText = rule.per_people
+                    ? `cada ${rule.per_people} ${rule.per_people === 1 ? 'persona' : 'personas'}`
+                    : 'en total';
+
+                const statusColor = rule.is_active ? '#28a745' : '#999';
+                const statusText = rule.is_active ? '✅ Activa' : '⏸️ Inactiva';
+
+                html += `
+                    <div style="display: grid; grid-template-columns: 100px 2fr 120px 150px 100px 100px; gap: 10px; padding: 12px 15px; border-bottom: 1px solid #eee; align-items: center;">
+                        <div style="font-weight: 600; color: ${typeColor};">
+                            ${typeText}
+                        </div>
+                        <div style="font-size: 14px;">
+                            ${categoriesText}
+                        </div>
+                        <div style="font-weight: 600;">
+                            ${rule.quantity} ${rule.quantity === 1 ? 'producto' : 'productos'}
+                        </div>
+                        <div style="font-size: 14px; color: #666;">
+                            ${perPeopleText}
+                        </div>
+                        <div style="font-weight: 600; color: ${statusColor}; font-size: 13px;">
+                            ${statusText}
+                        </div>
+                        <div style="text-align: center; display: flex; gap: 8px; justify-content: center;">
+                            <button onclick="toggleRuleStatus(${index})"
+                                    style="padding: 6px 10px; background: ${rule.is_active ? '#ffc107' : '#28a745'}; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;"
+                                    title="${rule.is_active ? 'Desactivar' : 'Activar'}">
+                                ${rule.is_active ? '⏸️' : '▶️'}
+                            </button>
+                            <button onclick="deleteRule(${index})"
+                                    style="padding: 6px 10px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;"
+                                    title="Eliminar regla">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        // Open modal to add new rule
+        function openAddRuleModal() {
+            const categoryCheckboxes = Object.keys(ruleCategoryNames).map(key => {
+                return `
+                    <label style="display: flex; align-items: center; gap: 8px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='#f0f0f0'" onmouseout="this.style.background='white'">
+                        <input type="checkbox" value="${key}" class="rule-category-checkbox" style="cursor: pointer;">
+                        <span style="font-size: 14px;">${ruleCategoryNames[key]}</span>
+                    </label>
+                `;
+            }).join('');
+
+            const modalBody = `
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">Tipo de regla:</label>
+                        <div style="display: flex; gap: 15px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rule-type" value="max" checked style="cursor: pointer;">
+                                <span>Máximo</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rule-type" value="min" style="cursor: pointer;">
+                                <span>Mínimo</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">Categorías (selecciona una o varias):</label>
+                        <div style="max-height: 200px; overflow-y: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; background: #f9f9f9; border-radius: 6px;">
+                            ${categoryCheckboxes}
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">Cantidad límite:</label>
+                        <input type="number" id="new-rule-quantity" placeholder="Ej: 4" min="0" step="0.5" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                    </div>
+
+                    <div>
+                        <label style="font-weight: bold; display: block; margin-bottom: 8px;">Aplicar:</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rule-apply" value="per-people" checked style="cursor: pointer;">
+                                <span>Por cada</span>
+                                <input type="number" id="new-rule-per-people" placeholder="2" min="1" value="2" style="width: 60px; padding: 6px; border: 1px solid #ddd; border-radius: 4px;">
+                                <span>personas</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rule-apply" value="total" style="cursor: pointer;">
+                                <span>En total (sin importar número de personas)</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            openModal('Añadir Nueva Regla', modalBody, 'Crear Regla', () => {
+                addRule();
+            });
+        }
+
+        // Add new rule
+        async function addRule() {
+            const ruleType = document.querySelector('input[name="rule-type"]:checked').value;
+            const selectedCategories = Array.from(document.querySelectorAll('.rule-category-checkbox:checked')).map(cb => cb.value);
+            const quantity = parseFloat(document.getElementById('new-rule-quantity').value);
+            const applyType = document.querySelector('input[name="rule-apply"]:checked').value;
+            const perPeople = applyType === 'per-people' ? parseInt(document.getElementById('new-rule-per-people').value) : null;
+
+            // Validation
+            if (selectedCategories.length === 0) {
+                alert('Por favor selecciona al menos una categoría');
+                return;
+            }
+            if (isNaN(quantity) || quantity <= 0) {
+                alert('Por favor introduce una cantidad válida mayor que 0');
+                return;
+            }
+            if (applyType === 'per-people' && (isNaN(perPeople) || perPeople <= 0)) {
+                alert('Por favor introduce un número de personas válido');
+                return;
+            }
+
+            const newRule = {
+                rule_type: ruleType,
+                categories: selectedCategories,
+                quantity: quantity,
+                per_people: perPeople,
+                is_active: true
+            };
+
+            // Add to Supabase
+            try {
+                const { data, error } = await supabase
+                    .from('menu_rules')
+                    .insert([newRule])
+                    .select();
+
+                if (error) {
+                    console.error('Error adding rule to Supabase:', error);
+                    alert('Error al guardar la regla en la base de datos: ' + error.message);
+                    return;
+                }
+
+                console.log('Successfully added rule to Supabase:', data);
+
+                // Add to local menuRules (with id from Supabase)
+                menuRules.push(data[0]);
+
+                // Close modal and refresh view
+                closeModal();
+                renderRules();
+                alert('Regla añadida correctamente');
+
+            } catch (err) {
+                console.error('Supabase error:', err);
+                alert('Error de conexión con la base de datos');
+            }
+        }
+
+        // Toggle rule active status
+        async function toggleRuleStatus(index) {
+            const rule = menuRules[index];
+            const newStatus = !rule.is_active;
+
+            try {
+                const { error } = await supabase
+                    .from('menu_rules')
+                    .update({ is_active: newStatus })
+                    .eq('id', rule.id);
+
+                if (error) {
+                    console.error('Error updating rule in Supabase:', error);
+                    alert('Error al actualizar la regla: ' + error.message);
+                    return;
+                }
+
+                // Update local state
+                menuRules[index].is_active = newStatus;
+                renderRules();
+
+            } catch (err) {
+                console.error('Supabase error:', err);
+                alert('Error de conexión con la base de datos');
+            }
+        }
+
+        // Delete rule
+        async function deleteRule(index) {
+            const rule = menuRules[index];
+
+            if (!confirm('¿Estás seguro de que quieres eliminar esta regla?')) {
+                return;
+            }
+
+            try {
+                const { error } = await supabase
+                    .from('menu_rules')
+                    .delete()
+                    .eq('id', rule.id);
+
+                if (error) {
+                    console.error('Error deleting rule from Supabase:', error);
+                    alert('Error al eliminar la regla: ' + error.message);
+                    return;
+                }
+
+                console.log('Successfully deleted rule from Supabase');
+
+                // Remove from local menuRules
+                menuRules.splice(index, 1);
+
+                // Refresh view
+                renderRules();
+                alert('Regla eliminada correctamente');
+
+            } catch (err) {
+                console.error('Supabase error:', err);
+                alert('Error de conexión con la base de datos');
+            }
+        }
+
+        // Load rules from Supabase
+        async function loadRulesFromSupabase() {
+            try {
+                const { data, error } = await supabase
+                    .from('menu_rules')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    console.error('Error loading rules from Supabase:', error);
+                    return false;
+                }
+
+                if (data) {
+                    menuRules = data;
+                    console.log('Successfully loaded rules from Supabase:', data.length);
+                    return true;
+                }
+            } catch (err) {
+                console.error('Supabase error loading rules:', err);
+                return false;
+            }
+        }
+
+        // Validate scenario against rules
+        function validateAgainstRules(category, itemName) {
+            const activeRules = menuRules.filter(r => r.is_active);
+            const people = currentScenario.people;
+
+            for (const rule of activeRules) {
+                // Check if this rule applies to the category
+                if (!rule.categories.includes(category)) {
+                    // Check for special category groups
+                    if (category.includes('vino') && rule.categories.includes('vinos_botellas')) {
+                        const item = menuItems[category].find(i => i.name === itemName);
+                        if (!item || !item.desc.includes('Botella')) {
+                            continue; // Rule doesn't apply to non-bottle wines
+                        }
+                    } else {
+                        continue; // Rule doesn't apply to this category
+                    }
+                }
+
+                // Count current items in the rule's categories
+                let currentCount = 0;
+                for (const ruleCategory of rule.categories) {
+                    currentCount += currentScenario.items
+                        .filter(item => item.category === ruleCategory)
+                        .reduce((sum, item) => sum + item.qty, 0);
+                }
+
+                // Calculate limit based on rule
+                let limit;
+                if (rule.per_people) {
+                    limit = Math.floor(people / rule.per_people) * rule.quantity;
+                } else {
+                    limit = rule.quantity;
+                }
+
+                // Check if adding would violate the rule
+                if (rule.rule_type === 'max') {
+                    if (currentCount >= limit) {
+                        const categoriesText = rule.categories.map(c => ruleCategoryNames[c] || c).join(' + ');
+                        const perPeopleText = rule.per_people
+                            ? ` por cada ${rule.per_people} ${rule.per_people === 1 ? 'persona' : 'personas'}`
+                            : ' en total';
+                        return {
+                            valid: false,
+                            message: `⛔ No se puede añadir este producto.\n\nRegla: Máximo ${rule.quantity} de (${categoriesText})${perPeopleText}\n\nLímite actual: ${limit} productos\nYa tienes: ${currentCount} productos`
+                        };
+                    }
+                }
+            }
+
+            return { valid: true };
+        }
+
         // ==================== END MENU ADMIN FUNCTIONS ====================
 
         // Inicializar
         document.addEventListener('DOMContentLoaded', async function() {
             // Load menu from Supabase first
             await loadMenuItemsFromSupabase();
+            await loadRulesFromSupabase();
             initEmployees();
             parseCalendarData();
             renderCalendar();
             updateAllCalculations(); // Actualiza todos los cálculos, incluyendo totales de pestañas, charts y resultados
             renderMenuItems(); // Initialize menu admin table
+            renderRules(); // Initialize rules table
 
             // Initialize mobile enhancements
             setTimeout(() => {
