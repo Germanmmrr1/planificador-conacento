@@ -184,11 +184,11 @@
         }
 
         .tab-content {
-            display: none;
+            display: none !important;
         }
 
         .tab-content.active {
-            display: block;
+            display: block !important;
         }
 
         .tab-grid {
@@ -1597,6 +1597,67 @@
             .day-cell {
                 min-height: 140px;
             }
+            
+            /* Tabla de empleados responsive */
+            .employee-header {
+                display: none !important;
+            }
+            
+            .employee-item {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 10px !important;
+                padding: 15px !important;
+            }
+            
+            .employee-item > div {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .employee-item > div[data-label]::before {
+                content: attr(data-label) ": ";
+                font-weight: 600;
+                color: #667eea;
+                font-size: 0.85em;
+                margin-bottom: 5px;
+                display: block;
+            }
+            
+            .employee-item > div[data-label] {
+                width: 100%;
+            }
+            
+            /* Tabla de empleados responsive */
+            .employee-header {
+                display: none !important;
+            }
+            
+            .employee-item {
+                display: block !important;
+                padding: 15px !important;
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            
+            .employee-item > div {
+                margin-bottom: 10px;
+            }
+            
+            .employee-item > div[data-label]::before {
+                content: attr(data-label) ": ";
+                display: block;
+                font-weight: 600;
+                color: #667eea;
+                margin-bottom: 5px;
+                font-size: 0.9em;
+            }
+            
+            .employee-item > div[data-label] {
+                width: 100%;
+            }
 
             /* Swipe indicator */
             .swipe-indicator {
@@ -1640,7 +1701,7 @@
         </div>
 
         <!-- Tab: Planificación y Variables (Merged) -->
-        <div id="tab-planificacion" class="tab-content active">
+        <div id="tab-planificacion" class="tab-content active" style="display: block !important;">
             <div style="padding: 30px;">
                 <!-- Variables Section -->
                 <div class="section full-width">
@@ -1648,10 +1709,10 @@
                     <div class="results-grid variables-grid">
                         <div class="input-group">
                             <label>
-                                Capacidad Total (comensales): <span class="range-value" id="capacidad-value">80</span>
+                                Capacidad Total (comensales): <span class="range-value" id="capacidad-value">75</span>
                                 <span class="tooltip-icon" data-tooltip="40 plazas en terraza + 50 plazas aprox. en interior" onclick="showTooltip(this.getAttribute('data-tooltip'), this)">i</span>
                             </label>
-                            <input type="range" id="capacidad" min="40" max="120" value="80" step="5" oninput="updateAllCalculations()">
+                            <input type="range" id="capacidad" min="40" max="120" value="75" step="5" oninput="updateAllCalculations()">
                         </div>
 
                         <div class="input-group">
@@ -2059,35 +2120,15 @@
                 <div class="section full-width">
                     <h2>Personal y Salarios</h2>
 
-                    <div class="employee-header" style="display: grid; grid-template-columns: 2fr 1fr 1fr 40px; gap: 15px; padding: 10px 15px; font-weight: 600; color: #667eea; border-bottom: 2px solid #667eea; margin-bottom: 15px;">
-                        <div>Empleado</div>
-                        <div style="text-align: center;">Salario Neto Mensual</div>
-                        <div style="text-align: center;">Coste Total Anual Empresa</div>
-                        <div style="text-align: center;">Info</div>
-                    </div>
-
-                    <div class="info-box" style="margin-bottom: 20px;">
-                        <strong>Cómo funciona el cálculo:</strong> Introduce el salario neto mensual que el empleado recibe en su cuenta. El sistema calcula:
-                        <ul style="margin: 10px 0 0 20px;">
-                            <li><strong>Salario Bruto Anual:</strong> Se calcula de forma inversa considerando las retenciones de SS empleado (6.35%) e IRPF progresivo</li>
-                            <li>
-                                <strong>IRPF:</strong> Se aplican los tramos de Andalucía 2025
-                                <span class="tooltip-icon" data-tooltip="Tramos IRPF Andalucía 2025:
-0€ - 12.450€ → 19%
-12.450€ - 13.000€ → 21,5%
-13.000€ - 20.200€ → 24%
-20.200€ - 21.000€ → 27%
-21.000€ - 35.200€ → 30%
-35.200€ - 50.000€ → 37%
-50.000€ - 60.000€ → 41%
-60.000€+ → 45%" onclick="showTooltip(this.getAttribute('data-tooltip'), this)">i</span>
-                            </li>
-                            <li><strong>Seguridad Social Empresa (31%):</strong> Se aplica sobre el bruto</li>
-                            <li><strong>Coste Total = Bruto Anual + SS Empresa</strong></li>
-                        </ul>
-                        <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
-                            💡 Haz clic en el botón <strong>+</strong> para ver el desglose completo de cada empleado
-                        </div>
+                    <div class="employee-header" style="display: grid; grid-template-columns: 1.5fr 2fr 0.8fr 0.8fr 0.8fr 1fr 1fr 60px; gap: 10px; padding: 12px 15px; font-weight: 600; color: #667eea; border-bottom: 2px solid #667eea; margin-bottom: 15px; background: #f8f9fa; border-radius: 8px 8px 0 0;">
+                        <div>Nombre</div>
+                        <div>Puesto</div>
+                        <div style="text-align: center;">Horas/sem</div>
+                        <div style="text-align: center;">IRPF (%)</div>
+                        <div style="text-align: center;">Pluses (€)</div>
+                        <div style="text-align: center;">Neto (€/mes)</div>
+                        <div style="text-align: center;">Coste Anual (€)</div>
+                        <div style="text-align: center;">Acciones</div>
                     </div>
 
                     <div class="employee-list" id="employee-list">
@@ -2098,8 +2139,52 @@
                         + Añadir Nuevo Empleado
                     </button>
 
+                    <div class="info-box" style="margin-top: 30px; margin-bottom: 20px;">
+                        <strong>Cómo funciona el cálculo:</strong> Selecciona el puesto, horas semanales e IRPF. El sistema calcula automáticamente:
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li><strong>Salario Base:</strong> Según tabla salarial del convenio, proporcional a horas semanales</li>
+                            <li><strong>Prorrata Pagas Extra:</strong> 3 pagas extra distribuidas en 12 meses</li>
+                            <li><strong>Pluses:</strong> Manutención (39.64€) y Transporte (96.65€) fijos</li>
+                            <li><strong>Total Devengado:</strong> Base + Prorrata + Pluses + Otros pluses</li>
+                            <li><strong>SS Trabajador (6.48%):</strong> Sobre base de cotización</li>
+                            <li><strong>IRPF:</strong> Porcentaje personalizado sobre base de cotización</li>
+                            <li><strong>SS Empresa (32.1%):</strong> Sobre base de cotización</li>
+                            <li><strong>Coste Total = Total Devengado + SS Empresa</strong></li>
+                        </ul>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: #666;">
+                            💡 Haz clic en el botón <strong>+</strong> para ver el desglose completo de cada empleado
+                        </div>
+                    </div>
+
                     <div class="info-box" style="margin-top: 20px;">
-                        <strong>Total Coste Personal Anual:</strong> <span id="total-personal" style="font-size: 1.3em; margin-left: 10px;">182,831€</span>
+                        <h3 style="margin-top: 0; color: #667eea; margin-bottom: 15px;">Totales Anuales</h3>
+                        <div style="margin-bottom: 10px;">
+                            <strong>Total Coste Personal Anual:</strong> <span id="total-personal" style="font-size: 1.3em; margin-left: 10px;">182,831€</span>
+                        </div>
+                        
+                        <h3 style="margin-top: 20px; color: #667eea; margin-bottom: 15px;">Totales Mensuales</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 10px;">
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea;">
+                                <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Salario Neto Mensual</div>
+                                <div style="font-size: 1.2em; font-weight: 600; color: #333;" id="total-net-monthly">0€</div>
+                            </div>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">SS Empleado Mensual</div>
+                                <div style="font-size: 1.2em; font-weight: 600; color: #333;" id="total-ss-employee-monthly">0€</div>
+                            </div>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ff9800;">
+                                <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">IRPF Empleado Mensual</div>
+                                <div style="font-size: 1.2em; font-weight: 600; color: #333;" id="total-irpf-monthly">0€</div>
+                            </div>
+                            <div style="padding: 10px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #dc3545;">
+                                <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">SS Empresa Mensual</div>
+                                <div style="font-size: 1.2em; font-weight: 600; color: #333;" id="total-ss-company-monthly">0€</div>
+                            </div>
+                            <div style="padding: 10px; background: #e8f5e9; border-radius: 8px; border-left: 4px solid #28a745;">
+                                <div style="font-size: 0.9em; color: #666; margin-bottom: 5px;">Coste Total Mensual</div>
+                                <div style="font-size: 1.2em; font-weight: 600; color: #28a745;" id="total-cost-monthly">0€</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2119,7 +2204,7 @@
                     </div>
                     <div class="input-group">
                         <label>Luz (€/mes)</label>
-                        <input type="number" id="luz" value="750" oninput="updateAllCalculations()">
+                        <input type="number" id="luz" value="600" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Agua (€/mes)</label>
@@ -2130,16 +2215,20 @@
                         <input type="number" id="gas" value="300" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
+                        <label>Carbón (€/mes)</label>
+                        <input type="number" id="carbon" value="200" oninput="updateAllCalculations()">
+                    </div>
+                    <div class="input-group">
                         <label>Internet (€/mes)</label>
-                        <input type="number" id="internet" value="50" oninput="updateAllCalculations()">
+                        <input type="number" id="internet" value="10" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Alarma (€/mes)</label>
-                        <input type="number" id="alarma" value="30" oninput="updateAllCalculations()">
+                        <input type="number" id="alarma" value="150" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Redes Sociales (€/mes)</label>
-                        <input type="number" id="redes" value="150" oninput="updateAllCalculations()">
+                        <input type="number" id="redes" value="0" oninput="updateAllCalculations()">
                     </div>
                     <div class="input-group">
                         <label>Mantenimiento (€/mes)</label>
@@ -2155,7 +2244,11 @@
                     </div>
                     <div class="input-group">
                         <label>Asesoría (€/mes)</label>
-                        <input type="number" id="asesoria" value="320" oninput="updateAllCalculations()">
+                        <input type="number" id="asesoria" value="350" oninput="updateAllCalculations()">
+                    </div>
+                    <div class="input-group">
+                        <label>Seguro (€/año)</label>
+                        <input type="number" id="seguro" value="850" oninput="updateAllCalculations()">
                     </div>
 
                     <div id="custom-expenses-list">
@@ -2168,7 +2261,12 @@
                 </button>
 
                 <div class="info-box" style="margin-top: 20px;">
-                    <strong>Total Gastos Operativos Anuales:</strong> <span id="total-operativos" style="font-size: 1.3em; margin-left: 10px;">46,545€</span>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Total Gastos Operativos Mensuales:</strong> <span id="total-operativos-mensual" style="font-size: 1.3em; margin-left: 10px;">0€</span>
+                    </div>
+                    <div>
+                        <strong>Total Gastos Operativos Anuales:</strong> <span id="total-operativos" style="font-size: 1.3em; margin-left: 10px;">46,545€</span>
+                    </div>
                 </div>
             </div>
 
@@ -2248,21 +2346,285 @@
     <div id="tooltip-content" class="tooltip-content"></div>
 
     <script>
+        // Wrap in IIFE to avoid conflicts with global supabase from CDN
+        (function() {
+        'use strict';
+        
+        // ==================== TAB NAVIGATION - Define FIRST so it's available immediately ====================
+        // Cambiar entre tabs - Simple and robust version
+        function switchTab(tabName, eventTarget) {
+            try {
+                // Hide all tab contents
+                var tabs = document.querySelectorAll('.tab-content');
+                for (var i = 0; i < tabs.length; i++) {
+                    tabs[i].classList.remove('active');
+                    tabs[i].style.display = 'none';
+                }
+
+                // Deactivate all buttons
+                var buttons = document.querySelectorAll('.tab-button');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('active');
+                }
+
+                // Activate selected tab
+                var targetTab = document.getElementById('tab-' + tabName);
+                if (targetTab) {
+                    targetTab.classList.add('active');
+                    targetTab.style.display = 'block';
+                }
+                
+                // Activate button
+                if (eventTarget) {
+                    eventTarget.classList.add('active');
+                }
+            } catch (error) {
+                console.error('Error in switchTab:', error);
+            }
+        }
+        
+        // Helper to expose functions globally
+        function exposeGlobal(name, fn) {
+            window[name] = fn;
+        }
+        
+        // Make functions globally available immediately
+        exposeGlobal('switchTab', switchTab);
+        exposeGlobal('getSupabase', getSupabase);
+
         // ==================== SUPABASE SETUP ====================
         const SUPABASE_URL = 'https://drmareaqvenjqdhidzeb.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRybWFyZWFxdmVuanFkaGlkemViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI2OTQ4MzksImV4cCI6MjA3ODI3MDgzOX0.ovZuNqB5kD1RUIX03LJKmQucnsMxxCZfXkNDjwlTYvo';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Initialize Supabase client - will be set in DOMContentLoaded
+        // Supabase v2 from CDN exposes 'supabase' as a global variable with createClient method
+        // Store the client instance in window to avoid variable name conflicts
+        window.supabaseClient = null;
+        
+        // Helper function to get supabase client
+        function getSupabase() {
+            return window.supabaseClient || window.supabase;
+        }
 
-        // Datos de empleados (solo salario neto mensual como input)
-        const employees = [
-            { name: 'Vito (Jefe de Sala + Gerente)', netMonthly: 2000 },
-            { name: 'Francisco (Ayudante cocina)', netMonthly: 1450 },
-            { name: 'Elena (Ayudante cocina)', netMonthly: 1550 },
-            { name: 'Elena U (Camarero)', netMonthly: 1450 },
-            { name: 'Extra cocina (fin de semana)', netMonthly: 550 },
-            { name: 'Extra sala (fin de semana)', netMonthly: 550 },
-            { name: 'Extra office (40h)', netMonthly: 1050 }
+        // ==================== CONSTANTES DEL SISTEMA ====================
+        const CONSTANTES = {
+            horas_convenio: 40,
+            pagas_anuales: 15,
+            pagas_extra: 3,
+            plus_manutencion: 39.64,
+            plus_transporte: 96.65,
+            ss_trabajador: 0.0648,
+            ss_empresa: 0.321
+        };
+
+        // ==================== TABLA SALARIAL ====================
+        const TABLA_SALARIAL = {
+            "Jefe de Sala": 1376.64,
+            "Primer encargado de Mostrador": 1376.64,
+            "Segundo Jefe Comedor": 1349.99,
+            "Segundo Jefe de Sala": 1349.99,
+            "Mayordomo de Pisos": 1349.99,
+            "Segundo Encargado de Mostrador": 1349.99,
+            "Jefe de Sala de Catering": 1270.33,
+            "Dependiente": 1270.33,
+            "Barman": 1270.33,
+            "Camarero/a Bar": 1259.65,
+            "Camarero/a Sala de Fiesta": 1259.65,
+            "Sumiller": 1259.65,
+            "Supervisor de catering": 1259.65,
+            "Supervisor de Colectividades": 1259.65,
+            "Conductor Equipo de Catering": 1259.65,
+            "Preparador Montador catering": 1249.11,
+            "Ayudante Cafetero": 1249.11,
+            "Ayudante Camarero": 1249.11,
+            "Ayudante Dependiente": 1249.11,
+            "Ayudante Equipo de Catering": 1249.11,
+            "Monitor Cuidador Colectividades": 1249.11,
+            "Repartidor de Comida y Bebida": 1249.11,
+            "Jefe Cocina": 1376.64,
+            "Jefe Economato": 1376.64,
+            "Jefe de Catering": 1376.64,
+            "Segundo Jefe de Cocina": 1349.99,
+            "Jefe Repostero": 1349.99,
+            "Segundo Encargado de Economato": 1349.99,
+            "Jefe de Partida": 1270.34,
+            "Jefe de Sector": 1270.34,
+            "Oficial Repostero": 1270.34,
+            "Cocinero/a": 1259.65,
+            "Panadero": 1259.65,
+            "Bodeguero": 1259.65,
+            "Cafetero": 1259.65,
+            "Ayudante de Cocina": 1249.11,
+            "Ayudante de Reposteria": 1249.11,
+            "Ayudante de Economato": 1249.11,
+            "Ayudante Bodeguero": 1249.11,
+            "Pinche": 1249.11,
+            "Fregador/a": 1249.11,
+            "Marmiton": 1249.11,
+            "Auxiliar de Cocina": 1249.11,
+            "Jefe Recepcion": 1376.64,
+            "Jefe Personal": 1376.64,
+            "Primer Conserje": 1376.64,
+            "Contable General": 1376.64,
+            "Jefe de Administracion": 1376.64,
+            "Segundo Jefe Administrativo": 1349.99,
+            "Segundo Jefe de Recepcion": 1349.99,
+            "Segundo Conserje de Noche": 1349.99,
+            "Segundo Conserje": 1349.99,
+            "Recepcionista": 1270.34,
+            "Cajero": 1270.34,
+            "Contable": 1270.34,
+            "Manocorrientes": 1270.34,
+            "Oficial Administrativo": 1270.34,
+            "Chofer": 1259.65,
+            "Telefonista": 1259.65,
+            "Comercial": 1259.65,
+            "Relaciones Publicas": 1259.65,
+            "Ayudante Recepcion": 1249.11,
+            "Ayudante de Conserje": 1249.11,
+            "Ayudante Administracion": 1249.11,
+            "Taquillero": 1249.11,
+            "Guardarropa": 1249.11,
+            "Auxiliar de Caja": 1249.11,
+            "Auxiliar de Factoria": 1249.11,
+            "Portero Noche": 1249.11,
+            "Ascensorista": 1249.11,
+            "Vigilante": 1249.11,
+            "Portero de Servicios": 1249.11,
+            "Mozo de Equipaje": 1249.11,
+            "Ordenanza de Salon": 1249.11,
+            "Botones": 1249.11,
+            "Recibidor Sala de Fiesta": 1249.11
+        };
+
+        // ==================== FUNCIÓN DE CÁLCULO DE SALARIOS ====================
+        function calculateSalary(puesto, horas_semanales, irpf, otros_pluses = 0) {
+            // Obtener salario base completo de la tabla
+            const salario_base_completo = TABLA_SALARIAL[puesto] || 0;
+            
+            // Calcular coeficiente de jornada
+            const coef_jornada = horas_semanales / CONSTANTES.horas_convenio;
+            
+            // Salario base real (proporcional a horas)
+            const salario_base_real = salario_base_completo * coef_jornada;
+            
+            // Prorrata de pagas extra
+            const prorrata_pagas = (salario_base_completo * CONSTANTES.pagas_extra / 12) * coef_jornada;
+            
+            // Pluses fijos
+            const manutencion_real = CONSTANTES.plus_manutencion;
+            const transporte_real = CONSTANTES.plus_transporte;
+            
+            // Total devengado
+            const total_devengado = salario_base_real + prorrata_pagas + manutencion_real + transporte_real + (otros_pluses || 0);
+            
+            // Base de cotización (igual al total devengado)
+            const base_cotizacion = total_devengado;
+            
+            // Seguridad Social trabajador
+            const ss_trabajador = base_cotizacion * CONSTANTES.ss_trabajador;
+            
+            // Retención IRPF (irpf es un porcentaje, ej: 0.15 para 15%)
+            const retencion_irpf = base_cotizacion * (irpf / 100);
+            
+            // Total deducciones
+            const total_deducciones = ss_trabajador + retencion_irpf;
+            
+            // Neto mensual
+            const neto = total_devengado - total_deducciones;
+            
+            // Seguridad Social empresa
+            const ss_empresa = base_cotizacion * CONSTANTES.ss_empresa;
+            
+            // Coste total para la empresa
+            const coste_empresa = total_devengado + ss_empresa;
+            
+            return {
+                puesto: puesto,
+                horas_semanales: horas_semanales,
+                salario_base_completo: salario_base_completo,
+                salario_base_real: salario_base_real,
+                prorrata_pagas: prorrata_pagas,
+                plus_manutencion: manutencion_real,
+                plus_transporte: transporte_real,
+                otros_pluses: otros_pluses || 0,
+                total_devengado: total_devengado,
+                base_cotizacion: base_cotizacion,
+                ss_trabajador: ss_trabajador,
+                irpf: retencion_irpf,
+                total_deducciones: total_deducciones,
+                neto: neto,
+                ss_empresa: ss_empresa,
+                coste_empresa: coste_empresa,
+                // Valores anuales para compatibilidad
+                netAnnual: neto * 12,
+                grossAnnual: total_devengado * 12,
+                companySS: ss_empresa * 12,
+                totalCost: coste_empresa * 12
+            };
+        }
+
+        // Datos de empleados (nueva estructura: puesto, horas_semanales, irpf, otros_pluses)
+        // Valores por defecto
+        const defaultEmployees = [
+            { name: 'Vito', puesto: 'Jefe de Sala', horas_semanales: 40, irpf: 0, otros_pluses: 0 },
+            { name: 'Francisco', puesto: 'Ayudante de Cocina', horas_semanales: 40, irpf: 0, otros_pluses: 0 },
+            { name: 'Elena', puesto: 'Ayudante de Cocina', horas_semanales: 40, irpf: 0, otros_pluses: 0 },
+            { name: 'Elena U', puesto: 'Camarero/a Bar', horas_semanales: 40, irpf: 0, otros_pluses: 0 },
+            { name: 'Extra cocina', puesto: 'Ayudante de Cocina', horas_semanales: 10, irpf: 0, otros_pluses: 0 },
+            { name: 'Extra sala', puesto: 'Camarero/a Bar', horas_semanales: 10, irpf: 0, otros_pluses: 0 },
+            { name: 'Extra office', puesto: 'Ayudante Administracion', horas_semanales: 40, irpf: 0, otros_pluses: 0 }
         ];
+        
+        // Cargar empleados desde localStorage o usar valores por defecto
+        let employees = [];
+        function loadEmployeesFromStorage() {
+            try {
+                const saved = localStorage.getItem('employees');
+                if (saved) {
+                    employees = JSON.parse(saved);
+                    console.log('Empleados cargados desde localStorage:', employees.length);
+                } else {
+                    employees = JSON.parse(JSON.stringify(defaultEmployees)); // Deep copy
+                    saveEmployeesToStorage();
+                }
+            } catch (e) {
+                console.error('Error loading employees:', e);
+                employees = JSON.parse(JSON.stringify(defaultEmployees));
+            }
+        }
+        
+        function saveEmployeesToStorage() {
+            try {
+                localStorage.setItem('employees', JSON.stringify(employees));
+                console.log('Empleados guardados en localStorage');
+            } catch (e) {
+                console.error('Error saving employees:', e);
+            }
+        }
+        
+        // Cargar empleados personalizados desde localStorage
+        function loadCustomEmployeesFromStorage() {
+            try {
+                const saved = localStorage.getItem('customEmployees');
+                if (saved) {
+                    customEmployees = JSON.parse(saved);
+                    console.log('Empleados personalizados cargados desde localStorage:', customEmployees.length);
+                }
+            } catch (e) {
+                console.error('Error loading custom employees:', e);
+                customEmployees = [];
+            }
+        }
+        
+        function saveCustomEmployeesToStorage() {
+            try {
+                localStorage.setItem('customEmployees', JSON.stringify(customEmployees));
+                console.log('Empleados personalizados guardados en localStorage');
+            } catch (e) {
+                console.error('Error saving custom employees:', e);
+            }
+        }
 
         // ==================== MENU SIMULATOR ====================
 
@@ -3757,10 +4119,48 @@
             const totalIRPF = calculateProgressiveIRPF(grossAnnual);
             return totalIRPF / grossAnnual;
         }
+        
+        // Calcular IRPF recomendado según total devengado (independiente del IRPF manual)
+        // La base para estimación del IRPF = total_devengado - ss_trabajador
+        // NO depende del neto ni del IRPF manual introducido
+        function calculateRecommendedIRPF(totalDevengadoMensual) {
+            if (!totalDevengadoMensual || totalDevengadoMensual <= 0) return 0;
+            
+            // Total devengado anual
+            const totalDevengadoAnual = totalDevengadoMensual * 12;
+            
+            // Calcular SS empleado anual
+            const ssEmpleadoAnual = totalDevengadoAnual * CONSTANTES.ss_trabajador;
+            
+            // Base imponible para IRPF = total_devengado - ss_trabajador
+            const baseImponibleAnual = totalDevengadoAnual - ssEmpleadoAnual;
+            
+            // Si la base imponible es muy baja, el IRPF será muy bajo o cero
+            if (baseImponibleAnual <= 0) return 0;
+            
+            // Calcular IRPF progresivo según tramos de Andalucía sobre la base imponible
+            const irpfAnual = calculateProgressiveIRPF(baseImponibleAnual);
+            
+            // El IRPF en el sistema se aplica como porcentaje sobre la base de cotización (total devengado)
+            // retencion_irpf = base_cotizacion * (irpf / 100)
+            // Pero el IRPF real se calcula sobre la base imponible
+            // 
+            // Para encontrar el porcentaje que debemos aplicar sobre total_devengado:
+            // Si IRPF_real = base_imponible * tasa_progresiva
+            // Y queremos: IRPF_aplicado = total_devengado * porcentaje / 100
+            // Y estos deben ser iguales: IRPF_real = IRPF_aplicado
+            // Entonces: total_devengado * porcentaje / 100 = base_imponible * tasa_progresiva
+            // porcentaje = (base_imponible * tasa_progresiva / total_devengado) * 100
+            // porcentaje = (irpf_anual / total_devengado_anual) * 100
+            
+            const irpfPorcentaje = (irpfAnual / totalDevengadoAnual) * 100;
+            
+            return Math.max(0, Math.min(45, irpfPorcentaje));
+        }
 
         // Calcular salario bruto desde salario neto (iterativo)
         function calculateGrossFromNet(netMonthly) {
-            const SS_EMPLOYEE_RATE = 0.0635; // 6.35% Seguridad Social empleado
+            const SS_EMPLOYEE_RATE = 0.0648; // 6.48% Seguridad Social empleado
             const netAnnual = netMonthly * 12;
 
             // Estimación inicial: el neto suele ser ~75-80% del bruto
@@ -3796,31 +4196,50 @@
             return grossAnnual / 12; // Retornar mensual
         }
 
-        // Calcular coste total anual para la empresa desde salario neto mensual
-        function calculateTotalCompanyCost(netMonthly) {
-            const SS_EMPLOYEE_RATE = 0.0635; // 6.35% SS empleado
-            const SS_COMPANY_RATE = 0.31;     // 31% SS empresa
-
-            // Paso 1: Calcular bruto mensual necesario para obtener ese neto
+        // Calcular coste total anual para la empresa (nueva función basada en puesto, horas, irpf)
+        function calculateTotalCompanyCost(employee) {
+            // Si employee es un objeto con puesto, horas_semanales, irpf, otros_pluses
+            if (employee && typeof employee === 'object' && employee.puesto) {
+                const result = calculateSalary(
+                    employee.puesto,
+                    employee.horas_semanales || 40,
+                    employee.irpf || 0,
+                    employee.otros_pluses || 0
+                );
+                return {
+                    netMonthly: result.neto,
+                    netAnnual: result.netAnnual,
+                    grossMonthly: result.total_devengado,
+                    grossAnnual: result.grossAnnual,
+                    ssEmployee: result.ss_trabajador * 12,
+                    irpf: result.irpf * 12,
+                    companySS: result.companySS,
+                    totalCost: result.totalCost,
+                    // Datos adicionales del nuevo sistema
+                    salario_base_completo: result.salario_base_completo,
+                    salario_base_real: result.salario_base_real,
+                    prorrata_pagas: result.prorrata_pagas,
+                    plus_manutencion: result.plus_manutencion,
+                    plus_transporte: result.plus_transporte,
+                    otros_pluses: result.otros_pluses,
+                    total_devengado: result.total_devengado,
+                    base_cotizacion: result.base_cotizacion,
+                    ss_trabajador: result.ss_trabajador,
+                    ss_empresa: result.ss_empresa,
+                    coste_empresa: result.coste_empresa
+                };
+            }
+            // Compatibilidad hacia atrás: si se pasa un número (netMonthly), usar cálculo antiguo
+            const netMonthly = typeof employee === 'number' ? employee : (employee?.netMonthly || 0);
+            const SS_EMPLOYEE_RATE = 0.0648;
+            const SS_COMPANY_RATE = 0.3207;
             const grossMonthly = calculateGrossFromNet(netMonthly);
             const grossAnnual = grossMonthly * 12;
-
-            // Paso 2: Calcular componentes
             const ssEmployee = grossAnnual * SS_EMPLOYEE_RATE;
-
-            // Base imponible para IRPF (después de SS empleado)
             const taxableBase = grossAnnual - ssEmployee;
-
-            // IRPF progresivo
             const irpfAnnual = calculateProgressiveIRPF(taxableBase);
-
-            // Paso 3: SS empresa (sobre el bruto)
             const companySS = grossAnnual * SS_COMPANY_RATE;
-
-            // COSTE TOTAL EMPRESA = Bruto + SS Empresa
-            // (El bruto ya incluye lo que se descuenta al empleado)
             const totalCost = grossAnnual + companySS;
-
             return {
                 netMonthly: netMonthly,
                 netAnnual: netMonthly * 12,
@@ -3962,91 +4381,355 @@
             }
         }
 
-        // Cambiar entre tabs
-        function switchTab(tabName, eventTarget) {
-            // Ocultar todos los contenidos
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            // Desactivar todos los botones
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            // Activar el tab seleccionado
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            if (eventTarget) {
-                eventTarget.classList.add('active');
-            } else {
-                // Fallback: find and activate the button
-                document.querySelector(`.tab-button[onclick*="${tabName}"]`)?.classList.add('active');
-            }
-
-            // Haptic feedback
-            vibrateLight();
-
-            // Scroll to top on tab change (mobile UX)
-            if (window.innerWidth <= 768) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
 
         // Mostrar/ocultar detalle de empleado
         function toggleEmployeeDetail(index) {
             const detail = document.getElementById(`emp-detail-${index}`);
-            detail.classList.toggle('show');
+            if (detail) {
+                detail.classList.toggle('show');
+            }
+        }
+        
+        function toggleCustomEmployeeDetail(index) {
+            const detail = document.getElementById(`custom-emp-detail-${index}`);
+            if (detail) {
+                detail.classList.toggle('show');
+            }
+        }
+        
+        // Actualizar desglose de empleado personalizado
+        function updateEmployeeBreakdownForCustom(index, cost) {
+            const breakdown = document.getElementById(`custom-emp-breakdown-${index}`);
+            if (!breakdown) return;
+            
+            // Si tiene los nuevos campos, mostrar desglose completo
+            if (cost.salario_base_completo !== undefined) {
+                const totalDeducciones = cost.ss_trabajador + (cost.irpf / 12);
+                breakdown.innerHTML = `
+                    <div style="background: #f0f7ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #667eea;">
+                        <h5 style="margin: 0 0 10px 0; color: #667eea; font-size: 1em;">📊 INGRESOS BRUTOS (Mensual)</h5>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">Salario Base Completo (40h/sem)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.salario_base_completo)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">→ Salario Base Real (proporcional)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.salario_base_real)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Prorrata Pagas Extra (3 pagas/12 meses)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.prorrata_pagas)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Plus Manutención</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.plus_manutencion)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Plus Transporte</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.plus_transporte)}</div>
+                        </div>
+                        ${cost.otros_pluses > 0 ? `
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Otros Pluses</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.otros_pluses)}</div>
+                        </div>
+                        ` : ''}
+                        <div class="detail-item" style="background: #667eea; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= TOTAL DEVENGADO</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.2em; color: white; margin: 0;">${formatCurrency(cost.total_devengado)}</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
+                        <h5 style="margin: 0 0 10px 0; color: #856404; font-size: 1em;">💰 DEDUCCIONES (Mensual)</h5>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">Base Cotización (igual a Total Devengado)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.base_cotizacion)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">- SS Trabajador (6.48%)</label>
+                            <div class="value" style="font-size: 0.95em; color: #dc3545;">-${formatCurrency(cost.ss_trabajador)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">- Retención IRPF</label>
+                            <div class="value" style="font-size: 0.95em; color: #dc3545;">-${formatCurrency(cost.irpf / 12)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #ffc107; color: #856404; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: #856404; margin: 0;">= TOTAL DEDUCCIONES</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.1em; color: #856404; margin: 0;">-${formatCurrency(totalDeducciones)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #28a745; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= SALARIO NETO MENSUAL</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.3em; color: white; margin: 0;">${formatCurrency(cost.netMonthly)}</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                        <h5 style="margin: 0 0 10px 0; color: #721c24; font-size: 1em;">🏢 COSTE PARA LA EMPRESA</h5>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">Total Devengado</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.total_devengado)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ SS Empresa (32.1%)</label>
+                            <div class="value" style="font-size: 0.95em; color: #dc3545;">+${formatCurrency(cost.ss_empresa)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #dc3545; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= COSTE TOTAL EMPRESA (Mensual)</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.3em; color: white; margin: 0;">${formatCurrency(cost.coste_empresa)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #721c24; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= COSTE TOTAL EMPRESA (Anual)</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.4em; color: white; margin: 0;">${formatCurrency(cost.totalCost)}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Desglose antiguo (compatibilidad)
+                breakdown.innerHTML = `
+                    <div class="detail-item">
+                        <label>Salario Neto Mensual</label>
+                        <div class="value">${formatCurrency(cost.netMonthly)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Salario Neto Anual</label>
+                        <div class="value">${formatCurrency(cost.netAnnual)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Salario Bruto Mensual</label>
+                        <div class="value">${formatCurrency(cost.grossMonthly)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Salario Bruto Anual</label>
+                        <div class="value">${formatCurrency(cost.grossAnnual)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>SS Empleado (6.48%)</label>
+                        <div class="value">${formatCurrency(cost.ssEmployee)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>IRPF Anual</label>
+                        <div class="value">${formatCurrency(cost.irpf)}</div>
+                    </div>
+                    <div class="detail-item" style="border-left-color: #dc3545;">
+                        <label>SS Empresa (32.07%)</label>
+                        <div class="value">${formatCurrency(cost.companySS)}</div>
+                    </div>
+                    <div class="detail-item" style="border-left-color: #dc3545;">
+                        <label><strong>COSTE TOTAL EMPRESA</strong></label>
+                        <div class="value" style="color: #dc3545; font-size: 1.3em;">${formatCurrency(cost.totalCost)}</div>
+                    </div>
+                `;
+            }
         }
 
         // Añadir nuevo empleado
         function addNewEmployee() {
+            // Generar opciones de puestos para el dropdown (ordenado alfabéticamente)
+            let puestoOptions = '<option value="">Seleccionar puesto</option>';
+            const puestosOrdenados = Object.keys(TABLA_SALARIAL).sort((a, b) => a.localeCompare(b, 'es'));
+            puestosOrdenados.forEach(puesto => {
+                puestoOptions += `<option value="${puesto}">${puesto}</option>`;
+            });
+            
             const modalBody = `
                 <div class="modal-input-group">
                     <label>Nombre del empleado:</label>
-                    <input type="text" id="new-employee-name" placeholder="Ej: Juan Pérez (Camarero)" autocomplete="off">
+                    <input type="text" id="new-employee-name" placeholder="Ej: Juan Pérez" autocomplete="off">
                 </div>
                 <div class="modal-input-group">
-                    <label>Salario neto mensual (€):</label>
-                    <input type="number" id="new-employee-salary" placeholder="1500" min="0" step="50" inputmode="decimal">
+                    <label>Puesto:</label>
+                    <select id="new-employee-puesto" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;">
+                        ${puestoOptions}
+                    </select>
+                </div>
+                <div class="modal-input-group">
+                    <label>Horas semanales:</label>
+                    <input type="number" id="new-employee-horas" placeholder="40" min="1" max="80" step="1" value="40">
+                </div>
+                <div class="modal-input-group">
+                    <label>IRPF (%):</label>
+                    <input type="number" id="new-employee-irpf" placeholder="0" min="0" max="45" step="0.1" value="0">
+                </div>
+                <div class="modal-input-group">
+                    <label>Otros pluses (€/mes):</label>
+                    <input type="number" id="new-employee-pluses" placeholder="0" min="0" step="10" value="0">
                 </div>
             `;
 
             openModal('Añadir Nuevo Empleado', modalBody, 'Añadir', () => {
                 const name = document.getElementById('new-employee-name').value.trim();
-                const netSalary = parseFloat(document.getElementById('new-employee-salary').value);
+                const puesto = document.getElementById('new-employee-puesto').value;
+                const horas = parseFloat(document.getElementById('new-employee-horas').value);
+                const irpf = parseFloat(document.getElementById('new-employee-irpf').value);
+                const pluses = parseFloat(document.getElementById('new-employee-pluses').value) || 0;
 
                 if (!name) {
                     alert('Por favor, introduce un nombre');
                     return;
                 }
 
-                if (!netSalary || netSalary <= 0) {
-                    alert('Por favor, introduce un salario válido');
+                if (!puesto) {
+                    alert('Por favor, selecciona un puesto');
+                    return;
+                }
+
+                if (!horas || horas <= 0) {
+                    alert('Por favor, introduce horas semanales válidas');
+                    return;
+                }
+
+                if (irpf === undefined || irpf < 0) {
+                    alert('Por favor, introduce un IRPF válido');
                     return;
                 }
 
                 const newEmployee = {
                     name: name,
-                    netMonthly: netSalary
+                    puesto: puesto,
+                    horas_semanales: horas,
+                    irpf: irpf,
+                    otros_pluses: pluses
                 };
 
                 customEmployees.push(newEmployee);
+                saveCustomEmployeesToStorage();
                 renderEmployees();
                 updateAllCalculations();
                 vibrateMedium(); // Success feedback
             });
         }
 
+        // Eliminar empleado base
+        function removeEmployee(index) {
+            if (confirm('¿Eliminar este empleado?')) {
+                employees.splice(index, 1);
+                saveEmployeesToStorage();
+                renderEmployees();
+                updateAllCalculations();
+            }
+        }
+        
         // Eliminar empleado personalizado
         function removeCustomEmployee(index) {
             if (confirm('¿Eliminar este empleado?')) {
                 customEmployees.splice(index, 1);
+                saveCustomEmployeesToStorage();
                 renderEmployees();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar nombre de empleado base
+        function updateEmployeeName(index, newName) {
+            if (employees && employees[index] !== undefined) {
+                employees[index].name = newName;
+                saveEmployeesToStorage();
+            }
+        }
+        
+        // Actualizar nombre de empleado personalizado
+        function updateCustomEmployeeName(index, newName) {
+            if (customEmployees && customEmployees[index] !== undefined) {
+                customEmployees[index].name = newName;
+                saveCustomEmployeesToStorage();
+            }
+        }
+        
+        // Actualizar puesto de empleado base
+        function updateEmployeePuesto(index, puesto) {
+            if (employees && employees[index] !== undefined) {
+                employees[index].puesto = puesto;
+                saveEmployeesToStorage();
+                updateEmployeeDisplays();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar horas semanales de empleado base
+        function updateEmployeeHoras(index, horas) {
+            if (employees && employees[index] !== undefined) {
+                employees[index].horas_semanales = horas;
+                saveEmployeesToStorage();
+                updateEmployeeDisplays();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar IRPF de empleado base
+        function updateEmployeeIRPF(index, irpf) {
+            if (employees && employees[index] !== undefined) {
+                employees[index].irpf = irpf;
+                saveEmployeesToStorage();
+                updateEmployeeDisplays();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar otros pluses de empleado base
+        function updateEmployeePluses(index, pluses) {
+            if (employees && employees[index] !== undefined) {
+                employees[index].otros_pluses = pluses;
+                saveEmployeesToStorage();
+                updateEmployeeDisplays();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar puesto de empleado personalizado
+        function updateCustomEmployeePuesto(index, puesto) {
+            if (customEmployees && customEmployees[index] !== undefined) {
+                customEmployees[index].puesto = puesto;
+                saveCustomEmployeesToStorage();
+                updateEmployeeDisplays();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar horas semanales de empleado personalizado
+        function updateCustomEmployeeHoras(index, horas) {
+            if (customEmployees && customEmployees[index] !== undefined) {
+                customEmployees[index].horas_semanales = horas;
+                saveCustomEmployeesToStorage();
+                updateEmployeeDisplays();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar IRPF de empleado personalizado
+        function updateCustomEmployeeIRPF(index, irpf) {
+            if (customEmployees && customEmployees[index] !== undefined) {
+                customEmployees[index].irpf = irpf;
+                saveCustomEmployeesToStorage();
+                updateEmployeeDisplays();
+                updateAllCalculations();
+            }
+        }
+        
+        // Actualizar otros pluses de empleado personalizado
+        function updateCustomEmployeePluses(index, pluses) {
+            if (customEmployees && customEmployees[index] !== undefined) {
+                customEmployees[index].otros_pluses = pluses;
+                saveCustomEmployeesToStorage();
+                updateEmployeeDisplays();
                 updateAllCalculations();
             }
         }
 
         // Renderizar todos los empleados
+        // Función helper para generar dropdown de puestos (ordenado alfabéticamente)
+        function generatePuestoDropdown(selectedPuesto, inputId, index, isCustom = false) {
+            let options = '<option value="">Seleccionar puesto</option>';
+            // Ordenar puestos alfabéticamente
+            const puestosOrdenados = Object.keys(TABLA_SALARIAL).sort((a, b) => a.localeCompare(b, 'es'));
+            puestosOrdenados.forEach(puesto => {
+                const selected = puesto === selectedPuesto ? 'selected' : '';
+                options += `<option value="${puesto}" ${selected}>${puesto}</option>`;
+            });
+            const updateFunc = isCustom ? `updateCustomEmployeePuesto(${index}, this.value)` : `updateEmployeePuesto(${index}, this.value)`;
+            return `<select id="${inputId}" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-weight: 600;" onchange="${updateFunc}">${options}</select>`;
+        }
+
         function renderEmployees() {
             const list = document.getElementById('employee-list');
             list.innerHTML = '';
@@ -4054,23 +4737,58 @@
             // Empleados base
             employees.forEach((emp, index) => {
                 const container = document.createElement('div');
-                const cost = calculateTotalCompanyCost(emp.netMonthly);
+                // Asegurar que el empleado tenga los campos necesarios
+                if (!emp.puesto) emp.puesto = 'Ayudante de Cocina';
+                if (!emp.horas_semanales) emp.horas_semanales = 40;
+                if (emp.irpf === undefined) emp.irpf = 0;
+                if (emp.otros_pluses === undefined) emp.otros_pluses = 0;
+                
+                let cost = calculateTotalCompanyCost(emp);
+                const totalDevengado = cost.total_devengado || cost.base_cotizacion || 0;
+                const irpfRecommended = calculateRecommendedIRPF(totalDevengado);
+                emp.irpf = Math.round(irpfRecommended * 10) / 10; // actualizar al recomendado automáticamente
+                cost = calculateTotalCompanyCost(emp); // recalcular con el IRPF actualizado
+                const irpfRecommendedText = irpfRecommended > 0 ? `(recomendado: ${irpfRecommended.toFixed(1)}%)` : '';
 
                 container.innerHTML = `
-                    <div class="employee-item">
-                        <span class="name">${emp.name}</span>
-                        <div class="employee-field">
-                            <label class="mobile-label">Salario Neto Mensual</label>
-                            <input type="number" id="emp-net-${index}" value="${emp.netMonthly.toFixed(2)}"
-                                   placeholder="Neto mensual" step="0.01" min="0" oninput="employees[${index}].netMonthly = parseFloat(this.value); updateAllCalculations()">
+                    <div class="employee-item" style="display: grid; grid-template-columns: 1.5fr 2fr 0.8fr 0.8fr 0.8fr 1fr 1fr 60px; gap: 10px; padding: 12px 15px; align-items: center; border-bottom: 1px solid #e0e0e0;">
+                        <div data-label="Nombre">
+                            <input type="text" id="emp-name-${index}" value="${emp.name || ''}"
+                                   placeholder="Nombre" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; font-weight: 600;" 
+                                   oninput="updateEmployeeName(${index}, this.value)">
                         </div>
-                        <div class="employee-field">
-                            <label class="mobile-label">Coste Total Anual Empresa</label>
-                            <div class="cost-display" id="emp-cost-${index}">${formatCurrency(cost.totalCost)}</div>
+                        <div data-label="Puesto">
+                            ${generatePuestoDropdown(emp.puesto, `emp-puesto-${index}`, index, false)}
                         </div>
-                        <button class="expand-btn" onclick="toggleEmployeeDetail(${index})" title="Ver desglose">+</button>
-
-                        <div class="employee-detail" id="emp-detail-${index}">
+                        <div data-label="Horas/sem" style="text-align: center;">
+                            <input type="number" id="emp-horas-${index}" value="${emp.horas_semanales}"
+                                   placeholder="40" step="1" min="1" max="80" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; text-align: center;"
+                                   oninput="updateEmployeeHoras(${index}, parseFloat(this.value) || 0)">
+                        </div>
+                        <div data-label="IRPF (%)" style="text-align: center;">
+                            <input type="number" id="emp-irpf-${index}" value="${emp.irpf}"
+                                   placeholder="0" step="0.1" min="0" max="45" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; text-align: center;"
+                                   oninput="updateEmployeeIRPF(${index}, parseFloat(this.value) || 0)">
+                            <div style="font-size: 0.75em; color: #666; margin-top: 2px;" id="emp-irpf-recommended-${index}">
+                                ${irpfRecommendedText}
+                            </div>
+                        </div>
+                        <div data-label="Pluses (€)" style="text-align: center;">
+                            <input type="number" id="emp-pluses-${index}" value="${emp.otros_pluses || 0}"
+                                   placeholder="0" step="10" min="0" style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 6px; text-align: center;"
+                                   oninput="updateEmployeePluses(${index}, parseFloat(this.value) || 0)">
+                        </div>
+                        <div data-label="Neto (€/mes)" style="text-align: center; font-weight: bold; color: #28a745;" id="emp-net-${index}">
+                            ${formatCurrency(cost.netMonthly)}
+                        </div>
+                        <div data-label="Coste Anual (€)" style="text-align: center; font-weight: bold; color: #dc3545;" id="emp-cost-${index}">
+                            ${formatCurrency(cost.totalCost)}
+                        </div>
+                        <div data-label="Acciones" style="display: flex; gap: 5px; justify-content: center;">
+                            <button class="expand-btn" onclick="toggleEmployeeDetail(${index})" title="Ver desglose" style="width: 30px; height: 30px; padding: 0; font-size: 1.2em;">+</button>
+                            <button onclick="removeEmployee(${index})" style="background: #dc3545; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1.2em; padding: 0;" title="Eliminar empleado">×</button>
+                        </div>
+                        <div class="employee-detail" id="emp-detail-${index}" style="grid-column: 1 / -1; margin-top: 15px; padding-top: 15px; border-top: 2px solid #667eea;">
                             <h4 style="margin-bottom: 10px; color: #667eea;">Desglose del Coste Anual</h4>
                             <div class="detail-grid" id="emp-breakdown-${index}">
                                 <!-- Se llenará dinámicamente -->
@@ -4086,30 +4804,82 @@
             customEmployees.forEach((emp, index) => {
                 const customIndex = employees.length + index;
                 const container = document.createElement('div');
-                const cost = calculateTotalCompanyCost(emp.netMonthly);
+                // Asegurar que el empleado tenga los campos necesarios
+                if (!emp.puesto) emp.puesto = 'Ayudante de Cocina';
+                if (!emp.horas_semanales) emp.horas_semanales = 40;
+                if (emp.irpf === undefined) emp.irpf = 0;
+                if (emp.otros_pluses === undefined) emp.otros_pluses = 0;
+                
+                let cost = calculateTotalCompanyCost(emp);
+                const totalDevengado = cost.total_devengado || cost.base_cotizacion || 0;
+                const irpfRecommended = calculateRecommendedIRPF(totalDevengado);
+                emp.irpf = Math.round(irpfRecommended * 10) / 10; // actualizar al recomendado automáticamente
+                cost = calculateTotalCompanyCost(emp); // recalcular con el IRPF actualizado
+                const irpfRecommendedText = irpfRecommended > 0 ? `(recomendado: ${irpfRecommended.toFixed(1)}%)` : '';
 
                 container.innerHTML = `
-                    <div class="employee-item" style="border-left: 3px solid #ffc107;">
-                        <input type="text" id="custom-emp-name-${index}" value="${emp.name}"
-                               placeholder="Nombre empleado" style="font-weight: bold; padding: 10px; border: 2px solid #ddd; border-radius: 6px;" oninput="customEmployees[${index}].name = this.value">
-                        <div class="employee-field">
-                            <label class="mobile-label">Salario Neto Mensual</label>
-                            <input type="number" id="custom-emp-net-${index}" value="${emp.netMonthly.toFixed(2)}"
-                                   placeholder="Neto mensual" step="0.01" min="0" oninput="customEmployees[${index}].netMonthly = parseFloat(this.value); updateAllCalculations()">
+                    <div class="employee-item" style="display: grid; grid-template-columns: 1.5fr 2fr 0.8fr 0.8fr 0.8fr 1fr 1fr 60px; gap: 10px; padding: 12px 15px; align-items: center; border-bottom: 1px solid #e0e0e0; border-left: 3px solid #ffc107; background: #fffbf0;">
+                        <div data-label="Nombre">
+                            <input type="text" id="custom-emp-name-${index}" value="${emp.name || ''}"
+                                   placeholder="Nombre" style="width: 100%; padding: 8px; border: 2px solid #ffc107; border-radius: 6px; font-weight: 600;" 
+                                   oninput="updateCustomEmployeeName(${index}, this.value)">
                         </div>
-                        <div class="employee-field">
-                            <label class="mobile-label">Coste Total Anual Empresa</label>
-                            <div class="cost-display" id="custom-emp-cost-${index}">${formatCurrency(cost.totalCost)}</div>
+                        <div data-label="Puesto">
+                            ${generatePuestoDropdown(emp.puesto, `custom-emp-puesto-${index}`, index, true)}
                         </div>
-                        <button onclick="removeCustomEmployee(${index})" style="background: #dc3545; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-weight: bold;">×</button>
+                        <div data-label="Horas/sem" style="text-align: center;">
+                            <input type="number" id="custom-emp-horas-${index}" value="${emp.horas_semanales}"
+                                   placeholder="40" step="1" min="1" max="80" style="width: 100%; padding: 8px; border: 2px solid #ffc107; border-radius: 6px; text-align: center;"
+                                   oninput="updateCustomEmployeeHoras(${index}, parseFloat(this.value) || 0)">
+                        </div>
+                        <div data-label="IRPF (%)" style="text-align: center;">
+                            <input type="number" id="custom-emp-irpf-${index}" value="${emp.irpf}"
+                                   placeholder="0" step="0.1" min="0" max="45" style="width: 100%; padding: 8px; border: 2px solid #ffc107; border-radius: 6px; text-align: center;"
+                                   oninput="updateCustomEmployeeIRPF(${index}, parseFloat(this.value) || 0)">
+                            <div style="font-size: 0.75em; color: #666; margin-top: 2px;" id="custom-emp-irpf-recommended-${index}">
+                                ${irpfRecommendedText}
+                            </div>
+                        </div>
+                        <div data-label="Pluses (€)" style="text-align: center;">
+                            <input type="number" id="custom-emp-pluses-${index}" value="${emp.otros_pluses || 0}"
+                                   placeholder="0" step="10" min="0" style="width: 100%; padding: 8px; border: 2px solid #ffc107; border-radius: 6px; text-align: center;"
+                                   oninput="updateCustomEmployeePluses(${index}, parseFloat(this.value) || 0)">
+                        </div>
+                        <div data-label="Neto (€/mes)" style="text-align: center; font-weight: bold; color: #28a745;" id="custom-emp-net-${index}">
+                            ${formatCurrency(cost.netMonthly)}
+                        </div>
+                        <div data-label="Coste Anual (€)" style="text-align: center; font-weight: bold; color: #dc3545;" id="custom-emp-cost-${index}">
+                            ${formatCurrency(cost.totalCost)}
+                        </div>
+                        <div data-label="Acciones" style="display: flex; gap: 5px; justify-content: center;">
+                            <button class="expand-btn" onclick="toggleCustomEmployeeDetail(${index})" title="Ver desglose" style="width: 30px; height: 30px; padding: 0; font-size: 1.2em;">+</button>
+                            <button onclick="removeCustomEmployee(${index})" style="background: #dc3545; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; font-size: 1.2em; padding: 0;" title="Eliminar empleado">×</button>
+                        </div>
+                        <div class="employee-detail" id="custom-emp-detail-${index}" style="grid-column: 1 / -1; margin-top: 15px; padding-top: 15px; border-top: 2px solid #ffc107;">
+                            <h4 style="margin-bottom: 10px; color: #ffc107;">Desglose del Coste Anual</h4>
+                            <div class="detail-grid" id="custom-emp-breakdown-${index}">
+                                <!-- Se llenará dinámicamente -->
+                            </div>
+                        </div>
                     </div>
                 `;
                 list.appendChild(container);
+                // Actualizar desglose del empleado personalizado
+                const customBreakdown = document.getElementById(`custom-emp-breakdown-${index}`);
+                if (customBreakdown) {
+                    updateEmployeeBreakdownForCustom(index, cost);
+                }
             });
+            // Persistir IRPF actualizado al recomendado
+            saveEmployeesToStorage();
+            saveCustomEmployeesToStorage();
         }
 
         // Inicializar empleados
         function initEmployees() {
+            // Cargar empleados desde localStorage
+            loadEmployeesFromStorage();
+            loadCustomEmployeesFromStorage();
             renderEmployees();
         }
 
@@ -4211,40 +4981,127 @@
         // Actualizar desglose de empleado
         function updateEmployeeBreakdown(index, cost) {
             const breakdown = document.getElementById(`emp-breakdown-${index}`);
-            breakdown.innerHTML = `
-                <div class="detail-item">
-                    <label>Salario Neto Mensual</label>
-                    <div class="value">${formatCurrency(cost.netMonthly)}</div>
-                </div>
-                <div class="detail-item">
-                    <label>Salario Neto Anual</label>
-                    <div class="value">${formatCurrency(cost.netAnnual)}</div>
-                </div>
-                <div class="detail-item">
-                    <label>Salario Bruto Mensual</label>
-                    <div class="value">${formatCurrency(cost.grossMonthly)}</div>
-                </div>
-                <div class="detail-item">
-                    <label>Salario Bruto Anual</label>
-                    <div class="value">${formatCurrency(cost.grossAnnual)}</div>
-                </div>
-                <div class="detail-item">
-                    <label>SS Empleado (6.35%)</label>
-                    <div class="value">${formatCurrency(cost.ssEmployee)}</div>
-                </div>
-                <div class="detail-item">
-                    <label>IRPF Anual</label>
-                    <div class="value">${formatCurrency(cost.irpf)}</div>
-                </div>
-                <div class="detail-item" style="border-left-color: #dc3545;">
-                    <label>SS Empresa (31%)</label>
-                    <div class="value">${formatCurrency(cost.companySS)}</div>
-                </div>
-                <div class="detail-item" style="border-left-color: #dc3545;">
-                    <label><strong>COSTE TOTAL EMPRESA</strong></label>
-                    <div class="value" style="color: #dc3545; font-size: 1.3em;">${formatCurrency(cost.totalCost)}</div>
-                </div>
-            `;
+            if (!breakdown) return;
+            
+            // Si tiene los nuevos campos, mostrar desglose completo
+            if (cost.salario_base_completo !== undefined) {
+                const totalDeducciones = cost.ss_trabajador + (cost.irpf / 12);
+                breakdown.innerHTML = `
+                    <div style="background: #f0f7ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #667eea;">
+                        <h5 style="margin: 0 0 10px 0; color: #667eea; font-size: 1em;">📊 INGRESOS BRUTOS (Mensual)</h5>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">Salario Base Completo (40h/sem)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.salario_base_completo)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">→ Salario Base Real (proporcional)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.salario_base_real)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Prorrata Pagas Extra (3 pagas/12 meses)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.prorrata_pagas)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Plus Manutención</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.plus_manutencion)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Plus Transporte</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.plus_transporte)}</div>
+                        </div>
+                        ${cost.otros_pluses > 0 ? `
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ Otros Pluses</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.otros_pluses)}</div>
+                        </div>
+                        ` : ''}
+                        <div class="detail-item" style="background: #667eea; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= TOTAL DEVENGADO</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.2em; color: white; margin: 0;">${formatCurrency(cost.total_devengado)}</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #ffc107;">
+                        <h5 style="margin: 0 0 10px 0; color: #856404; font-size: 1em;">💰 DEDUCCIONES (Mensual)</h5>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">Base Cotización (igual a Total Devengado)</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.base_cotizacion)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">- SS Trabajador (6.48%)</label>
+                            <div class="value" style="font-size: 0.95em; color: #dc3545;">-${formatCurrency(cost.ss_trabajador)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">- Retención IRPF</label>
+                            <div class="value" style="font-size: 0.95em; color: #dc3545;">-${formatCurrency(cost.irpf / 12)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #ffc107; color: #856404; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: #856404; margin: 0;">= TOTAL DEDUCCIONES</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.1em; color: #856404; margin: 0;">-${formatCurrency(totalDeducciones)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #28a745; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= SALARIO NETO MENSUAL</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.3em; color: white; margin: 0;">${formatCurrency(cost.netMonthly)}</div>
+                        </div>
+                    </div>
+
+                    <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+                        <h5 style="margin: 0 0 10px 0; color: #721c24; font-size: 1em;">🏢 COSTE PARA LA EMPRESA</h5>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">Total Devengado</label>
+                            <div class="value" style="font-size: 0.95em;">${formatCurrency(cost.total_devengado)}</div>
+                        </div>
+                        <div class="detail-item" style="background: white; padding: 8px; border-radius: 4px; margin-bottom: 5px;">
+                            <label style="font-size: 0.9em;">+ SS Empresa (32.1%)</label>
+                            <div class="value" style="font-size: 0.95em; color: #dc3545;">+${formatCurrency(cost.ss_empresa)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #dc3545; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= COSTE TOTAL EMPRESA (Mensual)</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.3em; color: white; margin: 0;">${formatCurrency(cost.coste_empresa)}</div>
+                        </div>
+                        <div class="detail-item" style="background: #721c24; color: white; padding: 12px; border-radius: 4px; margin-top: 10px; border: none;">
+                            <label style="font-weight: bold; font-size: 1em; color: white; margin: 0;">= COSTE TOTAL EMPRESA (Anual)</label>
+                            <div class="value" style="font-weight: bold; font-size: 1.4em; color: white; margin: 0;">${formatCurrency(cost.totalCost)}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Desglose antiguo (compatibilidad)
+                breakdown.innerHTML = `
+                    <div class="detail-item">
+                        <label>Salario Neto Mensual</label>
+                        <div class="value">${formatCurrency(cost.netMonthly)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Salario Neto Anual</label>
+                        <div class="value">${formatCurrency(cost.netAnnual)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Salario Bruto Mensual</label>
+                        <div class="value">${formatCurrency(cost.grossMonthly)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>Salario Bruto Anual</label>
+                        <div class="value">${formatCurrency(cost.grossAnnual)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>SS Empleado (6.48%)</label>
+                        <div class="value">${formatCurrency(cost.ssEmployee)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <label>IRPF Anual</label>
+                        <div class="value">${formatCurrency(cost.irpf)}</div>
+                    </div>
+                    <div class="detail-item" style="border-left-color: #dc3545;">
+                        <label>SS Empresa (32.07%)</label>
+                        <div class="value">${formatCurrency(cost.companySS)}</div>
+                    </div>
+                    <div class="detail-item" style="border-left-color: #dc3545;">
+                        <label><strong>COSTE TOTAL EMPRESA</strong></label>
+                        <div class="value" style="color: #dc3545; font-size: 1.3em;">${formatCurrency(cost.totalCost)}</div>
+                    </div>
+                `;
+            }
         }
 
         // Actualizar valores y cálculos
@@ -4252,24 +5109,46 @@
         function updateEmployeeDisplays() {
             // Actualizar empleados base
             employees.forEach((emp, index) => {
-                const cost = calculateTotalCompanyCost(emp.netMonthly);
+                const cost = calculateTotalCompanyCost(emp);
                 const costDisplay = document.getElementById(`emp-cost-${index}`);
+                const netDisplay = document.getElementById(`emp-net-${index}`);
+                const irpfRecommended = document.getElementById(`emp-irpf-recommended-${index}`);
                 if (costDisplay) {
                     costDisplay.textContent = formatCurrency(cost.totalCost);
                 }
-                // Actualizar desglose si existe
-                const breakdown = document.getElementById(`emp-breakdown-${index}`);
-                if (breakdown && breakdown.innerHTML !== '') {
-                    updateEmployeeBreakdown(index, cost);
+                if (netDisplay) {
+                    netDisplay.textContent = formatCurrency(cost.netMonthly);
                 }
+                if (irpfRecommended) {
+                    const totalDevengado = cost.total_devengado || cost.base_cotizacion || 0;
+                    const recommended = calculateRecommendedIRPF(totalDevengado);
+                    irpfRecommended.textContent = recommended > 0 ? `(recomendado: ${recommended.toFixed(1)}%)` : '';
+                }
+                // Actualizar desglose siempre (incluso si no está visible)
+                updateEmployeeBreakdown(index, cost);
             });
-
+            
             // Actualizar empleados personalizados
             customEmployees.forEach((emp, index) => {
-                const cost = calculateTotalCompanyCost(emp.netMonthly);
+                const cost = calculateTotalCompanyCost(emp);
                 const costDisplay = document.getElementById(`custom-emp-cost-${index}`);
+                const netDisplay = document.getElementById(`custom-emp-net-${index}`);
+                const irpfRecommended = document.getElementById(`custom-emp-irpf-recommended-${index}`);
                 if (costDisplay) {
                     costDisplay.textContent = formatCurrency(cost.totalCost);
+                }
+                if (netDisplay) {
+                    netDisplay.textContent = formatCurrency(cost.netMonthly);
+                }
+                if (irpfRecommended) {
+                    const totalDevengado = cost.total_devengado || cost.base_cotizacion || 0;
+                    const recommended = calculateRecommendedIRPF(totalDevengado);
+                    irpfRecommended.textContent = recommended > 0 ? `(recomendado: ${recommended.toFixed(1)}%)` : '';
+                }
+                // Actualizar desglose siempre (incluso si no está visible)
+                const breakdown = document.getElementById(`custom-emp-breakdown-${index}`);
+                if (breakdown) {
+                    updateEmployeeBreakdownForCustom(index, cost);
                 }
             });
         }
@@ -4286,8 +5165,18 @@
             // Actualizar totales en las pestañas
             const totalPersonal = calculateMonthlyPersonalCost();
             const totalOperativos = calculateMonthlyOperativeCost();
+            const totalOperativosMensual = calculateMonthlyOperativeCostMonthly();
             document.getElementById('total-personal').textContent = formatCurrency(totalPersonal);
             document.getElementById('total-operativos').textContent = formatCurrency(totalOperativos);
+            document.getElementById('total-operativos-mensual').textContent = formatCurrency(totalOperativosMensual);
+            
+            // Actualizar totales mensuales de personal
+            const monthlyBreakdown = calculateMonthlyPersonalBreakdown();
+            document.getElementById('total-net-monthly').textContent = formatCurrency(monthlyBreakdown.netMonthly);
+            document.getElementById('total-ss-employee-monthly').textContent = formatCurrency(monthlyBreakdown.ssEmployeeMonthly);
+            document.getElementById('total-irpf-monthly').textContent = formatCurrency(monthlyBreakdown.irpfMonthly);
+            document.getElementById('total-ss-company-monthly').textContent = formatCurrency(monthlyBreakdown.ssCompanyMonthly);
+            document.getElementById('total-cost-monthly').textContent = formatCurrency(monthlyBreakdown.costMonthly);
 
             // Recalcular todo
             updateAllMonthStats();
@@ -5042,8 +5931,22 @@
 
         // Parse CSV data
         function parseCalendarData() {
-            const lines = calendarCSV.trim().split('\n');
-            const headers = lines[0].split(',');
+            try {
+                if (!calendarCSV) {
+                    console.error('calendarCSV is not defined!');
+                    return;
+                }
+                
+                // Clear previous data
+                calendarData = [];
+                
+                const lines = calendarCSV.trim().split('\n');
+                if (lines.length < 2) {
+                    console.error('Calendar CSV has no data rows!');
+                    return;
+                }
+                
+                const headers = lines[0].split(',');
 
             for (let i = 1; i < lines.length; i++) {
                 const values = lines[i].split(',');
@@ -5121,6 +6024,11 @@
                 // Get default occupancy from matrix
                 const month = parseInt(row.mes);
                 let defaultOccupancy = occupancyMatrix[month] ? occupancyMatrix[month][dayOfWeek] : 40;
+                
+                // Increase Sunday occupancy by 10%
+                if (isSunday) {
+                    defaultOccupancy = Math.round((defaultOccupancy * 1.1) * 100) / 100;
+                }
 
                 // Shifts: 1 shift on Tuesday, Wednesday and Sunday; 2 shifts on Thu-Sat
                 let defaultShifts = 2;
@@ -5134,6 +6042,12 @@
                     shifts: isOpen ? defaultShifts : 0,
                     isHoliday: isHoliday
                 };
+            }
+            
+            console.log('Calendar data parsed successfully:', calendarData.length, 'days');
+            } catch (error) {
+                console.error('Error parsing calendar data:', error);
+                calendarData = [];
             }
         }
 
@@ -5227,18 +6141,41 @@
 
         // Render calendar for all months
         function renderCalendar() {
-            const container = document.getElementById('planning-months-container');
-            container.innerHTML = '';
+            try {
+                const container = document.getElementById('planning-months-container');
+                if (!container) {
+                    console.error('Container planning-months-container not found!');
+                    return;
+                }
+                
+                if (!calendarData || calendarData.length === 0) {
+                    console.error('Calendar data is empty! Call parseCalendarData() first.');
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">Cargando calendario...</div>';
+                    return;
+                }
+                
+                container.innerHTML = '';
 
-            const monthsGrouped = groupByMonth();
-            const sortedMonths = Object.keys(monthsGrouped).sort();
+                if (typeof groupByMonth !== 'function') {
+                    console.error('groupByMonth function not found!');
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #dc3545;">Error: función groupByMonth no encontrada</div>';
+                    return;
+                }
+                
+                const monthsGrouped = groupByMonth();
+                const sortedMonths = Object.keys(monthsGrouped).sort();
 
-            sortedMonths.forEach(yearMonth => {
-                const days = monthsGrouped[yearMonth];
-                const [year, month] = yearMonth.split('-');
-                const monthName = monthNames[parseInt(month)];
+                if (sortedMonths.length === 0) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No hay datos de calendario disponibles</div>';
+                    return;
+                }
+                
+                sortedMonths.forEach(yearMonth => {
+                    const days = monthsGrouped[yearMonth];
+                    const [year, month] = yearMonth.split('-');
+                    const monthName = monthNames[parseInt(month)] || `Mes ${month}`;
 
-                const totals = calculateMonthTotals(yearMonth);
+                    const totals = calculateMonthTotals(yearMonth);
 
                 const monthSection = document.createElement('div');
                 monthSection.className = 'month-section';
@@ -5309,9 +6246,20 @@
                 container.appendChild(monthSection);
 
                 // Render days
-                renderMonthDays(yearMonth, days);
-                updateMonthStats(yearMonth);
+                if (typeof renderMonthDays === 'function') {
+                    renderMonthDays(yearMonth, days);
+                }
+                if (typeof updateMonthStats === 'function') {
+                    updateMonthStats(yearMonth);
+                }
             });
+            } catch (error) {
+                console.error('Error rendering calendar:', error);
+                const container = document.getElementById('planning-months-container');
+                if (container) {
+                    container.innerHTML = '<div style="padding: 20px; text-align: center; color: #dc3545;">Error al cargar el calendario. Por favor, recarga la página.</div>';
+                }
+            }
         }
 
         // Render days for a specific month
@@ -5673,19 +6621,70 @@
             document.getElementById(`stats-result-${yearMonth}`).textContent = formatCurrency(result);
         }
 
-        // Calculate monthly personal cost
+        // Calculate monthly personal cost (ANUAL - devuelve el coste anual total)
         function calculateMonthlyPersonalCost() {
             let total = 0;
-            employees.forEach((emp, index) => {
-                const netMonthly = parseFloat(document.getElementById(`emp-net-${index}`)?.value) || emp.netMonthly;
-                const cost = calculateTotalCompanyCost(netMonthly);
-                total += cost.totalCost;
+            // Empleados base - usar la nueva estructura (puesto, horas, irpf, otros_pluses)
+            employees.forEach((emp) => {
+                // Asegurar que el empleado tenga los campos necesarios
+                if (!emp.puesto) emp.puesto = 'Ayudante de Cocina';
+                if (!emp.horas_semanales) emp.horas_semanales = 40;
+                if (emp.irpf === undefined) emp.irpf = 0;
+                if (emp.otros_pluses === undefined) emp.otros_pluses = 0;
+                
+                const cost = calculateTotalCompanyCost(emp);
+                total += cost.totalCost; // totalCost ya es anual
             });
+            // Empleados personalizados - usar la nueva estructura
             customEmployees.forEach(emp => {
-                const cost = calculateTotalCompanyCost(emp.netMonthly);
-                total += cost.totalCost;
+                // Asegurar que el empleado tenga los campos necesarios
+                if (!emp.puesto) emp.puesto = 'Ayudante de Cocina';
+                if (!emp.horas_semanales) emp.horas_semanales = 40;
+                if (emp.irpf === undefined) emp.irpf = 0;
+                if (emp.otros_pluses === undefined) emp.otros_pluses = 0;
+                
+                const cost = calculateTotalCompanyCost(emp);
+                total += cost.totalCost; // totalCost ya es anual
             });
             return total;
+        }
+        
+        // Calculate monthly personal cost breakdown
+        function calculateMonthlyPersonalBreakdown() {
+            let totalNetMonthly = 0;
+            let totalSSEmployeeMonthly = 0;
+            let totalIRPFMonthly = 0;
+            let totalSSCompanyMonthly = 0;
+            let totalCostMonthly = 0;
+            
+            // Empleados base
+            employees.forEach((emp, index) => {
+                // Usar valores del objeto empleado directamente
+                const cost = calculateTotalCompanyCost(emp);
+                totalNetMonthly += cost.netMonthly;
+                totalSSEmployeeMonthly += cost.ss_trabajador || (cost.ssEmployee / 12);
+                totalIRPFMonthly += (cost.irpf / 12);
+                totalSSCompanyMonthly += cost.ss_empresa || (cost.companySS / 12);
+                totalCostMonthly += cost.coste_empresa || (cost.totalCost / 12);
+            });
+            
+            // Empleados personalizados
+            customEmployees.forEach(emp => {
+                const cost = calculateTotalCompanyCost(emp);
+                totalNetMonthly += cost.netMonthly;
+                totalSSEmployeeMonthly += cost.ss_trabajador || (cost.ssEmployee / 12);
+                totalIRPFMonthly += (cost.irpf / 12);
+                totalSSCompanyMonthly += cost.ss_empresa || (cost.companySS / 12);
+                totalCostMonthly += cost.coste_empresa || (cost.totalCost / 12);
+            });
+            
+            return {
+                netMonthly: totalNetMonthly,
+                ssEmployeeMonthly: totalSSEmployeeMonthly,
+                irpfMonthly: totalIRPFMonthly,
+                ssCompanyMonthly: totalSSCompanyMonthly,
+                costMonthly: totalCostMonthly
+            };
         }
 
         // Calculate monthly operative cost
@@ -5694,6 +6693,7 @@
             const luz = parseFloat(document.getElementById('luz').value) * 12;
             const agua = parseFloat(document.getElementById('agua').value) * 12;
             const gas = parseFloat(document.getElementById('gas').value) * 12;
+            const carbon = parseFloat(document.getElementById('carbon').value || 0) * 12;
             const internet = parseFloat(document.getElementById('internet').value) * 12;
             const alarma = parseFloat(document.getElementById('alarma').value) * 12;
             const redes = parseFloat(document.getElementById('redes').value) * 12;
@@ -5701,13 +6701,44 @@
             const veladores = parseFloat(document.getElementById('veladores').value);
             const qamarero = parseFloat(document.getElementById('qamarero').value);
             const asesoria = parseFloat(document.getElementById('asesoria').value) * 12;
+            const seguro = parseFloat(document.getElementById('seguro').value || 0);
 
-            let total = alquiler + luz + agua + gas + internet + alarma + redes + mantenimiento + veladores + qamarero + asesoria;
+            let total = alquiler + luz + agua + gas + carbon + internet + alarma + redes + mantenimiento + veladores + qamarero + asesoria + seguro;
 
             customExpenses.forEach(expense => {
                 const frequency = expense.frequency || 'annual'; // Default to annual for backwards compatibility
                 const annualAmount = frequency === 'monthly' ? (expense.amount || 0) * 12 : (expense.amount || 0);
                 total += annualAmount;
+            });
+
+            return total;
+        }
+        
+        function calculateMonthlyOperativeCostMonthly() {
+            // Gastos mensuales (sin multiplicar)
+            const alquiler = parseFloat(document.getElementById('alquiler').value);
+            const luz = parseFloat(document.getElementById('luz').value);
+            const agua = parseFloat(document.getElementById('agua').value);
+            const gas = parseFloat(document.getElementById('gas').value);
+            const carbon = parseFloat(document.getElementById('carbon').value || 0);
+            const internet = parseFloat(document.getElementById('internet').value);
+            const alarma = parseFloat(document.getElementById('alarma').value);
+            const redes = parseFloat(document.getElementById('redes').value);
+            const mantenimiento = parseFloat(document.getElementById('mantenimiento').value);
+            const asesoria = parseFloat(document.getElementById('asesoria').value);
+            
+            // Gastos anuales (divididos por 12)
+            const veladores = parseFloat(document.getElementById('veladores').value) / 12;
+            const qamarero = parseFloat(document.getElementById('qamarero').value) / 12;
+            const seguro = parseFloat(document.getElementById('seguro').value || 0) / 12;
+
+            let total = alquiler + luz + agua + gas + carbon + internet + alarma + redes + mantenimiento + asesoria + veladores + qamarero + seguro;
+
+            // Gastos personalizados
+            customExpenses.forEach(expense => {
+                const frequency = expense.frequency || 'annual'; // Default to annual for backwards compatibility
+                const monthlyAmount = frequency === 'monthly' ? (expense.amount || 0) : ((expense.amount || 0) / 12);
+                total += monthlyAmount;
             });
 
             return total;
@@ -6091,7 +7122,7 @@
                 const newPrice = item.price * (1 + adjustment / 100);
 
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('menu_items')
                         .update({ price: newPrice })
                         .eq('category', product.category)
@@ -6143,7 +7174,7 @@
                 const newCost = item.cost * (1 + adjustment / 100);
 
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('menu_items')
                         .update({ cost: newCost })
                         .eq('category', product.category)
@@ -6196,7 +7227,7 @@
                 const newPrice = item.cost / (1 - targetMargin / 100);
 
                 try {
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('menu_items')
                         .update({ price: newPrice })
                         .eq('category', product.category)
@@ -6292,7 +7323,7 @@
                     const updateData = {};
                     updateData[dbFieldMap[field]] = newValue;
 
-                    const { data, error } = await supabase
+                    const { data, error } = await supabaseClient
                         .from('menu_items')
                         .update(updateData)
                         .eq('category', category)
@@ -6479,7 +7510,7 @@
 
             // Add to Supabase
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('menu_items')
                     .insert([
                         {
@@ -6533,7 +7564,9 @@
 
             try {
                 // Delete from Supabase
-                const { error } = await supabase
+                const supabaseClient = getSupabase();
+                if (!supabaseClient) return;
+                const { error } = await supabaseClient
                     .from('menu_items')
                     .delete()
                     .eq('category', category)
@@ -6566,7 +7599,12 @@
         // Load menu items from Supabase
         async function loadMenuItemsFromSupabase() {
             try {
-                const { data, error } = await supabase
+                const supabaseClient = getSupabase();
+                if (!supabaseClient) {
+                    console.warn('Supabase not initialized, skipping menu load');
+                    return false;
+                }
+                const { data, error } = await supabaseClient
                     .from('menu_items')
                     .select('*')
                     .order('category', { ascending: true })
@@ -6805,7 +7843,7 @@
 
             // Add to Supabase
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('menu_rules')
                     .insert([newRule])
                     .select();
@@ -6838,7 +7876,9 @@
             const newStatus = !rule.is_active;
 
             try {
-                const { error } = await supabase
+                const supabaseClient = getSupabase();
+                if (!supabaseClient) return;
+                const { error } = await supabaseClient
                     .from('menu_rules')
                     .update({ is_active: newStatus })
                     .eq('id', rule.id);
@@ -6868,7 +7908,9 @@
             }
 
             try {
-                const { error } = await supabase
+                const supabaseClient = getSupabase();
+                if (!supabaseClient) return;
+                const { error } = await supabaseClient
                     .from('menu_rules')
                     .delete()
                     .eq('id', rule.id);
@@ -6897,7 +7939,13 @@
         // Load rules from Supabase
         async function loadRulesFromSupabase() {
             try {
-                const { data, error } = await supabase
+                const supabaseClient = getSupabase();
+                if (!supabaseClient) {
+                    console.warn('Supabase not initialized, skipping rules load');
+                    return false;
+                }
+                if (!supabaseClient) return false;
+                const { data, error } = await supabaseClient
                     .from('menu_rules')
                     .select('*')
                     .order('created_at', { ascending: false });
@@ -6986,7 +8034,7 @@
             };
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('menu_audit_log')
                     .insert([logEntry])
                     .select();
@@ -7007,7 +8055,13 @@
         // Load audit log from Supabase
         async function loadAuditLog() {
             try {
-                const { data, error } = await supabase
+                const supabaseClient = getSupabase();
+                if (!supabaseClient) {
+                    console.warn('Supabase not initialized, skipping audit log load');
+                    return false;
+                }
+                if (!supabaseClient) return false;
+                const { data, error } = await supabaseClient
                     .from('menu_audit_log')
                     .select('*')
                     .order('created_at', { ascending: false })
@@ -7156,38 +8210,276 @@
 
         // ==================== END MENU ADMIN FUNCTIONS ====================
 
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', async function() {
-            // Load menu from Supabase first
-            await loadMenuItemsFromSupabase();
-            await loadRulesFromSupabase();
-            await loadAuditLog();
-            initEmployees();
-            parseCalendarData();
-            renderCalendar();
-            updateAllCalculations(); // Actualiza todos los cálculos, incluyendo totales de pestañas, charts y resultados
-            renderMenuItems(); // Initialize menu admin table
-            renderRules(); // Initialize rules table
-            renderAuditLog(); // Initialize audit log table
 
-            // Initialize mobile enhancements
-            setTimeout(() => {
-                initSwipeGestures();
-
-                // Add swipe indicators on mobile
-                if (window.innerWidth <= 768) {
-                    document.querySelectorAll('.month-section').forEach((section, index) => {
-                        const monthContent = section.querySelector('.month-content');
-                        if (monthContent && !monthContent.querySelector('.swipe-indicator')) {
-                            const indicator = document.createElement('div');
-                            indicator.className = 'swipe-indicator';
-                            indicator.textContent = '← Desliza para navegar entre meses →';
-                            monthContent.insertBefore(indicator, monthContent.firstChild);
-                        }
-                    });
+        // Inicializar - Simplified and robust
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure first tab is visible immediately
+            try {
+                var firstTab = document.getElementById('tab-planificacion');
+                if (firstTab) {
+                    firstTab.classList.add('active');
+                    firstTab.style.display = 'block';
+                }
+            } catch (e) {
+                console.error('Error showing first tab:', e);
+            }
+            
+            // Create mock Supabase client immediately (so content renders even if Supabase fails)
+            window.supabaseClient = {
+                from: function() {
+                    return {
+                        select: function() { return Promise.resolve({ data: [], error: null }); },
+                        insert: function() { return Promise.resolve({ data: null, error: null }); },
+                        update: function() { return Promise.resolve({ data: null, error: null }); },
+                        delete: function() { return Promise.resolve({ data: null, error: null }); },
+                        order: function() { return this; },
+                        limit: function() { return this; }
+                    };
+                }
+            };
+            
+            // Try to initialize real Supabase (non-blocking)
+            setTimeout(function() {
+                try {
+                    // Supabase CDN exposes 'supabase' as a global variable with createClient method
+                    var supabaseLib = window.supabase;
+                    if (supabaseLib && supabaseLib.createClient) {
+                        window.supabaseClient = supabaseLib.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                        console.log('Supabase client initialized');
+                    } else {
+                        console.warn('Supabase library not loaded, using mock client');
+                    }
+                } catch (e) {
+                    console.error('Supabase init error:', e);
+                    console.log('Continuing with mock client');
+                }
+            }, 50);
+            
+            // Initialize core functionality (with error handling)
+            // Use multiple timeouts to ensure everything loads in order
+            setTimeout(function() {
+                try {
+                    console.log('=== Starting initialization ===');
+                    
+                    // Step 1: Initialize calendar data first (this is critical)
+                    console.log('Step 1: Parsing calendar data...');
+                    if (typeof parseCalendarData === 'function') {
+                        parseCalendarData();
+                        console.log('✓ Calendar data parsed, days:', typeof calendarData !== 'undefined' ? calendarData.length : 0);
+                    } else {
+                        console.error('✗ parseCalendarData function not found!');
+                    }
+                } catch (e) {
+                    console.error('Error in step 1:', e);
+                }
+            }, 100);
+            
+            setTimeout(function() {
+                try {
+                    // Step 2: Render calendar
+                    console.log('Step 2: Rendering calendar...');
+                    if (typeof renderCalendar === 'function') {
+                        renderCalendar();
+                        console.log('✓ Calendar rendered');
+                    } else {
+                        console.error('✗ renderCalendar function not found!');
+                    }
+                } catch (e) {
+                    console.error('Error in step 2:', e);
+                }
+            }, 200);
+            
+            setTimeout(function() {
+                try {
+                    // Step 3: Initialize employees
+                    console.log('Step 3: Initializing employees...');
+                    if (typeof initEmployees === 'function') {
+                        initEmployees();
+                        console.log('✓ Employees initialized');
+                    }
+                } catch (e) {
+                    console.error('Error in step 3:', e);
+                }
+            }, 300);
+            
+            setTimeout(function() {
+                try {
+                    // Step 4: Update calculations
+                    console.log('Step 4: Updating calculations...');
+                    if (typeof updateAllCalculations === 'function') {
+                        updateAllCalculations();
+                        console.log('✓ Calculations updated');
+                    }
+                } catch (e) {
+                    console.error('Error in step 4:', e);
+                }
+            }, 400);
+            
+            setTimeout(function() {
+                try {
+                    // Step 5: Render menu admin components
+                    console.log('Step 5: Rendering menu admin...');
+                    if (typeof renderMenuItems === 'function') {
+                        renderMenuItems();
+                        console.log('✓ Menu items rendered');
+                    }
+                    if (typeof renderRules === 'function') {
+                        renderRules();
+                        console.log('✓ Rules rendered');
+                    }
+                    if (typeof renderAuditLog === 'function') {
+                        renderAuditLog();
+                        console.log('✓ Audit log rendered');
+                    }
+                    console.log('=== Initialization complete ===');
+                } catch (e) {
+                    console.error('Error in step 5:', e);
                 }
             }, 500);
+            
+            // Load from Supabase (non-blocking)
+            setTimeout(function() {
+                if (window.supabaseClient && typeof loadMenuItemsFromSupabase === 'function') {
+                    loadMenuItemsFromSupabase().catch(function(e) { console.error('Load error:', e); });
+                    loadRulesFromSupabase().catch(function(e) { console.error('Load error:', e); });
+                    loadAuditLog().catch(function(e) { console.error('Load error:', e); });
+                }
+            }, 500);
+            
+            // Initialize mobile enhancements (non-blocking)
+            setTimeout(function() {
+                try {
+                    if (typeof initSwipeGestures === 'function') {
+                        initSwipeGestures();
+                    }
+                } catch (e) {
+                    console.error('Swipe init error:', e);
+                }
+            }, 1000);
         });
+        
+        // Functions to update employee salaries (needed for inline oninput handlers)
+        function updateEmployeeSalary(index, value) {
+            const val = parseFloat(value) || 0;
+            if (employees && employees[index] !== undefined) {
+                employees[index].netMonthly = val;
+                saveEmployeesToStorage();
+                updateAllCalculations();
+            }
+        }
+        
+        function updateCustomEmployeeSalary(index, value) {
+            const val = parseFloat(value) || 0;
+            if (customEmployees && customEmployees[index] !== undefined) {
+                customEmployees[index].netMonthly = val;
+                saveCustomEmployeesToStorage();
+                updateAllCalculations();
+            }
+        }
+        
+        // Expose all necessary functions to window before closing IIFE
+        exposeGlobal('showTooltip', showTooltip);
+        exposeGlobal('updateAllCalculations', updateAllCalculations);
+        exposeGlobal('toggleMonth', toggleMonth);
+        exposeGlobal('updateDayPlanning', updateDayPlanning);
+        exposeGlobal('renderDayCell', renderDayCell);
+        exposeGlobal('bulkSetDays', bulkSetDays);
+        exposeGlobal('bulkSetOccupancy', bulkSetOccupancy);
+        exposeGlobal('switchMode', switchMode);
+        exposeGlobal('updateScenarioInputs', updateScenarioInputs);
+        exposeGlobal('generateRandomMenu', generateRandomMenu);
+        exposeGlobal('updateItemSelect', updateItemSelect);
+        exposeGlobal('addItem', addItem);
+        exposeGlobal('saveCurrentScenario', saveCurrentScenario);
+        exposeGlobal('switchMenuTab', switchMenuTab);
+        exposeGlobal('filterMenuItems', filterMenuItems);
+        exposeGlobal('openAddProductModal', openAddProductModal);
+        exposeGlobal('downloadMenuCSV', downloadMenuCSV);
+        exposeGlobal('clearSelection', clearSelection);
+        exposeGlobal('applyBulkPriceAdjustment', applyBulkPriceAdjustment);
+        exposeGlobal('applyBulkCostAdjustment', applyBulkCostAdjustment);
+        exposeGlobal('applyBulkMarginTarget', applyBulkMarginTarget);
+        exposeGlobal('toggleEmployeeDetail', toggleEmployeeDetail);
+        exposeGlobal('toggleCustomEmployeeDetail', toggleCustomEmployeeDetail);
+        exposeGlobal('addNewEmployee', addNewEmployee);
+        exposeGlobal('removeEmployee', removeEmployee);
+        exposeGlobal('removeCustomEmployee', removeCustomEmployee);
+        exposeGlobal('updateEmployeeName', updateEmployeeName);
+        exposeGlobal('updateCustomEmployeeName', updateCustomEmployeeName);
+        exposeGlobal('updateEmployeePuesto', updateEmployeePuesto);
+        exposeGlobal('updateEmployeeHoras', updateEmployeeHoras);
+        exposeGlobal('updateEmployeeIRPF', updateEmployeeIRPF);
+        exposeGlobal('updateEmployeePluses', updateEmployeePluses);
+        exposeGlobal('updateCustomEmployeePuesto', updateCustomEmployeePuesto);
+        exposeGlobal('updateCustomEmployeeHoras', updateCustomEmployeeHoras);
+        exposeGlobal('updateCustomEmployeeIRPF', updateCustomEmployeeIRPF);
+        exposeGlobal('updateCustomEmployeePluses', updateCustomEmployeePluses);
+        // Mantener compatibilidad con funciones antiguas (aunque ya no se usen)
+        exposeGlobal('updateEmployeeSalary', updateEmployeeSalary);
+        exposeGlobal('updateCustomEmployeeSalary', updateCustomEmployeeSalary);
+        exposeGlobal('closeModal', closeModal);
+        exposeGlobal('confirmModal', confirmModal);
+        exposeGlobal('openModal', openModal);
+        
+        // Expose arrays globally so helper functions can access them
+        window.employees = employees;
+        window.customEmployees = customEmployees;
+        
+        })(); // End IIFE
+    </script>
+    <script>
+        // Emergency fallback: Ensure tabs work even if main script fails
+        (function() {
+            if (typeof window.switchTab !== 'function') {
+                window.switchTab = function(tabName, btn) {
+                    var tabs = document.querySelectorAll('.tab-content');
+                    for (var i = 0; i < tabs.length; i++) {
+                        tabs[i].style.display = 'none';
+                        tabs[i].classList.remove('active');
+                    }
+                    var tab = document.getElementById('tab-' + tabName);
+                    if (tab) {
+                        tab.style.display = 'block';
+                        tab.classList.add('active');
+                    }
+                    var buttons = document.querySelectorAll('.tab-button');
+                    for (var i = 0; i < buttons.length; i++) {
+                        buttons[i].classList.remove('active');
+                    }
+                    if (btn) btn.classList.add('active');
+                };
+            }
+            // Ensure first tab is visible
+            setTimeout(function() {
+                var first = document.getElementById('tab-planificacion');
+                if (first && first.style.display === 'none') {
+                    first.style.display = 'block';
+                    first.classList.add('active');
+                }
+            }, 50);
+            
+            // Force render after a delay if nothing has rendered
+            setTimeout(function() {
+                var container = document.getElementById('planning-months-container');
+                if (container && container.innerHTML.trim() === '') {
+                    console.warn('Calendar container is empty, attempting to force render...');
+                    if (typeof parseCalendarData === 'function') {
+                        try {
+                            parseCalendarData();
+                        } catch(e) {
+                            console.error('Error in parseCalendarData:', e);
+                        }
+                    }
+                    if (typeof renderCalendar === 'function') {
+                        try {
+                            renderCalendar();
+                        } catch(e) {
+                            console.error('Error in renderCalendar:', e);
+                        }
+                    }
+                }
+            }, 2000);
+        })();
     </script>
 </body>
 </html>
